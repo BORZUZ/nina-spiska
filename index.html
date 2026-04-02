@@ -1853,6 +1853,7 @@ body{
     <div class="sheet-handle"></div>
     <h3 class="sheet-title" id="od-pay-sheet-title">To'lov kiritish</h3>
     <input type="hidden" id="od-pay-debt-id">
+    <input type="hidden" id="od-pay-txn-type" value="payment">
     <div id="od-pay-info" style="margin-bottom:16px"></div>
 
     <div class="form-group">
@@ -4856,9 +4857,15 @@ var LANGS = {
     debt_closed_toast: "Qarz to'liq yopildi! ✅",
     debt_tg_new: "YANGI QARZ QO'SHILDI",
     debt_tg_pay: "QARZGA TO'LOV QILINDI",
+    debt_tg_return: "MAHSULOT QAYTARILDI",
     debt_tg_creditor: "Qarz beruvchi",
     debt_tg_remaining: "Qolgan qarz",
     debt_tg_closed: "Qarz to'liq yopildi",
+    debt_return_btn: "Qaytarish",
+    debt_return_title: "Mahsulot qaytarish",
+    debt_return_save_btn: "Qaytarishni saqlash",
+    debt_return_saved: "Qaytarish saqlandi",
+    debt_return_note_ph: "Masalan: mahsulot qaytdi...",
     debt_nav_sub: "Yetkazib beruvchi, do'st, bank...",
     ft_stats_month: 'Oy', ft_stats_week: 'Hafta',
     ft_cust_debt: 'Qarzlilar', ft_cust_clean: 'Tozalar',
@@ -5114,9 +5121,15 @@ var LANGS = {
     debt_closed_toast: 'Долг полностью погашен! ✅',
     debt_tg_new: 'НОВЫЙ ДОЛГ ДОБАВЛЕН',
     debt_tg_pay: 'ПЛАТЁЖ ПО ДОЛГУ',
+    debt_tg_return: 'ТОВАР ВОЗВРАЩЁН',
     debt_tg_creditor: 'Кредитор',
     debt_tg_remaining: 'Остаток долга',
     debt_tg_closed: 'Долг полностью погашен',
+    debt_return_btn: 'Возврат',
+    debt_return_title: 'Возврат товара',
+    debt_return_save_btn: 'Сохранить возврат',
+    debt_return_saved: 'Возврат сохранён',
+    debt_return_note_ph: 'Напр: товар возвращён...',
     debt_nav_sub: 'Поставщики, друзья, банк...',
     ft_stats_month: 'Месяц', ft_stats_week: 'Неделя',
     ft_cust_debt: 'Должники', ft_cust_clean: 'Без долгов',
@@ -5984,10 +5997,40 @@ async function deleteExpense(id) {
 }
 
 // ═══════════════════════════════════════════════════
-// BIZNING QARZLARIMIZ
+// BIZNING QARZLARIMIZ  —  TO'LIQ QAYTA QURILDI
+// Struktura: debt_transactions (type: debt|payment|return)
 // ═══════════════════════════════════════════════════
-var currentOdFilter = 'all';
 
+var currentOdFilter = 'all';
+var currentOdDebtId  = null;  // detail page uchun
+
+// ── HELPER: qarz uchun balance hisoblash ───────────
+function odCalcBalance(debt, txns) {
+  // txns: debt_transactions rows (type: 'debt'|'payment'|'return')
+  // balance = sum(debt) - sum(payment) - sum(return)
+  var totalDebtSum = 0, totalDebtUsd = 0;
+  var totalPaySum  = 0, totalPayUsd  = 0;
+  (txns || []).forEach(function(tx) {
+    if (tx.type === 'debt') {
+      if (tx.currency === 'usd') totalDebtUsd += tx.amount || 0;
+      else totalDebtSum += tx.amount_sum || tx.amount || 0;
+    } else {
+      // 'payment' VA 'return' — ikkalasi ham qarzni kamaytiradi
+      if (tx.currency === 'usd') totalPayUsd += tx.amount || 0;
+      else totalPaySum += tx.amount_sum || tx.amount || 0;
+    }
+  });
+  if (debt.currency === 'usd') {
+    var bal = Math.max(0, (debt.amount || 0) + totalDebtUsd - totalPayUsd);
+    return { remain: bal, remainStr: '$' + bal.toFixed(2), isClosed: bal <= 0.001 };
+  } else {
+    var orig = debt.amount_sum || debt.amount || 0;
+    var bal2 = Math.max(0, orig + totalDebtSum - totalPaySum);
+    return { remain: bal2, remainStr: fmt(bal2) + " so'm", isClosed: bal2 <= 0 };
+  }
+}
+
+// ── FILTER ─────────────────────────────────────────
 function filterOurDebts(btn, status) {
   currentOdFilter = status;
   document.querySelectorAll('#page-our-debts .filter-tab')
@@ -5996,54 +6039,48 @@ function filterOurDebts(btn, status) {
   loadOurDebts();
 }
 
+// ── LIST ────────────────────────────────────────────
 async function loadOurDebts() {
   var el = document.getElementById('our-debts-list');
   if (!el) return;
   showLoading(el);
   try {
+    // Barcha qarzlar + ularning tranzaksiyalarini birga olish
     var q = db.from('our_debts')
-      .select('*, our_debt_payments(amount, currency, amount_sum)')
-      .order('created_at', {ascending: false});
-    if (currentOdFilter !== 'all') q = q.eq('status', currentOdFilter);
-    var res = await q;
-    var list = res.data || [];
+      .select('*, debt_transactions(type, amount, currency, amount_sum)')
+      .order('created_at', { ascending: false });
 
-    // Statistika hisoblash — faqat ochiq qarzlar uchun
-    var allRes = await db.from('our_debts')
-      .select('amount, currency, amount_sum, status, our_debt_payments(amount_sum, currency)');
-    var allList = allRes.data || [];
+    var allQ = db.from('our_debts')
+      .select('*, debt_transactions(type, amount, currency, amount_sum)');
 
+    var [res, allRes] = await Promise.all([q, allQ]);
+
+    var allList  = allRes.data || [];
+    var filtered = res.data || [];
+
+    // filter
+    if (currentOdFilter !== 'all') {
+      filtered = filtered.filter(function(d) { return d.status === currentOdFilter; });
+    }
+
+    // ─ Statistika ──────────────────────────────────
     var totalSum = 0, totalUsd = 0, openCount = 0, closedCount = 0;
     allList.forEach(function(d) {
-      var paid = (d.our_debt_payments || []).reduce(function(s, p) {
-        return s + (p.currency === 'usd' ? 0 : (p.amount_sum || 0));
-      }, 0);
-      var paidUsd = (d.our_debt_payments || []).reduce(function(s, p) {
-        return s + (p.currency === 'usd' ? (p.amount || 0) : 0);
-      }, 0);
-
+      var bal = odCalcBalance(d, d.debt_transactions || []);
       if (d.status === 'open') {
         openCount++;
-        if (d.currency === 'usd') {
-          totalUsd += Math.max(0, (d.amount || 0) - paidUsd);
-        } else {
-          totalSum += Math.max(0, (d.amount_sum || d.amount || 0) - paid);
-        }
+        if (d.currency === 'usd') totalUsd += bal.remain;
+        else totalSum += bal.remain;
       } else {
         closedCount++;
       }
     });
+    var e2 = document.getElementById('od-stat-sum');   if (e2) e2.textContent = fmt(totalSum);
+    var e3 = document.getElementById('od-stat-usd');   if (e3) e3.textContent = '$' + totalUsd.toFixed(2);
+    var e4 = document.getElementById('od-stat-open');  if (e4) e4.textContent = openCount;
+    var e5 = document.getElementById('od-stat-closed');if (e5) e5.textContent = closedCount;
 
-    var el2 = document.getElementById('od-stat-sum');
-    if (el2) el2.textContent = fmt(totalSum);
-    var el3 = document.getElementById('od-stat-usd');
-    if (el3) el3.textContent = '$' + totalUsd.toFixed(2);
-    var el4 = document.getElementById('od-stat-open');
-    if (el4) el4.textContent = openCount;
-    var el5 = document.getElementById('od-stat-closed');
-    if (el5) el5.textContent = closedCount;
-
-    if (!list.length) {
+    if (!filtered.length) {
       el.innerHTML = renderEmpty(
         '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/></svg>',
         t('debt_empty'), t('debt_empty_sub')
@@ -6051,108 +6088,150 @@ async function loadOurDebts() {
       return;
     }
 
-    el.innerHTML = list.map(function(debt) {
-      var payments = debt.our_debt_payments || [];
-      var paidSum = payments.reduce(function(s, p) {
-        return s + (p.currency !== 'usd' ? (p.amount_sum || 0) : 0);
-      }, 0);
-      var paidUsd2 = payments.reduce(function(s, p) {
-        return s + (p.currency === 'usd' ? (p.amount || 0) : 0);
-      }, 0);
-
-      var origSum = debt.currency === 'usd' ? (debt.amount || 0) : (debt.amount_sum || debt.amount || 0);
-      var remainSum = debt.currency === 'usd'
-        ? Math.max(0, (debt.amount || 0) - paidUsd2)
-        : Math.max(0, origSum - paidSum);
-      var remainStr = debt.currency === 'usd'
-        ? '$' + remainSum.toFixed(2)
-        : fmt(remainSum) + " so'm";
+    // ─ Render ro'yxat ──────────────────────────────
+    el.innerHTML = filtered.map(function(debt) {
+      var txns   = debt.debt_transactions || [];
+      var bal    = odCalcBalance(debt, txns);
       var isOpen = debt.status === 'open';
+      var color  = isOpen ? '#F97316' : 'var(--success)';
+      var ini    = (debt.creditor_name || '?').charAt(0).toUpperCase();
+      var bgColor = randomColor(debt.creditor_name || '');
 
-      return '<div class="list-item" onclick="navigate(\'our-debt-detail\',' + debt.id + ')">' +
-        '<div class="list-item-avatar" style="background:#FFF7ED;color:#F97316;flex-shrink:0">' +
-          '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/></svg>' +
-        '</div>' +
+      return '<div class="list-item" onclick="odOpenDetail(\'' + debt.id + '\')">' +
+        '<div style="width:42px;height:42px;border-radius:12px;background:' + bgColor + '20;color:' + bgColor + ';display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;flex-shrink:0">' + ini + '</div>' +
         '<div class="list-item-info">' +
-          '<div class="list-item-title">' + debt.creditor_name + '</div>' +
-          '<div class="list-item-subtitle">' + fmtDate(debt.created_at) + (debt.note ? ' · ' + debt.note : '') + '</div>' +
+          '<div class="list-item-title">' + (debt.creditor_name || '—') + '</div>' +
+          '<div class="list-item-subtitle">' + (debt.phone ? '📞 ' + debt.phone + ' · ' : '') + fmtDateShort(debt.created_at) + '</div>' +
         '</div>' +
         '<div class="list-item-right">' +
-          '<div style="font-weight:700;font-family:JetBrains Mono,monospace;font-size:.85rem;color:' + (isOpen ? '#F97316' : 'var(--success)') + '">' + remainStr + '</div>' +
+          '<div style="font-weight:800;font-family:JetBrains Mono,monospace;font-size:.88rem;color:' + color + '">' + bal.remainStr + '</div>' +
           '<span class="badge ' + (isOpen ? 'badge-open' : 'badge-closed') + '" style="font-size:.6rem;padding:2px 7px">' +
             (isOpen ? t('debt_open') : t('debt_closed_status')) +
           '</span>' +
         '</div>' +
       '</div>';
     }).join('');
+
   } catch(e) {
-    el.innerHTML = '<div class="empty-state"><div class="empty-text">Xato: ' + e.message + '</div></div>';
+    var el2 = document.getElementById('our-debts-list');
+    if (el2) el2.innerHTML = '<div class="empty-state"><div class="empty-text">Xato: ' + e.message + '</div></div>';
   }
 }
 
-// ─── DETAIL SAHIFASI ───────────────────────────────
+// ── DETAIL ──────────────────────────────────────────
+function odOpenDetail(debtId) {
+  currentOdDebtId = debtId;
+  navigate('our-debt-detail', debtId);
+}
+
 async function loadOurDebtDetail(debtId) {
+  currentOdDebtId = debtId;
   var el = document.getElementById('our-debt-detail-content');
   if (!el) return;
   el.innerHTML = '<div class="loading-spinner"><div class="spinner"></div></div>';
   try {
-    var dr = await db.from('our_debts').select('*, admins(full_name)').eq('id', debtId).single();
-    var pr = await db.from('our_debt_payments')
+    var dr = await db.from('our_debts')
+      .select('*, admins(full_name)')
+      .eq('id', debtId).single();
+    var tr = await db.from('debt_transactions')
       .select('*, admins(full_name)')
       .eq('debt_id', debtId)
-      .order('created_at', {ascending: false});
-    var debt = dr.data;
-    var payments = pr.data || [];
-    renderOurDebtDetail(debt, payments);
+      .order('created_at', { ascending: false });
+
+    if (dr.error) throw dr.error;
+    renderOurDebtDetail(dr.data, tr.data || []);
   } catch(e) {
     el.innerHTML = '<div class="empty-state"><div class="empty-text">Xato: ' + e.message + '</div></div>';
   }
 }
 
-function renderOurDebtDetail(debt, payments) {
+function renderOurDebtDetail(debt, txns) {
   var el = document.getElementById('our-debt-detail-content');
+  if (!el) return;
+
+  var bal    = odCalcBalance(debt, txns);
   var isOpen = debt.status === 'open';
 
-  // To'langan summa hisoblash
-  var paidSum = payments.reduce(function(s, p) {
-    return s + (p.currency !== 'usd' ? (p.amount_sum || 0) : 0);
-  }, 0);
-  var paidUsd = payments.reduce(function(s, p) {
-    return s + (p.currency === 'usd' ? (p.amount || 0) : 0);
-  }, 0);
+  // Jami qarz (barcha +debt txns)
+  var totalDebtSum = 0, totalDebtUsd = 0;
+  var totalPaySum  = 0, totalPayUsd  = 0;
+  txns.forEach(function(tx) {
+    if (tx.type === 'debt') {
+      if (tx.currency === 'usd') totalDebtUsd += tx.amount || 0;
+      else totalDebtSum += tx.amount_sum || tx.amount || 0;
+    } else {
+      if (tx.currency === 'usd') totalPayUsd += tx.amount || 0;
+      else totalPaySum += tx.amount_sum || tx.amount || 0;
+    }
+  });
 
-  var origAmount = debt.amount || 0;
-  var origSum = debt.currency === 'usd' ? (debt.amount_sum || 0) : (debt.amount_sum || origAmount);
-  var remainAmount = debt.currency === 'usd'
-    ? Math.max(0, origAmount - paidUsd)
-    : Math.max(0, (debt.amount_sum || origAmount) - paidSum);
-  var remainStr = debt.currency === 'usd'
-    ? '$' + remainAmount.toFixed(2)
-    : fmt(remainAmount) + " so'm";
-  var origStr = debt.currency === 'usd'
-    ? '$' + origAmount.toFixed(2) + (debt.amount_sum ? ' ≈ ' + fmt(debt.amount_sum) + " so'm" : '')
-    : fmt(origAmount) + " so'm";
-  var paidStr = debt.currency === 'usd'
-    ? '$' + paidUsd.toFixed(2)
-    : fmt(paidSum) + " so'm";
+  // origStr — asosiy qarz
+  var origStr, paidStr;
+  if (debt.currency === 'usd') {
+    var orig = debt.amount || 0;
+    origStr = '$' + orig.toFixed(2) + (debt.amount_sum ? ' \u2248 ' + fmt(debt.amount_sum) + " so'm" : '');
+    paidStr = '$' + totalPayUsd.toFixed(2);
+  } else {
+    origStr = fmt(debt.amount_sum || debt.amount || 0) + " so'm";
+    paidStr = fmt(totalPaySum) + " so'm";
+  }
+
   var adminName = (debt.admins && debt.admins.full_name) || '—';
+  var bgColor   = randomColor(debt.creditor_name || '');
+  var ini       = (debt.creditor_name || '?').charAt(0).toUpperCase();
 
-  // To'lovlar tarixi HTML
-  var historyHtml = payments.length
-    ? payments.map(function(p) {
-        var pAdmin = (p.admins && p.admins.full_name) || '—';
-        var pAmount = p.currency === 'usd'
-          ? '$' + (p.amount || 0).toFixed(2) + (p.amount_sum ? ' ≈ ' + fmt(p.amount_sum) + " so'm" : '')
-          : fmt(p.amount || 0) + " so'm";
-        return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">' +
+  // ─ Tarix HTML ─────────────────────────────────────
+  var histHtml = '';
+  if (txns.length) {
+    histHtml = txns.map(function(tx) {
+      var isDebt   = tx.type === 'debt';
+      var isReturn = tx.type === 'return';
+      var txAdmin  = (tx.admins && tx.admins.full_name) || '—';
+      var sign = isDebt ? '+' : '-';
+      var amt;
+      if (tx.currency === 'usd') {
+        amt = sign + '$' + (tx.amount || 0).toFixed(2) +
+          (tx.amount_sum ? ' \u2248 ' + fmt(tx.amount_sum) + " so'm" : '');
+      } else {
+        amt = sign + fmt(tx.amount_sum || tx.amount || 0) + " so'm";
+      }
+      // Rang: qarz=danger, to'lov=success, qaytarish=warning(orange)
+      var col, bgCol, icon, label;
+      if (isDebt) {
+        col   = 'var(--danger)';
+        bgCol = 'var(--danger-light)';
+        icon  = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+        label = t('debt_add_btn');
+      } else if (isReturn) {
+        col   = '#F97316';
+        bgCol = '#FFF7ED';
+        icon  = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>';
+        label = t('debt_return_btn');
+      } else {
+        col   = 'var(--success)';
+        bgCol = 'var(--success-light)';
+        icon  = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
+        label = t('debt_pay_btn');
+      }
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border)">' +
+        '<div style="display:flex;align-items:center;gap:8px">' +
+          '<div style="width:28px;height:28px;border-radius:8px;background:' + bgCol + ';color:' + col + ';display:flex;align-items:center;justify-content:center;flex-shrink:0">' + icon + '</div>' +
           '<div>' +
-            '<div style="font-size:.85rem;font-weight:700;color:var(--success)">+ ' + pAmount + '</div>' +
-            '<div style="font-size:.72rem;color:var(--text-muted)">' + fmtDate(p.created_at) + ' · ' + pAdmin + (p.note ? ' · ' + p.note : '') + '</div>' +
+            '<div style="font-size:.82rem;font-weight:700;color:' + col + '">' + amt + '</div>' +
+            '<div style="font-size:.7rem;color:var(--text-muted)">' + fmtDate(tx.created_at) + (tx.note ? ' · ' + tx.note : '') + ' · ' + txAdmin + '</div>' +
           '</div>' +
-          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>' +
-        '</div>';
-      }).join('')
-    : '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">' + t('debt_no_history') + '</div>';
+        '</div>' +
+        '<span style="font-size:.68rem;font-weight:700;color:' + col + ';background:' + bgCol + ';padding:2px 7px;border-radius:10px">' + label + '</span>' +
+      '</div>';
+    }).join('');
+  } else {
+    histHtml = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:.82rem">' + t('debt_no_history') + '</div>';
+  }
+
+  // ─ Progress bar ───────────────────────────────────
+  var origNum = debt.currency === 'usd' ? (debt.amount || 0) : (debt.amount_sum || debt.amount || 0);
+  var paidNum = debt.currency === 'usd' ? totalPayUsd : totalPaySum;
+  var pct = origNum > 0 ? Math.min(100, Math.round((paidNum / origNum) * 100)) : 0;
 
   el.innerHTML =
     '<button class="back-btn" onclick="navigate(\'our-debts\')">' +
@@ -6160,55 +6239,91 @@ function renderOurDebtDetail(debt, payments) {
       ' ' + t('spiska_back') +
     '</button>' +
 
+    // Avatar + ism
+    '<div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">' +
+      '<div style="width:52px;height:52px;border-radius:16px;background:' + bgColor + '20;color:' + bgColor + ';display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:800;flex-shrink:0">' + ini + '</div>' +
+      '<div style="flex:1;min-width:0">' +
+        '<div style="font-size:1.15rem;font-weight:800;letter-spacing:-.02em">' + (debt.creditor_name || '—') + '</div>' +
+        (debt.phone ? '<div style="font-size:.82rem;color:var(--text-muted)">📞 ' + debt.phone + '</div>' : '') +
+      '</div>' +
+      '<span class="badge ' + (isOpen ? 'badge-open' : 'badge-closed') + '">' +
+        (isOpen ? t('debt_open') : t('debt_closed_status')) +
+      '</span>' +
+    '</div>' +
+
     // Info karta
     '<div class="card" style="margin-bottom:12px">' +
-      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">' +
-        '<div>' +
-          '<div style="font-size:1.1rem;font-weight:800">' + debt.creditor_name + '</div>' +
-          (debt.phone ? '<div style="font-size:.8rem;color:var(--text-muted);margin-top:2px">📞 ' + debt.phone + '</div>' : '') +
-        '</div>' +
-        '<span class="badge ' + (isOpen ? 'badge-open' : 'badge-closed') + '">' +
-          (isOpen ? t('debt_open') : t('debt_closed_status')) +
-        '</span>' +
-      '</div>' +
       '<div class="card-row">' +
         '<span class="card-row-label">📅 ' + t('spiska_date') + '</span>' +
         '<span>' + fmtDate(debt.created_at) + '</span>' +
       '</div>' +
-      (debt.note ? '<div class="card-row"><span class="card-row-label">📝 ' + t('tg_note') + '</span><span>' + debt.note + '</span></div>' : '') +
+      (debt.note ? '<div class="card-row"><span class="card-row-label">📝 ' + t("tg_note") + '</span><span>' + debt.note + '</span></div>' : '') +
       '<div class="card-row">' +
-        '<span class="card-row-label">💰 Jami qarz</span>' +
-        '<span style="font-weight:700;color:#F97316">' + origStr + '</span>' +
+        '<span class="card-row-label">💸 Jami qarz</span>' +
+        '<span style="font-weight:700;color:var(--danger)">' + origStr + '</span>' +
       '</div>' +
       '<div class="card-row">' +
-        '<span class="card-row-label">✅ ' + t('debt_paid') + '</span>' +
+        '<span class="card-row-label">✅ ' + t("debt_paid") + '</span>' +
         '<span style="font-weight:700;color:var(--success)">' + paidStr + '</span>' +
       '</div>' +
-      '<div class="card-row" style="border:none">' +
-        '<span class="card-row-label" style="font-weight:700">📊 ' + t('debt_remaining') + '</span>' +
-        '<span style="font-size:1.1rem;font-weight:800;color:' + (remainAmount > 0 ? '#F97316' : 'var(--success)') + '">' + remainStr + '</span>' +
+      // Progress bar
+      '<div style="margin:12px 0 4px">' +
+        '<div style="display:flex;justify-content:space-between;margin-bottom:4px">' +
+          '<span style="font-size:.72rem;color:var(--text-muted)">' + t("debt_paid") + '</span>' +
+          '<span style="font-size:.72rem;font-weight:700;color:' + (pct >= 100 ? 'var(--success)' : 'var(--warning)') + '">' + pct + '%</span>' +
+        '</div>' +
+        '<div style="height:6px;border-radius:3px;background:var(--bg-tertiary);overflow:hidden">' +
+          '<div style="height:100%;border-radius:3px;width:' + pct + '%;background:' + (pct >= 100 ? 'var(--success)' : 'var(--warning)') + ';transition:width .4s"></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="card-row" style="border:none;padding-top:12px">' +
+        '<span class="card-row-label" style="font-weight:700;color:' + (isOpen ? '#F97316' : 'var(--success)') + '">📊 ' + t("debt_remaining") + '</span>' +
+        '<span style="font-size:1.2rem;font-weight:800;color:' + (isOpen ? '#F97316' : 'var(--success)') + '">' + bal.remainStr + '</span>' +
       '</div>' +
     '</div>' +
 
-    // Amallar — faqat ochiq bo'lsa
-    (isOpen ?
-      '<div style="display:flex;gap:8px;margin-bottom:16px">' +
-        '<button class="btn btn-full" onclick="openOurDebtPaySheet(' + debt.id + ')" style="height:46px;background:var(--success);color:#fff;border:none">' +
-          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' +
-          ' ' + t('debt_pay_btn') +
-        '</button>' +
-        '<button class="btn btn-full" onclick="deleteOurDebt(' + debt.id + ')" style="height:46px;background:var(--danger-light);color:var(--danger);border:1.5px solid rgba(239,68,68,.25)">' +
-          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>' +
-        '</button>' +
-      '</div>'
-    : '') +
+    // Action tugmalar
+    (isOpen
+      ? '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">' +
+          // 1-qator: To'lash + Qaytarish
+          '<div style="display:flex;gap:8px">' +
+            '<button class="btn btn-full" onclick="odOpenAddTxnSheet(\'payment\',\'' + debt.id + '\')" style="height:48px;background:var(--success);color:#fff;border:none;flex:1">' +
+              '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' +
+              ' ' + t("debt_pay_btn") +
+            '</button>' +
+            '<button class="btn btn-full" onclick="odOpenAddTxnSheet(\'return\',\'' + debt.id + '\')" style="height:48px;background:#FFF7ED;color:#F97316;border:1.5px solid rgba(249,115,22,.3);flex:1">' +
+              '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>' +
+              ' ' + t("debt_return_btn") +
+            '</button>' +
+          '</div>' +
+          // 2-qator: +Qarz + O'chirish
+          '<div style="display:flex;gap:8px">' +
+            '<button class="btn btn-full" onclick="odOpenAddTxnSheet(\'debt\',\'' + debt.id + '\')" style="height:38px;background:var(--bg-tertiary);color:var(--text-secondary);border:1.5px solid var(--border);flex:1;font-size:.8rem">' +
+              '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
+              ' ' + t("debt_add_btn") +
+            '</button>' +
+            '<button class="btn" onclick="deleteOurDebt(\'' + debt.id + '\')" style="height:38px;width:38px;padding:0;background:var(--danger-light);color:var(--danger);border:1.5px solid rgba(239,68,68,.25);flex-shrink:0">' +
+              '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>' +
+            '</button>' +
+          '</div>' +
+        '</div>'
+      : '<div style="display:flex;gap:8px;margin-bottom:16px">' +
+          '<div class="info-banner" style="flex:1">' +
+            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>' +
+            ' ' + t("debt_closed_toast") +
+          '</div>' +
+          '<button class="btn" onclick="deleteOurDebt(\'' + debt.id + '\')" style="height:46px;width:46px;padding:0;background:var(--danger-light);color:var(--danger);border:1.5px solid rgba(239,68,68,.25);flex-shrink:0">' +
+            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>' +
+          '</button>' +
+        '</div>'
+    ) +
 
-    // To'lovlar tarixi
-    '<div class="section-label">' + t('debt_history_title') + ' (' + payments.length + ')</div>' +
-    '<div class="card">' + historyHtml + '</div>';
+    // Tarix
+    '<div class="section-label">' + t("debt_history_title") + ' (' + txns.length + ')</div>' +
+    '<div class="card">' + histHtml + '</div>';
 }
 
-// ─── QARZ QO'SHISH ────────────────────────────────
+// ── YANGI QARZ QO'SHISH SHEET ─────────────────────
 function openOurDebtSheet() {
   document.getElementById('od-edit-id').value = '';
   document.getElementById('od-creditor').value = '';
@@ -6232,10 +6347,10 @@ function toggleOdCurrency() {
 
 function calcOdEquiv() {
   var isUsd = document.querySelector('input[name="od-currency"]:checked').value === 'usd';
-  if (!isUsd) return;
+  if (!isUsd) { document.getElementById('od-equiv').style.display = 'none'; return; }
   var amount = parseFloat(document.getElementById('od-amount').value) || 0;
-  var rate = parseFloat(document.getElementById('od-rate').value) || 0;
-  var el = document.getElementById('od-equiv');
+  var rate   = parseFloat(document.getElementById('od-rate').value) || 0;
+  var el     = document.getElementById('od-equiv');
   if (amount > 0 && rate > 0) {
     el.style.display = 'block';
     el.textContent = t('debt_equiv_label') + ': ' + fmt(Math.round(amount * rate)) + " so'm";
@@ -6246,47 +6361,61 @@ function calcOdEquiv() {
 
 async function saveOurDebt() {
   var creditor = document.getElementById('od-creditor').value.trim();
-  var phone = document.getElementById('od-phone').value.trim();
-  var note = document.getElementById('od-note').value.trim();
-  var amount = parseFloat(document.getElementById('od-amount').value);
+  var phone    = document.getElementById('od-phone').value.trim();
+  var note     = document.getElementById('od-note').value.trim();
+  var amount   = parseFloat(document.getElementById('od-amount').value);
   var currency = document.querySelector('input[name="od-currency"]:checked').value;
-  var rate = parseFloat(document.getElementById('od-rate').value) || 0;
+  var rate     = parseFloat(document.getElementById('od-rate').value) || 0;
 
-  if (!creditor) { showToast(t('debt_creditor_label').replace(' *','') + '!', 'error'); return; }
-  if (!amount || amount <= 0) { showToast(t('payment_amount_err'), 'error'); return; }
-  if (currency === 'usd' && !rate) { showToast(t('debt_rate_label') + '!', 'error'); return; }
+  if (!creditor)           { showToast(t('debt_creditor_label').replace(' *','') + ' kiritilmagan!', 'error'); return; }
+  if (!amount || amount<=0){ showToast(t('payment_amount_err'), 'error'); return; }
+  if (currency==='usd' && !rate){ showToast(t('debt_rate_label') + ' kiritilmagan!', 'error'); return; }
 
   var btn = btnStart('od-save-btn', t('saving'));
   if (!btn) return;
-
   try {
-    var data = {
+    // 1. our_debts jadvaliga qarz yaratiш
+    var debtData = {
       creditor_name: creditor,
-      phone: phone || null,
-      note: note || null,
-      amount: amount,
+      phone:    phone    || null,
+      note:     note     || null,
+      amount:   amount,
       currency: currency,
-      amount_sum: currency === 'usd' ? Math.round(amount * rate) : amount,
-      rate: currency === 'usd' ? rate : null,
-      status: 'open',
+      amount_sum: currency==='usd' ? Math.round(amount * rate) : amount,
+      rate:     currency==='usd' ? rate : null,
+      status:   'open',
       admin_id: currentAdmin.id
     };
+    var dr = await db.from('our_debts').insert(debtData).select().single();
+    if (dr.error) throw dr.error;
+    var newDebtId = dr.data.id;
 
-    var res = await db.from('our_debts').insert(data);
-    if (res.error) throw res.error;
+    // 2. debt_transactions ga birinchi "debt" tranzaksiyasi
+    var txData = {
+      debt_id:    newDebtId,
+      type:       'debt',
+      amount:     amount,
+      currency:   currency,
+      amount_sum: currency==='usd' ? Math.round(amount * rate) : amount,
+      rate:       currency==='usd' ? rate : null,
+      note:       note || null,
+      admin_id:   currentAdmin.id
+    };
+    var tr = await db.from('debt_transactions').insert(txData);
+    if (tr.error) throw tr.error;
 
-    // Telegram xabar
-    var amountStr = currency === 'usd'
-      ? '$' + amount.toFixed(2) + ' ≈ ' + fmt(Math.round(amount * rate)) + ' ' + t('som')
+    // 3. Telegram
+    var amtStr = currency==='usd'
+      ? '$' + amount.toFixed(2) + ' \u2248 ' + fmt(Math.round(amount*rate)) + ' ' + t('som')
       : fmt(amount) + ' ' + t('som');
     sendTelegramMessage(
-      '🟠 <b>' + t('debt_tg_new') + '</b>\n\n' +
-      '👤 <b>' + t('debt_tg_creditor') + ':</b> ' + tgEscape(creditor) + '\n' +
-      (phone ? '📞 <b>' + t('tg_phone') + ':</b> ' + tgEscape(phone) + '\n' : '') +
-      '💰 <b>' + t('tg_amount') + ':</b> ' + amountStr + '\n' +
-      (note ? '📝 <b>' + t('tg_note') + ':</b> ' + tgEscape(note) + '\n' : '') +
-      '👨‍💼 <b>' + t('tg_admin') + ':</b> ' + tgEscape(currentAdmin.full_name || '—') + '\n' +
-      '📅 <b>' + t('tg_date') + ':</b> ' + fmtDate(new Date().toISOString()) + '\n\n' +
+      '\uD83D\uDFE0 <b>' + t('debt_tg_new') + '</b>\n\n' +
+      '\uD83D\uDC64 <b>' + t('debt_tg_creditor') + ':</b> ' + tgEscape(creditor) + '\n' +
+      (phone ? '\uD83D\uDCDE <b>' + t('tg_phone') + ':</b> ' + tgEscape(phone) + '\n' : '') +
+      '\uD83D\uDCB0 <b>' + t('tg_amount') + ':</b> ' + amtStr + '\n' +
+      (note ? '\uD83D\uDCDD <b>' + t('tg_note') + ':</b> ' + tgEscape(note) + '\n' : '') +
+      '\uD83D\uDC68\u200D\uD83D\uDCBC <b>' + t('tg_admin') + ':</b> ' + tgEscape(currentAdmin.full_name||'—') + '\n' +
+      '\uD83D\uDCC5 <b>' + t('tg_date') + ':</b> ' + fmtDate(new Date().toISOString()) + '\n\n' +
       '<i>' + t('tg_system') + '</i>'
     );
 
@@ -6300,59 +6429,80 @@ async function saveOurDebt() {
   }
 }
 
-// ─── TO'LOV QO'SHISH ─────────────────────────────
-async function openOurDebtPaySheet(debtId) {
-  document.getElementById('od-pay-debt-id').value = debtId;
-  document.getElementById('od-pay-amount').value = '';
-  document.getElementById('od-pay-note').value = '';
-  document.getElementById('od-pay-rate').value = '';
-  document.getElementById('od-pay-equiv').style.display = 'none';
+// ── TRANZAKSIYA SHEET (ham to'lov, ham qarz qo'shish) ──
+function odOpenAddTxnSheet(txnType, debtId) {
+  // txnType: 'payment' | 'debt'
+  var sheet = document.getElementById('our-debt-pay-sheet');
+  if (!sheet) return;
+
+  document.getElementById('od-pay-debt-id').value    = debtId;
+  document.getElementById('od-pay-txn-type').value   = txnType;
+  document.getElementById('od-pay-amount').value     = '';
+  document.getElementById('od-pay-note').value       = '';
+  document.getElementById('od-pay-rate').value       = '';
+  document.getElementById('od-pay-equiv').style.display     = 'none';
   document.getElementById('od-pay-rate-group').style.display = 'none';
   document.querySelector('input[name="od-pay-currency"][value="sum"]').checked = true;
 
-  // Qolgan qarzni hisoblash va ko'rsatish
-  var infoEl = document.getElementById('od-pay-info');
-  if (infoEl) {
-    infoEl.innerHTML =
-      '<div style="background:var(--warning-light);border-radius:var(--radius-md);padding:10px 14px;font-size:.82rem;color:var(--warning);border:1px solid rgba(245,158,11,.2)">' +
-        '⏳ Yuklanmoqda...' +
-      '</div>';
+  // Sheet sarlavhasi
+  var titleEl = document.getElementById('od-pay-sheet-title');
+  if (titleEl) {
+    if (txnType === 'payment') titleEl.textContent = t('debt_pay_title');
+    else if (txnType === 'return') titleEl.textContent = t('debt_return_title');
+    else titleEl.textContent = t('debt_add_btn');
   }
 
-  try {
-    var dr = await db.from('our_debts').select('amount, currency, amount_sum, creditor_name').eq('id', debtId).single();
-    var pr = await db.from('our_debt_payments').select('amount, currency, amount_sum').eq('debt_id', debtId);
-    var debt = dr.data || {};
-    var pays = pr.data || [];
-
-    var origAmount = debt.amount || 0;
-    var remain;
-    if (debt.currency === 'usd') {
-      var paidUsd = pays.reduce(function(s, p){ return s + (p.currency === 'usd' ? (p.amount||0) : 0); }, 0);
-      remain = Math.max(0, origAmount - paidUsd);
+  // Tugma rangi
+  var saveBtn = document.getElementById('od-pay-save-btn');
+  if (saveBtn) {
+    if (txnType === 'payment') {
+      saveBtn.style.background = 'var(--success)';
+      saveBtn.textContent = t('debt_pay_save_btn');
+    } else if (txnType === 'return') {
+      saveBtn.style.background = '#F97316';
+      saveBtn.textContent = t('debt_return_save_btn');
     } else {
-      var paidSum = pays.reduce(function(s, p){ return s + (p.currency !== 'usd' ? (p.amount_sum||p.amount||0) : 0); }, 0);
-      remain = Math.max(0, (debt.amount_sum || origAmount) - paidSum);
+      saveBtn.style.background = 'var(--warning)';
+      saveBtn.textContent = t('debt_save_btn');
     }
+    saveBtn.style.color = '#fff';
+    saveBtn.style.border = 'none';
+  }
 
-    if (infoEl) {
-      infoEl.innerHTML =
-        '<div style="background:var(--warning-light);border-radius:var(--radius-md);padding:12px 14px;border:1px solid rgba(245,158,11,.2)">' +
-          '<div style="font-size:.72rem;font-weight:700;color:var(--warning);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">' +
-            '💡 ' + t('debt_remaining') +
-          '</div>' +
-          '<div style="font-size:1.3rem;font-weight:800;color:var(--warning);font-family:JetBrains Mono,monospace">' +
-            (debt.currency === 'usd' ? '$' + remain.toFixed(2) : fmt(remain) + " so\'m") +
-          '</div>' +
-          '<div style="font-size:.75rem;color:var(--text-muted);margin-top:4px">' + (debt.creditor_name || '') + '</div>' +
-        '</div>';
-    }
-  } catch(e) {
-    if (infoEl) infoEl.innerHTML = '';
+  // Qolgan balansni ko'rsatish (to'lov va qaytarish uchun)
+  var infoEl = document.getElementById('od-pay-info');
+  if (infoEl && (txnType === 'payment' || txnType === 'return')) {
+    infoEl.innerHTML = '<div style="background:var(--warning-light);border-radius:var(--radius-md);padding:8px 12px;font-size:.8rem;color:var(--warning)">⏳ Yuklanmoqda...</div>';
+    // async balance olish
+    db.from('our_debts').select('amount, currency, amount_sum').eq('id', debtId).single().then(function(dr) {
+      db.from('debt_transactions').select('type, amount, currency, amount_sum').eq('debt_id', debtId).then(function(tr) {
+        if (!dr.data) return;
+        var bal = odCalcBalance(dr.data, tr.data || []);
+        infoEl.innerHTML =
+          '<div style="background:var(--warning-light);border-radius:var(--radius-md);padding:12px 14px;border:1px solid rgba(245,158,11,.2)">' +
+            '<div style="font-size:.7rem;font-weight:700;color:var(--warning);text-transform:uppercase;margin-bottom:2px">' + t('debt_remaining') + '</div>' +
+            '<div style="font-size:1.3rem;font-weight:800;color:var(--warning);font-family:JetBrains Mono,monospace">' + bal.remainStr + '</div>' +
+          '</div>';
+      });
+    });
+  } else if (infoEl) {
+    infoEl.innerHTML = '';
+  }
+
+  // Note placeholder dinamik
+  var noteEl = document.getElementById('od-pay-note');
+  if (noteEl) {
+    if (txnType === 'return') noteEl.placeholder = t('debt_return_note_ph');
+    else noteEl.placeholder = t('debt_pay_note_ph');
   }
 
   applyLang();
   showSheet('our-debt-pay-sheet');
+}
+
+// (legacy — detail sahifasidan chaqirilishi mumkin)
+function openOurDebtPaySheet(debtId) {
+  odOpenAddTxnSheet('payment', debtId);
 }
 
 function toggleOdPayCurrency() {
@@ -6364,10 +6514,10 @@ function toggleOdPayCurrency() {
 
 function calcOdPayEquiv() {
   var isUsd = document.querySelector('input[name="od-pay-currency"]:checked').value === 'usd';
-  if (!isUsd) return;
+  if (!isUsd) { document.getElementById('od-pay-equiv').style.display = 'none'; return; }
   var amount = parseFloat(document.getElementById('od-pay-amount').value) || 0;
-  var rate = parseFloat(document.getElementById('od-pay-rate').value) || 0;
-  var el = document.getElementById('od-pay-equiv');
+  var rate   = parseFloat(document.getElementById('od-pay-rate').value) || 0;
+  var el     = document.getElementById('od-pay-equiv');
   if (amount > 0 && rate > 0) {
     el.style.display = 'block';
     el.textContent = t('debt_equiv_label') + ': ' + fmt(Math.round(amount * rate)) + " so'm";
@@ -6377,122 +6527,113 @@ function calcOdPayEquiv() {
 }
 
 async function saveOurDebtPayment() {
-  var debtId = document.getElementById('od-pay-debt-id').value;
-  var amountRaw = document.getElementById('od-pay-amount').value;
-  var amount = parseFloat(amountRaw);
+  var debtId   = document.getElementById('od-pay-debt-id').value;
+  var txnType  = document.getElementById('od-pay-txn-type').value || 'payment';
+  var amtRaw   = document.getElementById('od-pay-amount').value;
+  var amount   = parseFloat(amtRaw);
   var currency = document.querySelector('input[name="od-pay-currency"]:checked').value;
-  var rate = parseFloat(document.getElementById('od-pay-rate').value) || 0;
-  var note = document.getElementById('od-pay-note').value.trim();
+  var rate     = parseFloat(document.getElementById('od-pay-rate').value) || 0;
+  var note     = document.getElementById('od-pay-note').value.trim();
 
-  // ── VALIDATSIYA ──────────────────────────────────
-  if (!amountRaw || isNaN(amount) || amount <= 0) {
+  // ── Validatsiya ──────────────────────────────────
+  if (!amtRaw || isNaN(amount) || amount <= 0) {
     showToast(t('payment_amount_err'), 'error'); return;
   }
   if (currency === 'usd' && (!rate || rate <= 0)) {
     showToast(t('debt_rate_label') + ' kiritilmagan!', 'error'); return;
   }
 
-  // ── JORIY QARZNI OLISH ───────────────────────────
   var btn = btnStart('od-pay-save-btn', t('saving'));
   if (!btn) return;
 
   try {
     // 1. Qarz ma'lumotlarini olish
     var dr = await db.from('our_debts')
-      .select('id, amount, currency, amount_sum, status, creditor_name')
+      .select('id, amount, currency, amount_sum, creditor_name, status')
       .eq('id', debtId).single();
     if (dr.error) throw dr.error;
     var debt = dr.data;
 
-    // 2. Barcha oldingi to'lovlarni olish
-    var pr = await db.from('our_debt_payments')
-      .select('amount, currency, amount_sum')
-      .eq('debt_id', debtId);
-    var prevPays = pr.data || [];
+    // 2. To'lov yoki qaytarish bo'lsa — balansni tekshirish
+    if (txnType === 'payment' || txnType === 'return') {
+      var tr0 = await db.from('debt_transactions')
+        .select('type, amount, currency, amount_sum').eq('debt_id', debtId);
+      var bal = odCalcBalance(debt, tr0.data || []);
 
-    // 3. Qolgan qarzni hisoblash (valyutaga qarab)
-    var origAmount = debt.amount || 0;
-    var remainBefore;
-    if (debt.currency === 'usd') {
-      var paidUsd = prevPays.reduce(function(s, p) {
-        return s + (p.currency === 'usd' ? (p.amount || 0) : 0);
-      }, 0);
-      remainBefore = Math.max(0, origAmount - paidUsd);
-    } else {
-      var paidSum = prevPays.reduce(function(s, p) {
-        return s + (p.currency !== 'usd' ? (p.amount_sum || p.amount || 0) : 0);
-      }, 0);
-      remainBefore = Math.max(0, (debt.amount_sum || origAmount) - paidSum);
+      // Miqdor qolgan qarzdan oshmasligi kerak
+      var payInBase;
+      if (debt.currency === 'usd') {
+        payInBase = currency === 'usd' ? amount : (rate > 0 ? amount / rate : 0);
+      } else {
+        payInBase = currency === 'usd' ? Math.round(amount * rate) : amount;
+      }
+      var errLabel = txnType === 'return' ? t('debt_return_btn') : t('debt_pay_btn');
+      if (payInBase > bal.remain + 0.01) {
+        showToast(errLabel + ": qolgan qarzdan (" + bal.remainStr + ") ko'p bo'lishi mumkin emas!", 'error');
+        btnEnd(btn); return;
+      }
     }
 
-    // 4. To'lov summasi qolgan qarzdan oshmasligi kerak
-    var payInDebtCurrency;
-    if (debt.currency === 'usd') {
-      payInDebtCurrency = currency === 'usd' ? amount : (rate > 0 ? amount / rate : 0);
-    } else {
-      payInDebtCurrency = currency === 'usd' ? Math.round(amount * rate) : amount;
-    }
-
-    if (payInDebtCurrency > remainBefore + 0.001) {
-      var remainStr = debt.currency === 'usd'
-        ? '$' + remainBefore.toFixed(2)
-        : fmt(remainBefore) + " so'm";
-      showToast("To'lov qolgan qarzdan (" + remainStr + ") ko'p!", 'error');
-      btnEnd(btn);
-      return;
-    }
-
-    // 5. To'lovni saqlash
-    var payData = {
-      debt_id: debtId,
-      amount: amount,
-      currency: currency,
+    // 3. Tranzaksiyani saqlash
+    var txData = {
+      debt_id:    debtId,
+      type:       txnType,
+      amount:     amount,
+      currency:   currency,
       amount_sum: currency === 'usd' ? Math.round(amount * rate) : amount,
-      rate: currency === 'usd' ? rate : null,
-      note: note || null,
-      admin_id: currentAdmin.id
+      rate:       currency === 'usd' ? rate : null,
+      note:       note || null,
+      admin_id:   currentAdmin.id
     };
-    var pRes = await db.from('our_debt_payments').insert(payData);
-    if (pRes.error) throw pRes.error;
+    var tr2 = await db.from('debt_transactions').insert(txData);
+    if (tr2.error) throw tr2.error;
 
-    // 6. Yangi qolgan qarzni hisoblash
-    var remainAfter = Math.max(0, remainBefore - payInDebtCurrency);
-    var isClosed = remainAfter <= 0.001;
-
-    // 7. Agar to'liq to'langan bo'lsa — status = 'closed'
-    if (isClosed) {
-      var uRes = await db.from('our_debts').update({ status: 'closed' }).eq('id', debtId);
-      if (uRes.error) throw uRes.error;
+    // 4. To'lov yoki qaytarish — yangi balansni tekshirib status yangilash
+    var isClosed = false;
+    if (txnType === 'payment' || txnType === 'return') {
+      var tr3 = await db.from('debt_transactions')
+        .select('type, amount, currency, amount_sum').eq('debt_id', debtId);
+      var newBal = odCalcBalance(debt, tr3.data || []);
+      isClosed = newBal.isClosed;
+      if (isClosed) {
+        await db.from('our_debts').update({ status: 'closed' }).eq('id', debtId);
+      }
     }
 
-    // 8. Telegram xabar
-    var amountStr = currency === 'usd'
-      ? '$' + amount.toFixed(2) + ' ≈ ' + fmt(Math.round(amount * rate)) + ' ' + t('som')
+    // 5. Telegram
+    var amtStr = currency === 'usd'
+      ? '$' + amount.toFixed(2) + ' \u2248 ' + fmt(Math.round(amount * rate)) + ' ' + t('som')
       : fmt(amount) + ' ' + t('som');
-    var remainStrTg = debt.currency === 'usd'
-      ? '$' + remainAfter.toFixed(2)
-      : fmt(Math.round(remainAfter)) + ' ' + t('som');
-
+    var emoji, tgTitle;
+    if (txnType === 'payment') {
+      emoji = '\u2705'; tgTitle = t('debt_tg_pay');
+    } else if (txnType === 'return') {
+      emoji = '\uD83D\uDD01'; tgTitle = t('debt_tg_return');
+    } else {
+      emoji = '\uD83D\uDFE0'; tgTitle = t('debt_tg_new');
+    }
     sendTelegramMessage(
-      '✅ <b>' + t('debt_tg_pay') + '</b>\n\n' +
-      '👤 <b>' + t('debt_tg_creditor') + ':</b> ' + tgEscape(debt.creditor_name || '—') + '\n' +
-      '💰 <b>' + t('tg_amount') + ':</b> ' + amountStr + '\n' +
-      '📊 <b>' + t('debt_tg_remaining') + ':</b> ' + remainStrTg + '\n' +
-      (note ? '📝 <b>' + t('tg_note') + ':</b> ' + tgEscape(note) + '\n' : '') +
-      (isClosed ? '🎉 <b>' + t('debt_tg_closed') + '</b>\n' : '') +
-      '👨‍💼 <b>' + t('tg_admin') + ':</b> ' + tgEscape(currentAdmin.full_name || '—') + '\n' +
-      '📅 <b>' + t('tg_date') + ':</b> ' + fmtDate(new Date().toISOString()) + '\n\n' +
+      emoji + ' <b>' + tgTitle + '</b>\n\n' +
+      '\uD83D\uDC64 <b>' + t('debt_tg_creditor') + ':</b> ' + tgEscape(debt.creditor_name || '—') + '\n' +
+      '\uD83D\uDCB0 <b>' + t('tg_amount') + ':</b> ' + amtStr + '\n' +
+      (note ? '\uD83D\uDCDD <b>' + t('tg_note') + ':</b> ' + tgEscape(note) + '\n' : '') +
+      (isClosed ? '\uD83C\uDF89 <b>' + t('debt_tg_closed') + '</b>\n' : '') +
+      '\uD83D\uDC68\u200D\uD83D\uDCBC <b>' + t('tg_admin') + ':</b> ' + tgEscape(currentAdmin.full_name || '—') + '\n' +
+      '\uD83D\uDCC5 <b>' + t('tg_date') + ':</b> ' + fmtDate(new Date().toISOString()) + '\n\n' +
       '<i>' + t('tg_system') + '</i>'
     );
 
-    // 9. UI yangilash — reload yo'q, reactive
+    // 6. UI yangilash — reload yo'q
     hideSheet('our-debt-pay-sheet');
-    if (isClosed) showToast('🎉 ' + t('debt_closed_toast'));
-    else showToast('✅ ' + t('debt_pay_saved'));
+    if (isClosed) showToast('\uD83C\uDF89 ' + t('debt_closed_toast'));
+    else if (txnType === 'return') showToast('\uD83D\uDD01 ' + t('debt_return_saved'));
+    else if (txnType === 'payment') showToast('\u2705 ' + t('debt_pay_saved'));
+    else showToast(t('debt_saved'));
 
-    // Hozirgi detail sahifasini va ro'yxatni yangilash
+    // Detail + list reactive yangilansin
     loadOurDebtDetail(debtId);
-    loadOurDebts(); // statistika yangilansin
+    loadOurDebts();
+
   } catch(e) {
     showToast(e.message, 'error');
   } finally {
@@ -6500,12 +6641,12 @@ async function saveOurDebtPayment() {
   }
 }
 
-// ─── O'CHIRISH ────────────────────────────────────
+// ── O'CHIRISH ─────────────────────────────────────
 async function deleteOurDebt(debtId) {
   if (!confirm(t('debt_delete_confirm'))) return;
   try {
-    // Avval to'lovlarni o'chiramiz
-    await db.from('our_debt_payments').delete().eq('debt_id', debtId);
+    // Avval tranzaksiyalarni o'chirish
+    await db.from('debt_transactions').delete().eq('debt_id', debtId);
     // Keyin qarzni
     var res = await db.from('our_debts').delete().eq('id', debtId);
     if (res.error) throw res.error;
@@ -6577,6 +6718,8 @@ window.toggleOdCurrency = toggleOdCurrency;
 window.calcOdEquiv = calcOdEquiv;
 window.toggleOdPayCurrency = toggleOdPayCurrency;
 window.calcOdPayEquiv = calcOdPayEquiv;
+window.odOpenAddTxnSheet = odOpenAddTxnSheet;
+window.odOpenDetail = odOpenDetail;
 window.tourNext = tourNext;
 window.tourFinish = tourFinish;
 </script>
