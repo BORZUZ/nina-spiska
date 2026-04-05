@@ -77,217 +77,6 @@
   --shadow-xl:0 20px 60px rgba(0,0,0,.7);
 }
 
-/* ===================== PRO FEATURES CSS ===================== */
-
-/* Smart Insight Block */
-.insight-block {
-  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #06b6d4 100%);
-  border-radius: var(--radius-xl);
-  padding: 20px;
-  margin-bottom: 20px;
-  color: #fff;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 8px 32px rgba(37,99,235,.35);
-}
-.insight-block::before {
-  content: '';
-  position: absolute;
-  top: -40px; right: -40px;
-  width: 140px; height: 140px;
-  background: rgba(255,255,255,.08);
-  border-radius: 50%;
-}
-.insight-block::after {
-  content: '';
-  position: absolute;
-  bottom: -30px; left: -20px;
-  width: 100px; height: 100px;
-  background: rgba(255,255,255,.05);
-  border-radius: 50%;
-}
-.insight-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
-}
-.insight-badge {
-  background: rgba(255,255,255,.2);
-  border: 1px solid rgba(255,255,255,.3);
-  border-radius: 20px;
-  padding: 3px 10px;
-  font-size: .65rem;
-  font-weight: 800;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-.insight-title {
-  font-size: 1rem;
-  font-weight: 700;
-  margin: 0;
-}
-.insight-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-.insight-chip {
-  background: rgba(255,255,255,.15);
-  border-radius: var(--radius-md);
-  padding: 10px 12px;
-  backdrop-filter: blur(10px);
-}
-.insight-chip-label {
-  font-size: .62rem;
-  font-weight: 700;
-  opacity: .8;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  margin-bottom: 4px;
-}
-.insight-chip-value {
-  font-size: .95rem;
-  font-weight: 800;
-  font-family: 'JetBrains Mono', monospace;
-}
-.insight-recommendation {
-  background: rgba(255,255,255,.12);
-  border-radius: var(--radius-md);
-  padding: 10px 14px;
-  font-size: .82rem;
-  line-height: 1.5;
-  border-left: 3px solid rgba(255,255,255,.5);
-  position: relative;
-  z-index: 1;
-}
-
-/* Trend Badge */
-.trend-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-size: .68rem;
-  font-weight: 700;
-  padding: 2px 7px;
-  border-radius: 20px;
-  margin-top: 4px;
-}
-.trend-badge.up   { background: var(--success-light); color: var(--success); }
-.trend-badge.down { background: var(--danger-light);  color: var(--danger);  }
-.trend-badge.flat { background: var(--bg-tertiary);   color: var(--text-muted); }
-
-/* Risk Indicator */
-.risk-indicator {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: .65rem;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 20px;
-  text-transform: uppercase;
-  letter-spacing: .04em;
-}
-.risk-green  { background: var(--success-light); color: var(--success); }
-.risk-yellow { background: var(--warning-light); color: var(--warning); }
-.risk-red    { background: var(--danger-light);  color: var(--danger);  }
-
-/* Risk Section */
-.risk-section {
-  background: var(--bg-card);
-  border: 1.5px solid rgba(239,68,68,.2);
-  border-radius: var(--radius-lg);
-  padding: 16px;
-  margin-bottom: 16px;
-  box-shadow: var(--shadow-sm);
-}
-.risk-section-title {
-  font-size: .72rem;
-  font-weight: 700;
-  color: var(--danger);
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.risk-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border);
-  gap: 8px;
-}
-.risk-item:last-child { border-bottom: none; padding-bottom: 0; }
-.risk-item:first-child { padding-top: 0; }
-
-/* Export Buttons */
-.export-row {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-}
-.btn-export {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border-radius: var(--radius-md);
-  font-size: .78rem;
-  font-weight: 700;
-  border: 1.5px solid var(--border);
-  background: var(--bg-card);
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all .18s;
-  box-shadow: var(--shadow-xs);
-}
-.btn-export:hover { background: var(--bg-hover); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
-.btn-export.pdf   { border-color: rgba(239,68,68,.3); color: var(--danger); }
-.btn-export.excel { border-color: rgba(16,185,129,.3); color: var(--success); }
-.btn-export.pdf:hover   { background: var(--danger-light); }
-.btn-export.excel:hover { background: var(--success-light); }
-
-/* Profit Card */
-.profit-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-bottom: 16px;
-}
-.profit-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 14px 12px;
-  text-align: center;
-  box-shadow: var(--shadow-xs);
-}
-.profit-card.income  { border-color: rgba(37,99,235,.25);  }
-.profit-card.expense { border-color: rgba(239,68,68,.25);  }
-.profit-card.profit  { border-color: rgba(16,185,129,.25); background: var(--success-light); }
-.profit-card-label   { font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); margin-bottom: 6px; }
-.profit-card.income  .profit-card-label { color: var(--accent);  }
-.profit-card.expense .profit-card-label { color: var(--danger);  }
-.profit-card.profit  .profit-card-label { color: var(--success); }
-.profit-card-value   { font-size: .95rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
-.profit-card.income  .profit-card-value { color: var(--accent);  }
-.profit-card.expense .profit-card-value { color: var(--danger);  }
-.profit-card.profit  .profit-card-value { color: var(--success); }
-
-/* Stat card with trend */
-.stat-card-trend-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 2px;
-}
-
 /* ===================== RESET & BASE ===================== */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{
@@ -958,12 +747,28 @@ body{
 }
 
 /* ===================== STATS SUB TABS ===================== */
+.stats-sub-tabs-wrap{
+  display:flex;
+  gap:6px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  margin-bottom:16px;
+  padding-bottom:12px;
+  border-bottom:1px solid var(--border);
+}
+.stats-sub-tabs-wrap::-webkit-scrollbar{display:none;}
 .stats-sub-tab{
-  padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 14px;
+  height:36px;
+  border-radius:20px;border:1.5px solid var(--border);
   background:var(--bg-tertiary);color:var(--text-secondary);
   font-size:.78rem;font-weight:600;cursor:pointer;transition:all .18s;
   font-family:'DM Sans',sans-serif;
+  white-space:nowrap;flex-shrink:0;
 }
+.stats-sub-tab svg{flex-shrink:0;}
 .stats-sub-tab:hover{background:var(--bg-hover);color:var(--text-primary);}
 .stats-sub-tab.active{background:var(--accent);color:#fff;border-color:var(--accent);}
 
@@ -1477,23 +1282,41 @@ body{
         <div class="page-content">
 
           <!-- Sub-bo'limlar tabs -->
-          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)">
-            <button class="stats-sub-tab active" id="stab-overview"   onclick="switchStatsSub('overview')">📊 Umumiy</button>
-            <button class="stats-sub-tab"         id="stab-customers" onclick="switchStatsSub('customers')">👥 Mijozlar</button>
-            <button class="stats-sub-tab"         id="stab-products"  onclick="switchStatsSub('products')">📦 Mahsulotlar</button>
-            <button class="stats-sub-tab"         id="stab-spiska"    onclick="switchStatsSub('spiska')">📋 Spiska</button>
-            <button class="stats-sub-tab"         id="stab-expenses"  onclick="switchStatsSub('expenses')">💸 Xarajatlar</button>
-            <button class="stats-sub-tab"         id="stab-ourdebts"  onclick="switchStatsSub('ourdebts')">🏦 Bizning qarz</button>
+          <div class="stats-sub-tabs-wrap">
+            <button class="stats-sub-tab active" id="stab-overview" onclick="switchStatsSub('overview')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="9" height="9" rx="2"/><rect x="13" y="2" width="9" height="9" rx="2"/><rect x="2" y="13" width="9" height="9" rx="2"/><rect x="13" y="13" width="9" height="9" rx="2"/></svg>
+              Umumiy
+            </button>
+            <button class="stats-sub-tab" id="stab-customers" onclick="switchStatsSub('customers')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Mijozlar
+            </button>
+            <button class="stats-sub-tab" id="stab-products" onclick="switchStatsSub('products')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+              Mahsulotlar
+            </button>
+            <button class="stats-sub-tab" id="stab-spiska" onclick="switchStatsSub('spiska')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+              Spiska
+            </button>
+            <button class="stats-sub-tab" id="stab-expenses" onclick="switchStatsSub('expenses')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              Xarajatlar
+            </button>
+            <button class="stats-sub-tab" id="stab-ourdebts" onclick="switchStatsSub('ourdebts')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+              Bizning qarz
+            </button>
           </div>
 
           <!-- Filter (har sub-bo'lim uchun umumiy) -->
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px" id="stats-filter-row">
             <div class="filter-tabs" style="margin-bottom:0;flex-wrap:wrap">
-              <button class="filter-tab active" id="ft-stats-today"  onclick="statsSetPeriod(this,'today')">Bugun</button>
+              <button class="filter-tab active" id="ft-stats-today"  onclick="statsSetPeriod(this,'today')" data-period="today">Bugun</button>
               <button class="filter-tab"        id="ft-stats-week"   onclick="statsSetPeriod(this,'week')">7 kun</button>
               <button class="filter-tab"        id="ft-stats-month"  onclick="statsSetPeriod(this,'month')">30 kun</button>
               <button class="filter-tab"        id="ft-stats-all"    onclick="statsSetPeriod(this,'all')">Hammasi</button>
-              <button class="filter-tab"        id="ft-stats-custom" onclick="statsSetPeriod(this,'custom')">📅 Custom</button>
+              <button class="filter-tab"        id="ft-stats-custom" onclick="statsSetPeriod(this,'custom')">Custom</button>
             </div>
             <div id="stats-custom-dates" style="display:none;gap:6px;align-items:center;flex-wrap:wrap">
               <input type="date" id="stats-date-from" style="font-size:.78rem;padding:5px 8px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-input);color:var(--text-primary)" onchange="statsLoadCurrent()">
@@ -1504,78 +1327,20 @@ body{
 
           <!-- ====== OVERVIEW ====== -->
           <div id="stats-section-overview">
-
-            <!-- PRO: Export tugmalari -->
-            <div class="export-row" id="ov-export-row">
-              <button class="btn-export pdf" onclick="exportStatsPDF('overview')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                PDF Yuklab olish
-              </button>
-              <button class="btn-export excel" onclick="exportStatsExcel('overview')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-                Excel Yuklab olish
-              </button>
-            </div>
-
-            <!-- PRO: Smart Insight blok -->
-            <div class="insight-block" id="ov-insight-block" style="display:none">
-              <div class="insight-header">
-                <div class="insight-badge">PRO</div>
-                <div class="insight-title" id="ov-insight-period">Smart Tahlil</div>
-              </div>
-              <div class="insight-row">
-                <div class="insight-chip">
-                  <div class="insight-chip-label">O'sish</div>
-                  <div class="insight-chip-value" id="ov-insight-growth">—</div>
-                </div>
-                <div class="insight-chip">
-                  <div class="insight-chip-label">Eng yaxshi</div>
-                  <div class="insight-chip-value" id="ov-insight-best">—</div>
-                </div>
-                <div class="insight-chip">
-                  <div class="insight-chip-label">Xavf darajasi</div>
-                  <div class="insight-chip-value" id="ov-insight-risk">—</div>
-                </div>
-                <div class="insight-chip">
-                  <div class="insight-chip-label">Samaradorlik</div>
-                  <div class="insight-chip-value" id="ov-insight-eff">—</div>
-                </div>
-              </div>
-              <div class="insight-recommendation" id="ov-insight-rec">
-                Tavsiya yuklanmoqda...
-              </div>
-            </div>
-
-            <!-- PRO: Foyda hisobi -->
-            <div class="profit-grid">
-              <div class="profit-card income">
-                <div class="profit-card-label">Daromad</div>
-                <div class="profit-card-value" id="ov-profit-income">—</div>
-              </div>
-              <div class="profit-card expense">
-                <div class="profit-card-label">Xarajat</div>
-                <div class="profit-card-value" id="ov-profit-expense">—</div>
-              </div>
-              <div class="profit-card profit">
-                <div class="profit-card-label">Sof Foyda</div>
-                <div class="profit-card-value" id="ov-profit-net">—</div>
-              </div>
-            </div>
-
             <div class="stats-grid" style="margin-bottom:16px">
-              <div class="stat-card"><div class="stat-card-icon blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="stat-label">Jami daromad</div><div class="stat-value" id="ov-revenue" style="font-size:1.3rem">—</div><div class="stat-trend">so'm</div></div>
-              <div class="stat-card"><div class="stat-card-icon green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="stat-label">Spiskalar</div><div class="stat-value" id="ov-orders">—</div><div class="stat-trend" id="ov-orders-t">yopilgan</div></div>
-              <div class="stat-card"><div class="stat-card-icon amber"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="stat-label">Aktiv mijozlar</div><div class="stat-value" id="ov-customers">—</div><div class="stat-trend">buyurtma bergan</div></div>
-              <div class="stat-card"><div class="stat-card-icon" style="background:var(--danger-light);color:var(--danger)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="stat-label">Jami qarz</div><div class="stat-value" id="ov-debt" style="font-size:1.3rem;color:var(--danger)">—</div><div class="stat-trend">to'lanmagan</div></div>
+              <div class="stat-card"><div class="stat-card-icon blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="stat-label" id="sl-ov-revenue">Jami daromad</div><div class="stat-value" id="ov-revenue" style="font-size:1.3rem">—</div><div class="stat-trend" id="st-ov-som">so'm</div></div>
+              <div class="stat-card"><div class="stat-card-icon green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="stat-label" id="sl-ov-orders">Spiskalar</div><div class="stat-value" id="ov-orders">—</div><div class="stat-trend" id="ov-orders-t">yopilgan</div></div>
+              <div class="stat-card"><div class="stat-card-icon amber"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="stat-label" id="sl-ov-customers">Aktiv mijozlar</div><div class="stat-value" id="ov-customers">—</div><div class="stat-trend" id="st-ov-ordered">buyurtma bergan</div></div>
+              <div class="stat-card"><div class="stat-card-icon" style="background:var(--danger-light);color:var(--danger)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="stat-label" id="sl-ov-debt">Jami qarz</div><div class="stat-value" id="ov-debt" style="font-size:1.3rem;color:var(--danger)">—</div><div class="stat-trend" id="st-ov-unpaid">to'lanmagan</div></div>
               <div class="stat-card" style="grid-column:1/-1;border:1.5px solid rgba(16,185,129,.25);background:var(--success-light)">
                 <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-                  <div><div class="stat-card-icon" style="background:rgba(16,185,129,.15);color:var(--success);margin-bottom:10px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div><div class="stat-label" style="color:var(--success)">SOF FOYDA</div><div class="stat-value" id="ov-net-profit" style="font-size:1.5rem;color:var(--success)">—</div></div>
+                  <div><div class="stat-card-icon" style="background:rgba(16,185,129,.15);color:var(--success);margin-bottom:10px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div><div class="stat-label" style="color:var(--success)" id="sl-ov-profit">SOF FOYDA</div><div class="stat-value" id="ov-net-profit" style="font-size:1.5rem;color:var(--success)">—</div></div>
                   <div style="display:flex;flex-direction:column;gap:5px;min-width:140px">
-                    <div style="display:flex;justify-content:space-between;gap:12px"><span style="font-size:.75rem;color:var(--text-muted)">Daromad:</span><span style="font-size:.78rem;font-weight:700;font-family:'JetBrains Mono',monospace" id="ov-pr-rev">—</span></div>
-                    <div style="display:flex;justify-content:space-between;gap:12px"><span style="font-size:.75rem;color:var(--text-muted)">Tan narxi:</span><span style="font-size:.78rem;font-weight:700;color:var(--danger);font-family:'JetBrains Mono',monospace" id="ov-pr-cost">—</span></div>
-                    <div style="display:flex;justify-content:space-between;gap:12px"><span style="font-size:.75rem;color:var(--text-muted)">Xarajatlar:</span><span style="font-size:.78rem;font-weight:700;color:var(--danger);font-family:'JetBrains Mono',monospace" id="ov-pr-exp">—</span></div>
+                    <div style="display:flex;justify-content:space-between;gap:12px"><span style="font-size:.75rem;color:var(--text-muted)" id="sl-ov-pr-rev">Daromad:</span><span style="font-size:.78rem;font-weight:700;font-family:'JetBrains Mono',monospace" id="ov-pr-rev">—</span></div>
+                    <div style="display:flex;justify-content:space-between;gap:12px"><span style="font-size:.75rem;color:var(--text-muted)" id="sl-ov-pr-cost">Tan narxi:</span><span style="font-size:.78rem;font-weight:700;color:var(--danger);font-family:'JetBrains Mono',monospace" id="ov-pr-cost">—</span></div>
+                    <div style="display:flex;justify-content:space-between;gap:12px"><span style="font-size:.75rem;color:var(--text-muted)" id="sl-ov-pr-exp">Xarajatlar:</span><span style="font-size:.78rem;font-weight:700;color:var(--danger);font-family:'JetBrains Mono',monospace" id="ov-pr-exp">—</span></div>
                     <div style="height:1px;background:rgba(16,185,129,.2)"></div>
-                    <div style="display:flex;justify-content:space-between;gap:12px"><span style="font-size:.75rem;color:var(--success);font-weight:600">Foyda %:</span><span style="font-size:.82rem;font-weight:800;color:var(--success);font-family:'JetBrains Mono',monospace" id="ov-pr-pct">—</span></div>
+                    <div style="display:flex;justify-content:space-between;gap:12px"><span style="font-size:.75rem;color:var(--success);font-weight:600" id="sl-ov-pr-pct">Foyda %:</span><span style="font-size:.82rem;font-weight:800;color:var(--success);font-family:'JetBrains Mono',monospace" id="ov-pr-pct">—</span></div>
                   </div>
                 </div>
               </div>
@@ -1583,10 +1348,10 @@ body{
             <!-- Oylik grafik -->
             <div class="chart-wrap">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-                <div class="chart-title" style="margin-bottom:0">Oylik statistika</div>
+                <div class="chart-title" style="margin-bottom:0" id="sl-ov-monthly">Oylik statistika</div>
                 <div style="display:flex;gap:4px">
-                  <button id="chart-toggle-sum"  onclick="switchChartMode('sum')"  style="font-size:.68rem;font-weight:700;padding:4px 10px;border-radius:20px;border:none;cursor:pointer;background:var(--accent);color:#fff;transition:all .18s">So'm</button>
-                  <button id="chart-toggle-dona" onclick="switchChartMode('dona')" style="font-size:.68rem;font-weight:700;padding:4px 10px;border-radius:20px;border:none;cursor:pointer;background:var(--bg-tertiary);color:var(--text-muted);transition:all .18s">Dona</button>
+                  <button id="chart-toggle-sum"  onclick="switchChartMode('sum')"  style="font-size:.68rem;font-weight:700;padding:4px 10px;border-radius:20px;border:none;cursor:pointer;background:var(--accent);color:#fff;transition:all .18s" data-t="som_btn">So'm</button>
+                  <button id="chart-toggle-dona" onclick="switchChartMode('dona')" style="font-size:.68rem;font-weight:700;padding:4px 10px;border-radius:20px;border:none;cursor:pointer;background:var(--bg-tertiary);color:var(--text-muted);transition:all .18s" data-t="dona_btn">Dona</button>
                 </div>
               </div>
               <div class="bar-chart" id="monthly-bar-chart"><div style="display:flex;align-items:center;justify-content:center;width:100%;color:var(--text-muted);font-size:.82rem">Yuklanmoqda...</div></div>
@@ -1595,222 +1360,109 @@ body{
 
           <!-- ====== MIJOZLAR ====== -->
           <div id="stats-section-customers" style="display:none">
-            <!-- PRO: Export -->
-            <div class="export-row">
-              <button class="btn-export pdf" onclick="exportStatsPDF('customers')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                PDF
-              </button>
-              <button class="btn-export excel" onclick="exportStatsExcel('customers')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-                Excel
-              </button>
-            </div>
-            <!-- PRO: Insight -->
-            <div class="insight-block" id="sc-insight-block" style="display:none">
-              <div class="insight-header">
-                <div class="insight-badge">PRO</div>
-                <div class="insight-title">Mijozlar Tahlili</div>
-              </div>
-              <div class="insight-row">
-                <div class="insight-chip"><div class="insight-chip-label">Yangi mijozlar</div><div class="insight-chip-value" id="sc-insight-new">—</div></div>
-                <div class="insight-chip"><div class="insight-chip-label">Qarzdorlik</div><div class="insight-chip-value" id="sc-insight-debt">—</div></div>
-                <div class="insight-chip"><div class="insight-chip-label">Aktiv %</div><div class="insight-chip-value" id="sc-insight-active-pct">—</div></div>
-                <div class="insight-chip"><div class="insight-chip-label">TOP xaridor</div><div class="insight-chip-value" id="sc-insight-top">—</div></div>
-              </div>
-              <div class="insight-recommendation" id="sc-insight-rec">Tahlil yuklanmoqda...</div>
-            </div>
             <div class="stats-grid" style="margin-bottom:16px">
-              <div class="stat-card"><div class="stat-card-icon blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="stat-label">Jami mijozlar</div><div class="stat-value" id="sc-total">—</div></div>
-              <div class="stat-card"><div class="stat-card-icon green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="stat-label">Aktiv mijozlar</div><div class="stat-value" id="sc-active">—</div></div>
-              <div class="stat-card"><div class="stat-card-icon" style="background:var(--danger-light);color:var(--danger)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="stat-label">Qarzdor mijozlar</div><div class="stat-value" id="sc-debtors">—</div></div>
-              <div class="stat-card"><div class="stat-card-icon amber"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="stat-label">Davr yangi</div><div class="stat-value" id="sc-new">—</div></div>
+              <div class="stat-card"><div class="stat-card-icon blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="stat-label" id="sl-sc-total">Jami mijozlar</div><div class="stat-value" id="sc-total">—</div></div>
+              <div class="stat-card"><div class="stat-card-icon green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="stat-label" id="sl-sc-active">Aktiv mijozlar</div><div class="stat-value" id="sc-active">—</div></div>
+              <div class="stat-card"><div class="stat-card-icon" style="background:var(--danger-light);color:var(--danger)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="stat-label" id="sl-sc-debtors">Qarzdor mijozlar</div><div class="stat-value" id="sc-debtors">—</div></div>
+              <div class="stat-card"><div class="stat-card-icon amber"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="stat-label" id="sl-sc-new">Davr yangi</div><div class="stat-value" id="sc-new">—</div></div>
             </div>
             <div class="chart-wrap">
-              <div class="chart-title">🏆 TOP 5 mijoz (xarid bo'yicha)</div>
-              <div id="sc-top5-list"><div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">Yuklanmoqda...</div></div>
+              <div class="chart-title" id="sl-sc-top5">TOP 5 mijoz (xarid bo'yicha)</div>
+              <div id="sc-top5-list"><div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem" id="sl-sc-loading1">Yuklanmoqda...</div></div>
             </div>
             <div class="chart-wrap" style="margin-top:12px">
-              <div class="chart-title">📈 Yangi mijozlar (oylik)</div>
-              <div class="bar-chart" id="sc-bar-chart"><div style="display:flex;align-items:center;justify-content:center;width:100%;color:var(--text-muted);font-size:.82rem">Yuklanmoqda...</div></div>
+              <div class="chart-title" id="sl-sc-monthly">Yangi mijozlar (oylik)</div>
+              <div class="bar-chart" id="sc-bar-chart"><div style="display:flex;align-items:center;justify-content:center;width:100%;color:var(--text-muted);font-size:.82rem" id="sl-sc-loading2">Yuklanmoqda...</div></div>
             </div>
           </div>
 
           <!-- ====== MAHSULOTLAR ====== -->
           <div id="stats-section-products" style="display:none">
-            <!-- PRO: Export -->
-            <div class="export-row">
-              <button class="btn-export pdf" onclick="exportStatsPDF('products')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                PDF
-              </button>
-              <button class="btn-export excel" onclick="exportStatsExcel('products')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-                Excel
-              </button>
-            </div>
-            <!-- PRO: Insight -->
-            <div class="insight-block" id="sp-insight-block" style="display:none">
-              <div class="insight-header">
-                <div class="insight-badge">PRO</div>
-                <div class="insight-title">Mahsulotlar Tahlili</div>
-              </div>
-              <div class="insight-row">
-                <div class="insight-chip"><div class="insight-chip-label">Eng ko'p sotilgan</div><div class="insight-chip-value" id="sp-insight-top">—</div></div>
-                <div class="insight-chip"><div class="insight-chip-label">Eng kam sotilgan</div><div class="insight-chip-value" id="sp-insight-low">—</div></div>
-                <div class="insight-chip"><div class="insight-chip-label">O'rtacha marja</div><div class="insight-chip-value" id="sp-insight-margin">—</div></div>
-                <div class="insight-chip"><div class="insight-chip-label">Jami foyda</div><div class="insight-chip-value" id="sp-insight-profit">—</div></div>
-              </div>
-              <div class="insight-recommendation" id="sp-insight-rec">Tahlil yuklanmoqda...</div>
-            </div>
             <div class="stats-grid" style="margin-bottom:16px">
-              <div class="stat-card"><div class="stat-card-icon green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></div><div class="stat-label">Jami mahsulotlar</div><div class="stat-value" id="sp-total">—</div></div>
-              <div class="stat-card"><div class="stat-card-icon blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="stat-label">Sotilgan (dona)</div><div class="stat-value" id="sp-sold-qty">—</div></div>
-              <div class="stat-card"><div class="stat-card-icon amber"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="stat-label">Sotilgan (summa)</div><div class="stat-value" id="sp-sold-sum" style="font-size:1.2rem">—</div></div>
-              <div class="stat-card"><div class="stat-card-icon" style="background:var(--danger-light);color:var(--danger)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></div><div class="stat-label">Aktiv turlar</div><div class="stat-value" id="sp-active">—</div></div>
+              <div class="stat-card"><div class="stat-card-icon green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></div><div class="stat-label" id="sl-sp-total">Jami mahsulotlar</div><div class="stat-value" id="sp-total">—</div></div>
+              <div class="stat-card"><div class="stat-card-icon blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="stat-label" id="sl-sp-sold-qty">Sotilgan (dona)</div><div class="stat-value" id="sp-sold-qty">—</div></div>
+              <div class="stat-card"><div class="stat-card-icon amber"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="stat-label" id="sl-sp-sold-sum">Sotilgan (summa)</div><div class="stat-value" id="sp-sold-sum" style="font-size:1.2rem">—</div></div>
+              <div class="stat-card"><div class="stat-card-icon" style="background:var(--danger-light);color:var(--danger)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></div><div class="stat-label" id="sl-sp-active">Aktiv turlar</div><div class="stat-value" id="sp-active">—</div></div>
             </div>
             <div class="chart-wrap">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-                <div class="chart-title" style="margin-bottom:0">⭐ TOP 5 mahsulot</div>
+                <div class="chart-title" style="margin-bottom:0" id="sl-sp-top5">TOP 5 mahsulot</div>
                 <div style="display:flex;gap:4px">
-                  <button id="prod-toggle-dona" onclick="switchProductSort('dona')" style="font-size:.68rem;font-weight:700;padding:4px 10px;border-radius:20px;border:none;cursor:pointer;background:var(--success);color:#fff;transition:all .18s">Dona</button>
-                  <button id="prod-toggle-sum"  onclick="switchProductSort('sum')"  style="font-size:.68rem;font-weight:700;padding:4px 10px;border-radius:20px;border:none;cursor:pointer;background:var(--bg-tertiary);color:var(--text-muted);transition:all .18s">Summa</button>
+                  <button id="prod-toggle-dona" onclick="switchProductSort('dona')" style="font-size:.68rem;font-weight:700;padding:4px 10px;border-radius:20px;border:none;cursor:pointer;background:var(--success);color:#fff;transition:all .18s" data-t="dona_btn">Dona</button>
+                  <button id="prod-toggle-sum"  onclick="switchProductSort('sum')"  style="font-size:.68rem;font-weight:700;padding:4px 10px;border-radius:20px;border:none;cursor:pointer;background:var(--bg-tertiary);color:var(--text-muted);transition:all .18s" data-t="summa_btn">Summa</button>
                 </div>
               </div>
               <div id="top-products-list"><div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">Yuklanmoqda...</div></div>
             </div>
             <div class="chart-wrap" style="margin-top:12px">
-              <div class="chart-title">📉 Eng kam sotilgan</div>
+              <div class="chart-title" id="sl-sp-least">Eng kam sotilgan</div>
               <div id="sp-least-list"><div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">Yuklanmoqda...</div></div>
             </div>
           </div>
 
           <!-- ====== SPISKA ====== -->
           <div id="stats-section-spiska" style="display:none">
-            <!-- PRO: Export -->
-            <div class="export-row">
-              <button class="btn-export pdf" onclick="exportStatsPDF('spiska')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                PDF
-              </button>
-              <button class="btn-export excel" onclick="exportStatsExcel('spiska')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-                Excel
-              </button>
-            </div>
-            <!-- PRO: Risk analiz (30+ kun qarzlar) -->
-            <div class="risk-section" id="ss-risk-section" style="display:none">
-              <div class="risk-section-title">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                30+ kun oshgan qarzlar (XAVFLI)
-              </div>
-              <div id="ss-risk-list"></div>
-            </div>
-            <!-- PRO: Insight -->
-            <div class="insight-block" id="ss-insight-block" style="display:none">
-              <div class="insight-header">
-                <div class="insight-badge">PRO</div>
-                <div class="insight-title">Spiska Tahlili</div>
-              </div>
-              <div class="insight-row">
-                <div class="insight-chip"><div class="insight-chip-label">30+ kunlik</div><div class="insight-chip-value" id="ss-insight-overdue">—</div></div>
-                <div class="insight-chip"><div class="insight-chip-label">O'rtacha qarz</div><div class="insight-chip-value" id="ss-insight-avg">—</div></div>
-                <div class="insight-chip"><div class="insight-chip-label">TOP qarzdor</div><div class="insight-chip-value" id="ss-insight-top">—</div></div>
-                <div class="insight-chip"><div class="insight-chip-label">Xavf darajasi</div><div class="insight-chip-value" id="ss-insight-risk">—</div></div>
-              </div>
-              <div class="insight-recommendation" id="ss-insight-rec">Tahlil yuklanmoqda...</div>
-            </div>
             <div class="stats-grid" style="margin-bottom:16px">
-              <div class="stat-card" style="grid-column:1/-1"><div class="stat-card-icon blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="stat-label">Jami berilgan qarz (so'm)</div><div class="stat-value" id="ss-total-sum" style="font-size:1.3rem">—</div><div class="stat-trend" id="ss-total-cnt">0 ta spiska</div></div>
-              <div class="stat-card"><div class="stat-card-icon" style="background:var(--warning-light);color:var(--warning)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="stat-label">Ochiq qarzlar</div><div class="stat-value" id="ss-open" style="color:var(--warning)">—</div></div>
-              <div class="stat-card"><div class="stat-card-icon green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div class="stat-label">Yopilgan qarzlar</div><div class="stat-value" id="ss-closed" style="color:var(--success)">—</div></div>
+              <div class="stat-card" style="grid-column:1/-1"><div class="stat-card-icon blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="stat-label" id="sl-ss-total">Jami berilgan qarz (so'm)</div><div class="stat-value" id="ss-total-sum" style="font-size:1.3rem">—</div><div class="stat-trend" id="ss-total-cnt">0 ta spiska</div></div>
+              <div class="stat-card"><div class="stat-card-icon" style="background:var(--warning-light);color:var(--warning)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="stat-label" id="sl-ss-open">Ochiq qarzlar</div><div class="stat-value" id="ss-open" style="color:var(--warning)">—</div></div>
+              <div class="stat-card"><div class="stat-card-icon green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div class="stat-label" id="sl-ss-closed">Yopilgan qarzlar</div><div class="stat-value" id="ss-closed" style="color:var(--success)">—</div></div>
             </div>
             <div class="chart-wrap">
-              <div class="chart-title">🏆 TOP 5 qarzdor</div>
+              <div class="chart-title" id="sl-ss-top5">TOP 5 qarzdor</div>
               <div id="ss-top5-list"><div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">Yuklanmoqda...</div></div>
             </div>
             <div class="chart-wrap" style="margin-top:12px">
-              <div class="chart-title">📊 Ochiq vs Yopilgan</div>
+              <div class="chart-title" id="sl-ss-pie">Ochiq vs Yopilgan</div>
               <div id="ss-pie-chart" style="padding:12px 0"></div>
             </div>
             <div class="chart-wrap" style="margin-top:12px">
-              <div class="chart-title">📈 Vaqt bo'yicha (oylik)</div>
+              <div class="chart-title" id="sl-ss-bar">Vaqt bo'yicha (oylik)</div>
               <div class="bar-chart" id="ss-bar-chart"><div style="display:flex;align-items:center;justify-content:center;width:100%;color:var(--text-muted);font-size:.82rem">Yuklanmoqda...</div></div>
             </div>
           </div>
 
           <!-- ====== XARAJATLAR ====== -->
           <div id="stats-section-expenses" style="display:none">
-            <!-- PRO: Export -->
-            <div class="export-row">
-              <button class="btn-export pdf" onclick="exportStatsPDF('expenses')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                PDF
-              </button>
-              <button class="btn-export excel" onclick="exportStatsExcel('expenses')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-                Excel
-              </button>
-            </div>
             <div class="stats-grid" style="margin-bottom:16px">
-              <div class="stat-card" style="grid-column:1/-1;border:1.5px solid rgba(239,68,68,.2);background:var(--danger-light)"><div class="stat-card-icon" style="background:rgba(239,68,68,.15);color:var(--danger)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="stat-label" style="color:var(--danger)">Jami xarajat (so'm)</div><div class="stat-value" id="se-total-sum" style="font-size:1.4rem;color:var(--danger)">—</div><div class="stat-trend" id="se-total-usd" style="color:var(--danger);opacity:.8"></div></div>
-              <div class="stat-card"><div class="stat-card-icon amber"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div><div class="stat-label">Xarajatlar soni</div><div class="stat-value" id="se-count">—</div></div>
-              <div class="stat-card"><div class="stat-card-icon" style="background:var(--danger-light);color:var(--danger)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="stat-label">USD xarajat</div><div class="stat-value" id="se-usd" style="font-size:1.2rem">—</div></div>
+              <div class="stat-card" style="grid-column:1/-1;border:1.5px solid rgba(239,68,68,.2);background:var(--danger-light)"><div class="stat-card-icon" style="background:rgba(239,68,68,.15);color:var(--danger)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="stat-label" style="color:var(--danger)" id="sl-se-total">Jami xarajat (so'm)</div><div class="stat-value" id="se-total-sum" style="font-size:1.4rem;color:var(--danger)">—</div><div class="stat-trend" id="se-total-usd" style="color:var(--danger);opacity:.8"></div></div>
+              <div class="stat-card"><div class="stat-card-icon amber"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div><div class="stat-label" id="sl-se-count">Xarajatlar soni</div><div class="stat-value" id="se-count">—</div></div>
+              <div class="stat-card"><div class="stat-card-icon" style="background:var(--danger-light);color:var(--danger)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="stat-label" id="sl-se-usd">USD xarajat</div><div class="stat-value" id="se-usd" style="font-size:1.2rem">—</div></div>
             </div>
             <div class="chart-wrap">
-              <div class="chart-title">🍕 Kategoriya bo'yicha</div>
+              <div class="chart-title" id="sl-se-cat">Kategoriya bo'yicha</div>
               <div id="se-cat-list"><div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">Yuklanmoqda...</div></div>
             </div>
             <div class="chart-wrap" style="margin-top:12px">
-              <div class="chart-title">📈 Oylik xarajatlar</div>
+              <div class="chart-title" id="sl-se-monthly">Oylik xarajatlar</div>
               <div class="bar-chart" id="se-bar-chart"><div style="display:flex;align-items:center;justify-content:center;width:100%;color:var(--text-muted);font-size:.82rem">Yuklanmoqda...</div></div>
             </div>
             <div class="chart-wrap" style="margin-top:12px">
-              <div class="chart-title">💰 Eng katta xarajatlar</div>
+              <div class="chart-title" id="sl-se-top">Eng katta xarajatlar</div>
               <div id="se-top-list"><div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">Yuklanmoqda...</div></div>
             </div>
           </div>
 
           <!-- ====== BIZNING QARZLAR ====== -->
           <div id="stats-section-ourdebts" style="display:none">
-            <!-- PRO: Export -->
-            <div class="export-row">
-              <button class="btn-export pdf" onclick="exportStatsPDF('ourdebts')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                PDF
-              </button>
-              <button class="btn-export excel" onclick="exportStatsExcel('ourdebts')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-                Excel
-              </button>
-            </div>
-            <!-- PRO: Risk analiz — xavfli qarzdorlar -->
-            <div class="risk-section" id="od-risk-section" style="display:none">
-              <div class="risk-section-title">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
-                TOP 5 Eng Xavfli Qarzdorlar
-              </div>
-              <div id="od-risk-top5"></div>
-            </div>
             <div class="stats-grid" style="margin-bottom:16px">
-              <div class="stat-card" style="grid-column:1/-1"><div class="stat-card-icon" style="background:var(--danger-light);color:var(--danger)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="stat-label">Jami qarzimiz (so'm)</div><div class="stat-value" id="od-total-sum" style="font-size:1.3rem;color:var(--danger)">—</div><div class="stat-trend" id="od-total-usd">$ —</div></div>
-              <div class="stat-card"><div class="stat-card-icon green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div class="stat-label">To'langan (so'm)</div><div class="stat-value" id="od-paid" style="color:var(--success);font-size:1.2rem">—</div></div>
-              <div class="stat-card"><div class="stat-card-icon" style="background:var(--warning-light);color:var(--warning)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="stat-label">Qolgan qarz (so'm)</div><div class="stat-value" id="od-remain" style="color:var(--warning);font-size:1.2rem">—</div></div>
+              <div class="stat-card" style="grid-column:1/-1"><div class="stat-card-icon" style="background:var(--danger-light);color:var(--danger)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="stat-label" id="sl-od-total">Jami qarzimiz (so'm)</div><div class="stat-value" id="od-total-sum" style="font-size:1.3rem;color:var(--danger)">—</div><div class="stat-trend" id="od-total-usd">$ —</div></div>
+              <div class="stat-card"><div class="stat-card-icon green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div class="stat-label" id="sl-od-paid">To'langan (so'm)</div><div class="stat-value" id="od-paid" style="color:var(--success);font-size:1.2rem">—</div></div>
+              <div class="stat-card"><div class="stat-card-icon" style="background:var(--warning-light);color:var(--warning)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="stat-label" id="sl-od-remain">Qolgan qarz (so'm)</div><div class="stat-value" id="od-remain" style="color:var(--warning);font-size:1.2rem">—</div></div>
             </div>
             <!-- Progress bar -->
             <div class="chart-wrap" style="margin-bottom:12px">
-              <div class="chart-title">📊 To'lov holati</div>
-              <div style="margin:8px 0 4px;font-size:.78rem;color:var(--text-muted);display:flex;justify-content:space-between"><span>To'langan</span><span id="od-progress-pct">0%</span></div>
+              <div class="chart-title" id="sl-od-progress">To'lov holati</div>
+              <div style="margin:8px 0 4px;font-size:.78rem;color:var(--text-muted);display:flex;justify-content:space-between"><span id="sl-od-paid-label">To'langan</span><span id="od-progress-pct">0%</span></div>
               <div style="height:12px;background:var(--bg-tertiary);border-radius:6px;overflow:hidden">
                 <div id="od-progress-bar" style="height:100%;width:0%;background:var(--success);border-radius:6px;transition:width .8s cubic-bezier(.22,1,.36,1)"></div>
               </div>
             </div>
             <div class="chart-wrap">
-              <div class="chart-title">🏆 Kimga qarzdormiz (TOP 5)</div>
+              <div class="chart-title" id="sl-od-top5">Kimga qarzdormiz (TOP 5)</div>
               <div id="od-top5-list"><div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">Yuklanmoqda...</div></div>
             </div>
             <div class="chart-wrap" style="margin-top:12px">
-              <div class="chart-title">🍕 To'langan vs Qolgan</div>
+              <div class="chart-title" id="sl-od-pie">To'langan vs Qolgan</div>
               <div id="od-pie-chart" style="padding:12px 0"></div>
             </div>
           </div>
@@ -1818,7 +1470,7 @@ body{
           <!-- Top mijozlar (overview uchun) -->
           <div id="stats-section-topcust" style="margin-top:0">
             <div class="chart-wrap">
-              <div class="chart-title" id="pg-stats-top-title">🏆 TOP MIJOZLAR</div>
+              <div class="chart-title" id="pg-stats-top-title">TOP MIJOZLAR</div>
               <div id="top-customers-list"><div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">Yuklanmoqda...</div></div>
             </div>
           </div>
@@ -2850,8 +2502,8 @@ function showMainApp() {
   navigate('dashboard');
 
   // Tour — faqat birinchi kirganida
-  if (!localStorage.getItem('nina_tour_done')) {
-    setTimeout(function() { tourStart(); }, 600);
+  if (!localStorage.getItem('nina_tour_done') && !localStorage.getItem('onboarding_seen')) {
+    setTimeout(function() { tourStart(); }, 700);
   }
 }
 
@@ -5621,19 +5273,74 @@ var LANGS = {
     stats_unpaid: "to'lanmagan",
     settings_listadmin_btn: "Ko'rish",
     settings_listadmin_sub: "Barcha adminlar ro'yxati",
+    // Sub-tabs
+    stab_overview: 'Umumiy', stab_customers: 'Mijozlar',
+    stab_products: 'Mahsulotlar', stab_spiska: 'Spiska',
+    stab_expenses: 'Xarajatlar', stab_ourdebts: 'Bizning qarz',
+    // Stats filter
+    ft_stats_today: 'Bugun', ft_stats_custom: 'Maxsus',
+    // Chart toggle buttons
+    som_btn: "So'm", dona_btn: 'Dona', summa_btn: 'Summa',
+    // Overview section
+    sl_ov_revenue: 'Jami daromad', sl_ov_orders: 'Spiskalar',
+    sl_ov_customers: 'Aktiv mijozlar', sl_ov_debt: 'Jami qarz',
+    sl_ov_profit: 'SOF FOYDA', sl_ov_monthly: 'Oylik statistika',
+    sl_ov_pr_rev: 'Daromad:', sl_ov_pr_cost: 'Tan narxi:',
+    sl_ov_pr_exp: 'Xarajatlar:', sl_ov_pr_pct: 'Foyda %:',
+    ov_orders_t: 'yopilgan', ov_ordered: 'buyurtma bergan', ov_unpaid: "to'lanmagan",
+    // Customers section
+    sl_sc_total: 'Jami mijozlar', sl_sc_active: 'Aktiv mijozlar',
+    sl_sc_debtors: 'Qarzdor mijozlar', sl_sc_new: 'Davr yangi',
+    sl_sc_top5: 'TOP 5 mijoz (xarid bo\'yicha)', sl_sc_monthly: 'Yangi mijozlar (oylik)',
+    // Products section
+    sl_sp_total: 'Jami mahsulotlar', sl_sp_sold_qty: 'Sotilgan (dona)',
+    sl_sp_sold_sum: 'Sotilgan (summa)', sl_sp_active: 'Aktiv turlar',
+    sl_sp_top5: 'TOP 5 mahsulot', sl_sp_least: 'Eng kam sotilgan',
+    // Spiska section
+    sl_ss_total: "Jami berilgan qarz (so'm)", sl_ss_open: 'Ochiq qarzlar',
+    sl_ss_closed: 'Yopilgan qarzlar', sl_ss_top5: 'TOP 5 qarzdor',
+    sl_ss_pie: 'Ochiq vs Yopilgan', sl_ss_bar: "Vaqt bo'yicha (oylik)",
+    // Expenses section
+    sl_se_total: "Jami xarajat (so'm)", sl_se_count: 'Xarajatlar soni',
+    sl_se_usd: 'USD xarajat', sl_se_cat: "Kategoriya bo'yicha",
+    sl_se_monthly: 'Oylik xarajatlar', sl_se_top: 'Eng katta xarajatlar',
+    // Our debts section
+    sl_od_total: "Jami qarzimiz (so'm)", sl_od_paid: "To'langan (so'm)",
+    sl_od_remain: "Qolgan qarz (so'm)", sl_od_progress: "To'lov holati",
+    sl_od_paid_label: "To'langan", sl_od_top5: 'Kimga qarzdormiz (TOP 5)',
+    sl_od_pie: "To'langan vs Qolgan",
+    // Loading
+    loading_text: 'Yuklanmoqda...',
     // TOUR
     tour_skip: "O'tkazib yuborish",
     tour_next: "Keyingisi →",
-    tour_finish: "Boshlash 🚀",
+    tour_finish: "Boshlash",
     tour_step: "{0} / {1}",
+    tour_steps_mobile: [
+      { title: "Bosh sahifa",       desc: "Bu yerda barcha muhim ko'rsatkichlar — ochiq spiskalar, mijozlar soni va so'nggi faoliyat ko'rinadi." },
+      { title: "Yangi spiska",      desc: "Bu tugma orqali yangi spiska yaratasiz. Mijoz tanlang va mahsulotlarni qo'shing." },
+      { title: "Spiskalar",         desc: "Barcha spiskalar ro'yxati. Filter va qidiruv yordamida tez topasiz." },
+      { title: "Mijozlar",          desc: "Mijozlarni qo'shing, qarzlarini ko'ring va to'lovlarni kuzating." },
+      { title: "Mahsulotlar",       desc: "Mahsulotlar katalogi — narx, kod, sotilgan miqdor va foyda tahlili." },
+      { title: "Tezkor qo'shish",   desc: "Istalgan sahifadan markaziy tugma orqali bir zumda yangi spiska yarating." },
+      { title: "Sozlamalar",        desc: "Til va mavzuni o'zgartiring, adminlarni boshqaring, ma'lumotlarni eksport qiling." },
+    ],
+    tour_steps_desktop: [
+      { title: "Chap menyu",        desc: "Sidebar — barcha bo'limlarga tez o'tish uchun asosiy navigatsiya paneli." },
+      { title: "Bosh sahifa",       desc: "Bu yerda umumiy ko'rsatkichlar va so'nggi spiskalar ko'rinadi." },
+      { title: "Spiskalar",         desc: "Barcha spiskalarni ko'ring, filter qiling va yangilarini yarating." },
+      { title: "Statistika",        desc: "Daromad, foyda, eng aktiv mijozlar va mahsulotlar bo'yicha to'liq tahlil." },
+      { title: "Sozlamalar",        desc: "Til, mavzu, admin boshqaruvi va Excel eksport/import — hammasi shu yerda." },
+    ],
+    // fallback
     tour_steps: [
-      { title: "Yangi spiska 📋", desc: "Bu tugma bilan tezda yangi spiska yaratasiz. Mijoz tanlang va mahsulot qo'shing!" },
-      { title: "Statistika kartalar 📊", desc: "Bu yerda ochiq, yopilgan spiskalar va mijozlar soni ko'rinadi." },
-      { title: "Spiskalar 📄", desc: "Barcha spiskalarni ko'rish, filter qilish va boshqarish." },
-      { title: "Mijozlar 👤", desc: "Mijozlarni qo'shish, qarzlarini boshqarish va to'lovlarni kuzatish." },
-      { title: "Mahsulotlar 📦", desc: "Mahsulotlar katalogi — narx, kod va tahlil." },
-      { title: "Markaziy tugma ➕", desc: "Istalgan sahifadan tezda yangi spiska yaratish tugmasi." },
-      { title: "Sozlamalar ⚙️", desc: "Til, tema o'zgartirish va admin boshqaruvi." },
+      { title: "Bosh sahifa",       desc: "Bu yerda barcha muhim ko'rsatkichlar ko'rinadi." },
+      { title: "Yangi spiska",      desc: "Bu tugma orqali yangi spiska yaratasiz." },
+      { title: "Spiskalar",         desc: "Barcha spiskalar ro'yxati." },
+      { title: "Mijozlar",          desc: "Mijozlarni qo'shing va qarzlarini kuzating." },
+      { title: "Mahsulotlar",       desc: "Mahsulotlar katalogi va tahlili." },
+      { title: "Tezkor qo'shish",   desc: "Markaziy tugma — yangi spiska." },
+      { title: "Sozlamalar",        desc: "Til, mavzu va admin boshqaruvi." },
     ],
   },
 
@@ -5885,18 +5592,72 @@ var LANGS = {
     stats_unpaid: 'не оплачено',
     settings_listadmin_btn: 'Открыть',
     settings_listadmin_sub: 'Список всех администраторов',
+    // Sub-tabs
+    stab_overview: 'Общий', stab_customers: 'Клиенты',
+    stab_products: 'Товары', stab_spiska: 'Списки',
+    stab_expenses: 'Расходы', stab_ourdebts: 'Наши долги',
+    // Stats filter
+    ft_stats_today: 'Сегодня', ft_stats_custom: 'Период',
+    // Chart toggle buttons
+    som_btn: 'Сум', dona_btn: 'Шт.', summa_btn: 'Сумма',
+    // Overview section
+    sl_ov_revenue: 'Общая выручка', sl_ov_orders: 'Списки',
+    sl_ov_customers: 'Активных клиентов', sl_ov_debt: 'Общий долг',
+    sl_ov_profit: 'ЧИСТАЯ ПРИБЫЛЬ', sl_ov_monthly: 'Статистика по месяцам',
+    sl_ov_pr_rev: 'Выручка:', sl_ov_pr_cost: 'Себестоимость:',
+    sl_ov_pr_exp: 'Расходы:', sl_ov_pr_pct: 'Прибыль %:',
+    ov_orders_t: 'закрыто', ov_ordered: 'сделали заказ', ov_unpaid: 'не оплачено',
+    // Customers section
+    sl_sc_total: 'Всего клиентов', sl_sc_active: 'Активных клиентов',
+    sl_sc_debtors: 'Должников', sl_sc_new: 'Новых за период',
+    sl_sc_top5: 'ТОП 5 клиентов (по покупкам)', sl_sc_monthly: 'Новые клиенты (по месяцам)',
+    // Products section
+    sl_sp_total: 'Всего товаров', sl_sp_sold_qty: 'Продано (шт.)',
+    sl_sp_sold_sum: 'Продано (сумма)', sl_sp_active: 'Активных видов',
+    sl_sp_top5: 'ТОП 5 товаров', sl_sp_least: 'Меньше всего продано',
+    // Spiska section
+    sl_ss_total: 'Итого долгов (сум)', sl_ss_open: 'Открытых долгов',
+    sl_ss_closed: 'Закрытых долгов', sl_ss_top5: 'ТОП 5 должников',
+    sl_ss_pie: 'Открытые vs Закрытые', sl_ss_bar: 'По времени (помесячно)',
+    // Expenses section
+    sl_se_total: 'Итого расходов (сум)', sl_se_count: 'Количество расходов',
+    sl_se_usd: 'Расходы в USD', sl_se_cat: 'По категориям',
+    sl_se_monthly: 'Расходы по месяцам', sl_se_top: 'Крупнейшие расходы',
+    // Our debts section
+    sl_od_total: 'Наш долг итого (сум)', sl_od_paid: 'Оплачено (сум)',
+    sl_od_remain: 'Остаток долга (сум)', sl_od_progress: 'Статус оплаты',
+    sl_od_paid_label: 'Оплачено', sl_od_top5: 'Кому должны (ТОП 5)',
+    sl_od_pie: 'Оплачено vs Остаток',
+    // Loading
+    loading_text: 'Загрузка...',
     tour_skip: 'Пропустить',
     tour_next: 'Далее →',
-    tour_finish: 'Начать 🚀',
+    tour_finish: 'Начать',
     tour_step: '{0} / {1}',
+    tour_steps_mobile: [
+      { title: 'Главная страница',     desc: 'Здесь отображаются ключевые показатели — открытые списки, клиенты и последние действия.' },
+      { title: 'Новый список',         desc: 'Кнопка для создания нового списка. Выберите клиента и добавьте товары.' },
+      { title: 'Списки',               desc: 'Все списки с фильтром и поиском — найдите нужный за секунды.' },
+      { title: 'Клиенты',              desc: 'Добавляйте клиентов, следите за долгами и принимайте платежи.' },
+      { title: 'Товары',               desc: 'Каталог товаров — цены, коды, статистика продаж и маржа.' },
+      { title: 'Быстрое создание',     desc: 'Центральная кнопка создаёт новый список с любой страницы приложения.' },
+      { title: 'Настройки',            desc: 'Язык, тема, управление администраторами и экспорт данных.' },
+    ],
+    tour_steps_desktop: [
+      { title: 'Боковое меню',         desc: 'Sidebar — основная навигация для быстрого перехода между разделами.' },
+      { title: 'Главная страница',     desc: 'Здесь отображаются общие показатели и последние списки.' },
+      { title: 'Списки',               desc: 'Просмотр, фильтрация и создание новых списков.' },
+      { title: 'Статистика',           desc: 'Полный анализ: выручка, прибыль, топ-клиенты и топ-товары.' },
+      { title: 'Настройки',            desc: 'Язык, тема, администраторы и Excel экспорт/импорт.' },
+    ],
     tour_steps: [
-      { title: 'Новый список 📋', desc: 'Эта кнопка создаёт новый список. Выберите клиента и добавьте товары!' },
-      { title: 'Карточки статистики 📊', desc: 'Здесь отображается количество открытых, закрытых списков и клиентов.' },
-      { title: 'Списки 📄', desc: 'Просмотр, фильтрация и управление всеми списками.' },
-      { title: 'Клиенты 👤', desc: 'Добавление клиентов, управление долгами и отслеживание платежей.' },
-      { title: 'Товары 📦', desc: 'Каталог товаров — цены, коды и аналитика.' },
-      { title: 'Центральная кнопка ➕', desc: 'Быстрое создание нового списка с любой страницы.' },
-      { title: 'Настройки ⚙️', desc: 'Смена языка, темы и управление администраторами.' },
+      { title: 'Главная страница',     desc: 'Ключевые показатели приложения.' },
+      { title: 'Новый список',         desc: 'Создание нового списка.' },
+      { title: 'Списки',               desc: 'Все списки с фильтром.' },
+      { title: 'Клиенты',              desc: 'Управление клиентами и долгами.' },
+      { title: 'Товары',               desc: 'Каталог товаров и аналитика.' },
+      { title: 'Быстрое создание',     desc: 'Центральная кнопка — новый список.' },
+      { title: 'Настройки',            desc: 'Язык, тема и администраторы.' },
     ],
   }
 };
@@ -6100,9 +5861,11 @@ function applyLang() {
 
   // === STATS PAGE static matnlar ===
   sid('pg-stats-title',      d.stats_title);
-  sid('ft-stats-month',      d.ft_stats_month);
+  sid('ft-stats-today',      d.ft_stats_today);
   sid('ft-stats-week',       d.ft_stats_week);
+  sid('ft-stats-month',      d.ft_stats_month);
   sid('ft-stats-all',        d.spiska_all);
+  sid('ft-stats-custom',     d.ft_stats_custom);
   sid('sl-stats-rev',        d.stats_revenue);
   sid('sl-stats-ord',        d.page_spiska);
   sid('sl-stats-cust',       d.stat_customers);
@@ -6110,7 +5873,76 @@ function applyLang() {
   sid('sl-stats-debt',       d.dash_debt_title);
   sid('st-stats-debt',       d.stats_unpaid);
   sid('pg-stats-chart-title', d.stats_monthly + ' (' + d.som + ')');
-  sid('pg-stats-top-title',  d.stat_customers);
+  sid('pg-stats-top-title',  d.sl_sc_top5);
+  // Sub-tab labels
+  var stabOv = document.getElementById('stab-overview');
+  if (stabOv) { var tn = stabOv.childNodes; for(var i=tn.length-1;i>=0;i--){if(tn[i].nodeType===3&&tn[i].textContent.trim()){tn[i].textContent=' '+d.stab_overview;break;}} }
+  var stabCu = document.getElementById('stab-customers');
+  if (stabCu) { var tn2 = stabCu.childNodes; for(var i2=tn2.length-1;i2>=0;i2--){if(tn2[i2].nodeType===3&&tn2[i2].textContent.trim()){tn2[i2].textContent=' '+d.stab_customers;break;}} }
+  var stabPr = document.getElementById('stab-products');
+  if (stabPr) { var tn3 = stabPr.childNodes; for(var i3=tn3.length-1;i3>=0;i3--){if(tn3[i3].nodeType===3&&tn3[i3].textContent.trim()){tn3[i3].textContent=' '+d.stab_products;break;}} }
+  var stabSp = document.getElementById('stab-spiska');
+  if (stabSp) { var tn4 = stabSp.childNodes; for(var i4=tn4.length-1;i4>=0;i4--){if(tn4[i4].nodeType===3&&tn4[i4].textContent.trim()){tn4[i4].textContent=' '+d.stab_spiska;break;}} }
+  var stabEx = document.getElementById('stab-expenses');
+  if (stabEx) { var tn5 = stabEx.childNodes; for(var i5=tn5.length-1;i5>=0;i5--){if(tn5[i5].nodeType===3&&tn5[i5].textContent.trim()){tn5[i5].textContent=' '+d.stab_expenses;break;}} }
+  var stabOd = document.getElementById('stab-ourdebts');
+  if (stabOd) { var tn6 = stabOd.childNodes; for(var i6=tn6.length-1;i6>=0;i6--){if(tn6[i6].nodeType===3&&tn6[i6].textContent.trim()){tn6[i6].textContent=' '+d.stab_ourdebts;break;}} }
+  // Chart toggle buttons
+  sid('chart-toggle-sum',  d.som_btn);
+  sid('chart-toggle-dona', d.dona_btn);
+  sid('prod-toggle-dona',  d.dona_btn);
+  sid('prod-toggle-sum',   d.summa_btn);
+  // Overview stats
+  sid('sl-ov-revenue',   d.sl_ov_revenue);
+  sid('sl-ov-orders',    d.sl_ov_orders);
+  sid('sl-ov-customers', d.sl_ov_customers);
+  sid('sl-ov-debt',      d.sl_ov_debt);
+  sid('sl-ov-profit',    d.sl_ov_profit);
+  sid('sl-ov-monthly',   d.sl_ov_monthly);
+  sid('sl-ov-pr-rev',    d.sl_ov_pr_rev);
+  sid('sl-ov-pr-cost',   d.sl_ov_pr_cost);
+  sid('sl-ov-pr-exp',    d.sl_ov_pr_exp);
+  sid('sl-ov-pr-pct',    d.sl_ov_pr_pct);
+  sid('st-ov-som',       d.som);
+  sid('ov-orders-t',     d.ov_orders_t);
+  sid('st-ov-ordered',   d.ov_ordered);
+  sid('st-ov-unpaid',    d.ov_unpaid);
+  // Customers stats
+  sid('sl-sc-total',   d.sl_sc_total);
+  sid('sl-sc-active',  d.sl_sc_active);
+  sid('sl-sc-debtors', d.sl_sc_debtors);
+  sid('sl-sc-new',     d.sl_sc_new);
+  sid('sl-sc-top5',    d.sl_sc_top5);
+  sid('sl-sc-monthly', d.sl_sc_monthly);
+  // Products stats
+  sid('sl-sp-total',    d.sl_sp_total);
+  sid('sl-sp-sold-qty', d.sl_sp_sold_qty);
+  sid('sl-sp-sold-sum', d.sl_sp_sold_sum);
+  sid('sl-sp-active',   d.sl_sp_active);
+  sid('sl-sp-top5',     d.sl_sp_top5);
+  sid('sl-sp-least',    d.sl_sp_least);
+  // Spiska stats
+  sid('sl-ss-total',  d.sl_ss_total);
+  sid('sl-ss-open',   d.sl_ss_open);
+  sid('sl-ss-closed', d.sl_ss_closed);
+  sid('sl-ss-top5',   d.sl_ss_top5);
+  sid('sl-ss-pie',    d.sl_ss_pie);
+  sid('sl-ss-bar',    d.sl_ss_bar);
+  // Expenses stats
+  sid('sl-se-total',   d.sl_se_total);
+  sid('sl-se-count',   d.sl_se_count);
+  sid('sl-se-usd',     d.sl_se_usd);
+  sid('sl-se-cat',     d.sl_se_cat);
+  sid('sl-se-monthly', d.sl_se_monthly);
+  sid('sl-se-top',     d.sl_se_top);
+  // Our debts stats
+  sid('sl-od-total',      d.sl_od_total);
+  sid('sl-od-paid',       d.sl_od_paid);
+  sid('sl-od-remain',     d.sl_od_remain);
+  sid('sl-od-progress',   d.sl_od_progress);
+  sid('sl-od-paid-label', d.sl_od_paid_label);
+  sid('sl-od-top5',       d.sl_od_top5);
+  sid('sl-od-pie',        d.sl_od_pie);
 
   // === CUSTOMERS PAGE static matnlar ===
   sid('pg-cust-title',  d.customers_title);
@@ -6279,32 +6111,56 @@ function applySheetBtnText(sheetId, btnSel, text) {
 // ===================== SPOTLIGHT TOUR =====================
 var tourCurrentStep = 0;
 var tourActive = false;
+var tourSteps = [];   // joriy sessiya uchun hisoblangan steplar
 
-// Qaysi elementlarni ko'rsatamiz (id va yo'nalish)
+// Device aniqlanadi
+function tourIsMobile() { return window.innerWidth < 768; }
+
+// Aktiv steplar ro'yxati — device ga qarab
 function tourGetSteps() {
-  return [
-    { id: 'pg-dash-newbtn',   pos: 'bottom' },  // Yangi spiska tugmasi
-    { id: 'page-dashboard',   pos: 'top',    selector: '.stats-grid' },  // Stat kartalar
-    { id: 'nav-spiska',       pos: 'top'    },  // Spiskalar nav
-    { id: 'nav-customers',    pos: 'top'    },  // Mijozlar nav
-    { id: 'nav-products',     pos: 'top'    },  // Mahsulotlar nav
-    { id: 'nav-spiska',       pos: 'top',    useCenter: true },  // Markaziy FAB
-    { id: 'nav-settings',     pos: 'top'    },  // Sozlamalar nav
-  ];
+  if (tourIsMobile()) {
+    return [
+      { id: 'page-dashboard',  selector: '.stats-grid',   pos: 'bottom' },
+      { id: 'pg-dash-newbtn',                             pos: 'bottom' },
+      { id: 'nav-spiska',                                 pos: 'top'    },
+      { id: 'nav-customers',                              pos: 'top'    },
+      { id: 'nav-products',                               pos: 'top'    },
+      { id: 'nav-spiska',      selector: '.nav-spiska-fab', pos: 'top'  },
+      { id: 'nav-settings',                               pos: 'top'    },
+    ];
+  } else {
+    return [
+      { id: 'sidebar',                                    pos: 'right'  },
+      { id: 'page-dashboard',  selector: '.stats-grid',   pos: 'bottom' },
+      { id: 'snav-spiska',                                pos: 'right'  },
+      { id: 'snav-stats',                                 pos: 'right'  },
+      { id: 'snav-settings',                              pos: 'right'  },
+    ];
+  }
+}
+
+// Til + device ga qarab to'g'ri steplar
+function tourGetLangSteps() {
+  var d = LANGS[getLang()] || LANGS['uz_latin'];
+  var isMobile = tourIsMobile();
+  return isMobile
+    ? (d.tour_steps_mobile || d.tour_steps)
+    : (d.tour_steps_desktop || d.tour_steps);
 }
 
 function tourStart() {
   if (tourActive) return;
-  var d = LANGS[getLang()] || LANGS['uz_latin'];
-  if (!d.tour_steps || !d.tour_steps.length) return;
+  var steps = tourGetLangSteps();
+  if (!steps || !steps.length) return;
 
   tourActive = true;
   tourCurrentStep = 0;
+  tourSteps = tourGetSteps();
 
-  // Dots hosil qilish
+  // Dots
   var dotsEl = document.getElementById('tour-dots');
   if (dotsEl) {
-    dotsEl.innerHTML = d.tour_steps.map(function(_, i) {
+    dotsEl.innerHTML = steps.map(function(_, i) {
       return '<div class="tour-dot' + (i === 0 ? ' active' : '') + '" id="tour-dot-' + i + '"></div>';
     }).join('');
   }
@@ -6317,30 +6173,30 @@ function tourStart() {
 
 function tourShowStep(step) {
   var d = LANGS[getLang()] || LANGS['uz_latin'];
-  var steps = d.tour_steps;
-  var targets = tourGetSteps();
-  if (!steps || step >= steps.length) { tourFinish(); return; }
+  var steps = tourGetLangSteps();
+  var targets = tourSteps;
+  if (!steps || step >= steps.length || step >= targets.length) { tourFinish(); return; }
 
   tourCurrentStep = step;
   var info = steps[step];
   var target = targets[step];
 
-  // Dot yangilash
+  // Dots
   document.querySelectorAll('.tour-dot').forEach(function(dot, i) {
     dot.classList.toggle('active', i === step);
   });
 
-  // Step label
+  // Step badge
   var stepLabel = document.getElementById('tour-step-label');
-  if (stepLabel) stepLabel.textContent = d.tour_step.replace('{0}', step+1).replace('{1}', steps.length);
+  if (stepLabel) stepLabel.textContent = d.tour_step.replace('{0}', step + 1).replace('{1}', steps.length);
 
-  // Title va desc
+  // Matn
   var titleEl = document.getElementById('tour-card-title');
-  var descEl = document.getElementById('tour-card-desc');
+  var descEl  = document.getElementById('tour-card-desc');
   if (titleEl) titleEl.textContent = info.title;
-  if (descEl) descEl.textContent = info.desc;
+  if (descEl)  descEl.textContent  = info.desc;
 
-  // Skip va Next tugma matnlari
+  // Tugmalar
   var skipBtn = document.getElementById('tour-skip-btn');
   var nextBtn = document.getElementById('tour-next-btn');
   if (skipBtn) skipBtn.textContent = d.tour_skip;
@@ -6350,86 +6206,76 @@ function tourShowStep(step) {
   var el = null;
   if (target.selector) {
     var parent = document.getElementById(target.id);
-    if (parent) el = parent.querySelector(target.selector);
-  } else if (target.useCenter && step === 5) {
-    // Markaziy FAB tugmasi — nav-spiska ichidagi fab
-    var navEl = document.getElementById('nav-spiska');
-    if (navEl) el = navEl.querySelector('.nav-spiska-fab') || navEl;
+    if (parent) el = parent.querySelector(target.selector) || parent;
   } else {
     el = document.getElementById(target.id);
   }
-
   if (!el) { tourNext(); return; }
 
-  // Elementni ko'rinadigan qilish
   el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-  // RAF bilan pozitsiyani hisoblash (scroll tugaganidan keyin)
-  setTimeout(function() {
-    tourPositionSpotlight(el, target.pos);
-  }, 200);
+  setTimeout(function() { tourPositionSpotlight(el, target.pos); }, 200);
 }
 
 function tourPositionSpotlight(el, pos) {
-  var r = el.getBoundingClientRect();
+  var r   = el.getBoundingClientRect();
   var pad = 8;
-  var rTop    = Math.max(0, r.top - pad);
-  var rLeft   = Math.max(0, r.left - pad);
-  var rRight  = Math.min(window.innerWidth, r.right + pad);
+  var rTop    = Math.max(0, r.top    - pad);
+  var rLeft   = Math.max(0, r.left   - pad);
+  var rRight  = Math.min(window.innerWidth,  r.right  + pad);
   var rBottom = Math.min(window.innerHeight, r.bottom + pad);
   var rW = rRight - rLeft;
   var rH = rBottom - rTop;
 
-  // 4 qorong'i panel
   var setPanel = function(id, top, left, width, height) {
     var p = document.getElementById(id);
     if (!p) return;
-    p.style.top = top + 'px'; p.style.left = left + 'px';
-    p.style.width = width + 'px'; p.style.height = height + 'px';
+    p.style.cssText = 'top:'+top+'px;left:'+left+'px;width:'+width+'px;height:'+height+'px;';
   };
-  setPanel('tour-dark-top',    0, 0, window.innerWidth, rTop);
-  setPanel('tour-dark-bottom', rBottom, 0, window.innerWidth, window.innerHeight - rBottom);
-  setPanel('tour-dark-left',   rTop, 0, rLeft, rH);
-  setPanel('tour-dark-right',  rTop, rRight, window.innerWidth - rRight, rH);
+  setPanel('tour-dark-top',    0,       0,      window.innerWidth,          rTop);
+  setPanel('tour-dark-bottom', rBottom, 0,      window.innerWidth,          window.innerHeight - rBottom);
+  setPanel('tour-dark-left',   rTop,    0,      rLeft,                      rH);
+  setPanel('tour-dark-right',  rTop,    rRight, window.innerWidth - rRight, rH);
 
-  // Highlight ring
   var ring = document.getElementById('tour-highlight-ring');
   if (ring) {
-    ring.style.top    = rTop + 'px';
-    ring.style.left   = rLeft + 'px';
-    ring.style.width  = rW + 'px';
-    ring.style.height = rH + 'px';
+    ring.style.cssText = 'top:'+rTop+'px;left:'+rLeft+'px;width:'+rW+'px;height:'+rH+'px;';
   }
 
   // Karta pozitsiyasi
   var card = document.getElementById('tour-card');
   if (!card) return;
-  var cardW = 300; var cardH = card.offsetHeight || 160;
-  var margin = 14;
+  var cardW = 300;
+  var cardH = card.offsetHeight || 170;
+  var margin = 16;
   var cx, cy;
 
   if (pos === 'bottom') {
-    // Elementdan pastga
     cy = rBottom + margin;
     if (cy + cardH > window.innerHeight - 16) cy = rTop - cardH - margin;
+  } else if (pos === 'right') {
+    cx = rRight + margin;
+    if (cx + cardW > window.innerWidth - 16) cx = rLeft - cardW - margin;
+    cy = rTop + rH / 2 - cardH / 2;
+    cy = Math.max(16, Math.min(cy, window.innerHeight - cardH - 16));
+    card.style.left  = Math.max(16, cx) + 'px';
+    card.style.top   = cy + 'px';
+    card.style.width = cardW + 'px';
+    return;
   } else {
-    // Elementdan tepaga
     cy = rTop - cardH - margin;
     if (cy < 16) cy = rBottom + margin;
   }
 
-  // Gorizontal markazlash
   cx = rLeft + rW / 2 - cardW / 2;
   cx = Math.max(16, Math.min(cx, window.innerWidth - cardW - 16));
-
-  card.style.left = cx + 'px';
-  card.style.top  = cy + 'px';
+  card.style.left  = cx + 'px';
+  card.style.top   = cy + 'px';
   card.style.width = cardW + 'px';
 }
 
 function tourNext() {
-  var d = LANGS[getLang()] || LANGS['uz_latin'];
-  var total = d.tour_steps ? d.tour_steps.length : 7;
+  var steps = tourGetLangSteps();
+  var total = steps ? steps.length : 0;
   if (tourCurrentStep < total - 1) {
     tourShowStep(tourCurrentStep + 1);
   } else {
@@ -6440,6 +6286,7 @@ function tourNext() {
 function tourFinish() {
   tourActive = false;
   localStorage.setItem('nina_tour_done', '1');
+  localStorage.setItem('onboarding_seen', '1');
   var overlay = document.getElementById('tour-overlay');
   if (overlay) {
     overlay.style.opacity = '0';
@@ -6450,15 +6297,14 @@ function tourFinish() {
   }
 }
 
-// Oyna o'lchamlari o'zgarganda spotlight yangilash
+// Resize — spotlight yangilansin
 window.addEventListener('resize', function() {
   if (!tourActive) return;
-  var d = LANGS[getLang()] || LANGS['uz_latin'];
-  var targets = tourGetSteps();
-  var target = targets[tourCurrentStep];
+  var targets = tourSteps;
+  var target  = targets[tourCurrentStep];
   if (!target) return;
   var el = target.selector
-    ? (document.getElementById(target.id)||{querySelector:function(){}}).querySelector(target.selector)
+    ? (document.getElementById(target.id) || { querySelector: function(){} }).querySelector(target.selector)
     : document.getElementById(target.id);
   if (el) tourPositionSpotlight(el, target.pos);
 });
@@ -7405,602 +7251,6 @@ async function deleteOurDebt(debtId) {
     showToast(e.message, 'error');
   }
 }
-
-// ===================== PRO FEATURES =====================
-
-// ── CACHE tizimi ─────────────────────────────────
-var _proCache = {};
-var _proCacheTime = {};
-var PRO_CACHE_TTL = 60000; // 60 sekund
-
-function _cacheGet(key) {
-  if (_proCache[key] && (Date.now() - (_proCacheTime[key]||0)) < PRO_CACHE_TTL) {
-    return _proCache[key];
-  }
-  return null;
-}
-
-function _cacheSet(key, val) {
-  _proCache[key] = val;
-  _proCacheTime[key] = Date.now();
-}
-
-// ── TREND hisoblash ──────────────────────────────
-function calcTrend(current, previous) {
-  if (!previous || previous === 0) return { pct: 0, dir: 'flat' };
-  var pct = Math.round(((current - previous) / previous) * 100);
-  return { pct: pct, dir: pct > 0 ? 'up' : pct < 0 ? 'down' : 'flat' };
-}
-
-function renderTrendBadge(trend) {
-  var arrow = trend.dir === 'up' ? '↑' : trend.dir === 'down' ? '↓' : '→';
-  var sign  = trend.pct > 0 ? '+' : '';
-  return '<span class="trend-badge ' + trend.dir + '">' + arrow + ' ' + sign + trend.pct + '%</span>';
-}
-
-function getRiskLabel(days) {
-  if (days <= 7)  return '<span class="risk-indicator risk-green">● Yaxshi</span>';
-  if (days <= 30) return '<span class="risk-indicator risk-yellow">● O\'rta</span>';
-  return '<span class="risk-indicator risk-red">● Xavfli</span>';
-}
-
-// ── SMART INSIGHT generatsiya ────────────────────
-function generateInsightOverview(data) {
-  var block = document.getElementById('ov-insight-block');
-  if (!block) return;
-
-  var revenue   = data.revenue   || 0;
-  var prevRev   = data.prevRevenue || 0;
-  var orders    = data.orders    || 0;
-  var debt      = data.debt      || 0;
-  var netProfit = data.netProfit || 0;
-  var expSum    = data.expenses  || 0;
-
-  var trend = calcTrend(revenue, prevRev);
-
-  _set('ov-insight-growth', (trend.pct >= 0 ? '+' : '') + trend.pct + '%');
-  _set('ov-insight-best',   orders + ' ta spiska');
-  _set('ov-insight-risk',   debt > 0 ? fmt(debt) + " so'm" : 'Yo\'q');
-  _set('ov-insight-eff',    revenue > 0 ? Math.round((netProfit / revenue) * 100) + '%' : '—');
-
-  // Tavsiya
-  var rec = '';
-  if (debt > revenue * 0.3) {
-    rec = '⚠️ Qarz daromadning 30% dan oshib ketdi. Qarzdorlardan to\'lovni talab qiling.';
-  } else if (trend.dir === 'down') {
-    rec = '📉 Daromad ' + Math.abs(trend.pct) + '% ga kamaydi. Yangi mijozlar jalb qiling va chegirmalar bering.';
-  } else if (netProfit < 0) {
-    rec = '🔴 Sof foyda manfiy! Xarajatlarni kamaytiring yoki narxlarni oshiring.';
-  } else if (expSum > revenue * 0.5) {
-    rec = '💡 Xarajatlar daromadning 50% dan oshib ketdi. Xarajatlarni optimallashtiring.';
-  } else if (trend.dir === 'up') {
-    rec = '✅ Daromad ' + trend.pct + '% ga o\'sdi. Davom eting! Eng faol mijozlarga bonus bering.';
-  } else {
-    rec = '📊 Barcha ko\'rsatkichlar normal. Sotuvni oshirish uchun mahsulot assortimentini kengaytiring.';
-  }
-
-  _set('ov-insight-rec', rec);
-  block.style.display = 'block';
-}
-
-function generateInsightCustomers(data) {
-  var block = document.getElementById('sc-insight-block');
-  if (!block) return;
-  var total   = data.total   || 0;
-  var active  = data.active  || 0;
-  var debtors = data.debtors || 0;
-  var newC    = data.newCount || 0;
-  var topName = data.topName  || '—';
-
-  var activePct = total > 0 ? Math.round((active / total) * 100) : 0;
-  _set('sc-insight-new',        newC + ' ta yangi');
-  _set('sc-insight-debt',       debtors + ' ta qarzdor');
-  _set('sc-insight-active-pct', activePct + '%');
-  _set('sc-insight-top',        topName);
-
-  var rec = '';
-  if (debtors > active * 0.4) {
-    rec = '⚠️ Qarzdor mijozlar 40% dan oshib ketdi. To\'lovlarni talab qiling.';
-  } else if (newC === 0) {
-    rec = '💡 Bu davrda yangi mijoz yo\'q. Marketing faoliyatini oshiring.';
-  } else if (activePct < 50) {
-    rec = '📉 Aktiv mijozlar 50% dan kam. Noaktiv mijozlarni qaytarish kampaniyasi o\'tkazing.';
-  } else {
-    rec = '✅ Mijozlar bazasi yaxshi holda. Eng sadoqatli ' + Math.min(debtors, 3) + ' mijozga bonuslar bering.';
-  }
-  _set('sc-insight-rec', rec);
-  block.style.display = 'block';
-}
-
-function generateInsightProducts(data) {
-  var block = document.getElementById('sp-insight-block');
-  if (!block) return;
-  _set('sp-insight-top',    data.topName    || '—');
-  _set('sp-insight-low',    data.lowName    || '—');
-  _set('sp-insight-margin', data.avgMargin  ? data.avgMargin + '%' : '—');
-  _set('sp-insight-profit', data.totalProfit ? fmt(data.totalProfit) + " so'm" : '—');
-
-  var rec = '';
-  if (data.avgMargin < 10) {
-    rec = '⚠️ O\'rtacha marja 10% dan kam. Narxlarni ko\'rib chiqing yoki xarajatlarni kamaytiring.';
-  } else if (data.lowName && data.lowSold < 3) {
-    rec = '📦 "' + data.lowName + '" mahsuloti deyarli sotilmayapti. Narxini pasaytiring yoki ro\'yxatdan olib tashlang.';
-  } else {
-    rec = '✅ "' + (data.topName || 'TOP mahsulot') + '" eng yaxshi sotilmoqda. Bu mahsulotni ko\'proq taklif qiling.';
-  }
-  _set('sp-insight-rec', rec);
-  block.style.display = 'block';
-}
-
-function generateInsightSpiska(data) {
-  var block = document.getElementById('ss-insight-block');
-  if (!block) return;
-  var overdue = data.overdue || 0;
-  var avg     = data.avg     || 0;
-  var topName = data.topName || '—';
-  var total   = data.total   || 0;
-
-  var riskLabel = overdue > 5 ? 'YUQORI' : overdue > 2 ? "O'RTA" : 'PAST';
-  _set('ss-insight-overdue', overdue + ' ta');
-  _set('ss-insight-avg',     avg > 0 ? fmt(Math.round(avg)) + " so'm" : '—');
-  _set('ss-insight-top',     topName);
-  _set('ss-insight-risk',    riskLabel);
-
-  var rec = '';
-  if (overdue > 5) {
-    rec = '🔴 ' + overdue + ' ta qarz 30 kundan oshib ketdi. Shoshilinch choralar ko\'ring!';
-  } else if (overdue > 0) {
-    rec = '⚠️ ' + overdue + ' ta qarz 30 kundan oshgan. "' + topName + '" dan to\'lovni talab qiling.';
-  } else {
-    rec = '✅ Barcha qarzlar vaqtida to\'lanmoqda. Yaxshi holat!';
-  }
-  _set('ss-insight-rec', rec);
-  block.style.display = 'block';
-}
-
-// ── RISK ANALIZ (SPISKA — 30+ kun) ──────────────
-async function loadRiskAnalysis() {
-  try {
-    var cacheKey = 'risk_spiska_' + currentStatsPeriod;
-    var cached = _cacheGet(cacheKey);
-    var list;
-    if (cached) {
-      list = cached;
-    } else {
-      var now = new Date();
-      var cutoff = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-
-      var q = db.from('customer_debts')
-        .select('*, customers(full_name, phone)')
-        .gt('balance', 0)
-        .order('balance', { ascending: false });
-      var res = await q;
-      list = res.data || [];
-
-      // Spiska orqali created_at topish
-      var spQ = db.from('spiska')
-        .select('customer_id, created_at')
-        .eq('status', 'open')
-        .order('created_at', { ascending: true });
-      var spRes = await spQ;
-      var spiskas = spRes.data || [];
-
-      // Har bir qarzdor uchun eng eski ochiq spiskani topish
-      list = list.map(function(d) {
-        var custSpisk = spiskas.filter(function(s){ return s.customer_id === d.customer_id; });
-        var oldest = custSpisk.length ? new Date(custSpisk[0].created_at) : null;
-        var days = oldest ? Math.floor((now - oldest) / (1000 * 60 * 60 * 24)) : 0;
-        return Object.assign({}, d, { oldest_days: days });
-      });
-
-      _cacheSet(cacheKey, list);
-    }
-
-    // 30+ kundan oshganlar
-    var overdue = list.filter(function(d){ return d.oldest_days >= 30; });
-    var top5 = overdue.slice(0, 5);
-
-    var riskSection = document.getElementById('ss-risk-section');
-    var riskList    = document.getElementById('ss-risk-list');
-    if (riskSection && riskList) {
-      if (top5.length > 0) {
-        riskSection.style.display = 'block';
-        riskList.innerHTML = top5.map(function(d) {
-          var name    = (d.customers && d.customers.full_name) || '—';
-          var phone   = (d.customers && d.customers.phone) || '';
-          var days    = d.oldest_days || 0;
-          var balance = d.balance || 0;
-          var risk    = getRiskLabel(days);
-          return '<div class="risk-item">' +
-            '<div style="flex:1;min-width:0">' +
-              '<div style="font-size:.85rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + name + '</div>' +
-              '<div style="font-size:.72rem;color:var(--text-muted)">' + days + ' kun' + (phone ? ' · ' + phone : '') + '</div>' +
-            '</div>' +
-            '<div style="text-align:right;flex-shrink:0">' +
-              '<div style="font-size:.85rem;font-weight:800;color:var(--danger);font-family:JetBrains Mono,monospace">' + fmt(balance) + " so'm</div>" +
-              risk +
-            '</div>' +
-          '</div>';
-        }).join('');
-      } else {
-        riskSection.style.display = 'none';
-      }
-    }
-
-    // Insight uchun ma'lumot
-    var topDebt = overdue[0];
-    generateInsightSpiska({
-      overdue: overdue.length,
-      avg:     list.length > 0 ? list.reduce(function(s,d){ return s+(d.balance||0); }, 0) / list.length : 0,
-      topName: topDebt && topDebt.customers ? topDebt.customers.full_name : '—',
-      total:   list.length
-    });
-
-  } catch(e) { console.error('Risk analysis error:', e); }
-}
-
-// ── OUR DEBTS RISK ────────────────────────────────
-async function loadOurDebtsRisk() {
-  try {
-    var cacheKey = 'risk_ourdebts';
-    var cached = _cacheGet(cacheKey);
-    var all;
-    if (cached) {
-      all = cached;
-    } else {
-      var dr = await db.from('our_debts')
-        .select('*, debt_transactions(type,amount,currency,amount_sum)')
-        .eq('status', 'open')
-        .order('created_at', { ascending: true });
-      all = dr.data || [];
-      _cacheSet(cacheKey, all);
-    }
-
-    var now = new Date();
-    var ranked = all.map(function(d) {
-      var bal  = odCalcBalance(d, d.debt_transactions || []);
-      var days = Math.floor((now - new Date(d.created_at)) / (1000 * 60 * 60 * 24));
-      return { name: d.creditor_name || '—', remain: bal.remain, remainStr: bal.remainStr, days: days };
-    }).filter(function(d){ return d.remain > 0; })
-      .sort(function(a,b){ return b.remain - a.remain; })
-      .slice(0, 5);
-
-    var sec  = document.getElementById('od-risk-section');
-    var list = document.getElementById('od-risk-top5');
-    if (sec && list && ranked.length > 0) {
-      sec.style.display = 'block';
-      list.innerHTML = ranked.map(function(d) {
-        return '<div class="risk-item">' +
-          '<div style="flex:1;min-width:0">' +
-            '<div style="font-size:.85rem;font-weight:700">' + d.name + '</div>' +
-            '<div style="font-size:.72rem;color:var(--text-muted)">' + d.days + ' kun oldin olingan</div>' +
-          '</div>' +
-          '<div style="text-align:right;flex-shrink:0">' +
-            '<div style="font-size:.85rem;font-weight:800;color:var(--danger);font-family:JetBrains Mono,monospace">' + d.remainStr + '</div>' +
-            getRiskLabel(d.days) +
-          '</div>' +
-        '</div>';
-      }).join('');
-    } else if (sec) {
-      sec.style.display = 'none';
-    }
-  } catch(e) { console.error('OurDebts risk error:', e); }
-}
-
-// ── EXPORT FUNKSIYALAR ────────────────────────────
-
-function exportStatsPDF(section) {
-  var title = {
-    overview:  'Umumiy Statistika',
-    customers: 'Mijozlar Statistikasi',
-    products:  'Mahsulotlar Statistikasi',
-    spiska:    'Spiska (Qarz) Statistikasi',
-    expenses:  'Xarajatlar Statistikasi',
-    ourdebts:  'Bizning Qarzlar'
-  }[section] || 'Statistika';
-
-  var now = new Date();
-  var dateStr = now.toLocaleDateString('uz-UZ');
-  var rows = _collectExportData(section);
-
-  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8">' +
-    '<title>' + title + '</title>' +
-    '<style>' +
-    'body{font-family:Arial,sans-serif;padding:32px;color:#1e293b;max-width:800px;margin:0 auto}' +
-    'h1{font-size:1.5rem;font-weight:800;margin-bottom:4px;color:#0f172a}' +
-    '.subtitle{font-size:.85rem;color:#64748b;margin-bottom:24px}' +
-    'table{width:100%;border-collapse:collapse;margin-bottom:24px}' +
-    'th{background:#2563eb;color:#fff;text-align:left;padding:10px 14px;font-size:.8rem;font-weight:700;letter-spacing:.03em}' +
-    'td{padding:9px 14px;border-bottom:1px solid #e2e8f0;font-size:.85rem}' +
-    'tr:nth-child(even){background:#f8fafc}' +
-    '.badge-ok{color:#10b981;font-weight:700}.badge-warn{color:#f59e0b;font-weight:700}.badge-bad{color:#ef4444;font-weight:700}' +
-    '.footer{font-size:.72rem;color:#94a3b8;margin-top:32px;text-align:center;border-top:1px solid #e2e8f0;padding-top:12px}' +
-    '@media print{body{padding:16px}}' +
-    '</style></head><body>' +
-    '<h1>' + title + '</h1>' +
-    '<div class="subtitle">Sana: ' + dateStr + ' &nbsp;|&nbsp; Davr: ' + _getPeriodLabel() + '</div>';
-
-  if (rows.length > 0) {
-    html += '<table><thead><tr>' + Object.keys(rows[0]).map(function(k){ return '<th>' + k + '</th>'; }).join('') + '</tr></thead><tbody>';
-    rows.forEach(function(r) {
-      html += '<tr>' + Object.values(r).map(function(v){ return '<td>' + v + '</td>'; }).join('') + '</tr>';
-    });
-    html += '</tbody></table>';
-  } else {
-    html += '<p style="color:#94a3b8">Ma\'lumot topilmadi.</p>';
-  }
-
-  html += '<div class="footer">Nina Spiska &mdash; Pro Export &mdash; ' + dateStr + '</div></body></html>';
-
-  var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-  var url  = URL.createObjectURL(blob);
-  var a    = document.createElement('a');
-  a.href   = url;
-  a.download = 'nina_' + section + '_' + now.toISOString().slice(0,10) + '.html';
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(function(){ URL.revokeObjectURL(url); document.body.removeChild(a); }, 1000);
-  showToast('PDF tayyorlandi (HTML formatda) ✅');
-}
-
-function exportStatsExcel(section) {
-  var rows = _collectExportData(section);
-  if (!rows.length) { showToast('Ma\'lumot topilmadi', 'error'); return; }
-
-  var keys = Object.keys(rows[0]);
-  var tsv  = keys.join('\t') + '\n' +
-    rows.map(function(r){ return Object.values(r).map(function(v){ return String(v).replace(/\t/g,' '); }).join('\t'); }).join('\n');
-
-  // BOM uchun UTF-8
-  var bom  = '\uFEFF';
-  var blob = new Blob([bom + tsv], { type: 'text/tab-separated-values;charset=utf-8' });
-  var url  = URL.createObjectURL(blob);
-  var a    = document.createElement('a');
-  var now  = new Date();
-  a.href     = url;
-  a.download = 'nina_' + section + '_' + now.toISOString().slice(0,10) + '.xls';
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(function(){ URL.revokeObjectURL(url); document.body.removeChild(a); }, 1000);
-  showToast('Excel yuklab olindi ✅');
-}
-
-function _getPeriodLabel() {
-  var labels = { today: 'Bugun', week: '7 kun', month: '30 kun', all: 'Hammasi', custom: 'Custom' };
-  return labels[currentStatsPeriod] || currentStatsPeriod;
-}
-
-function _collectExportData(section) {
-  var rows = [];
-  try {
-    if (section === 'overview') {
-      rows = [
-        { 'Ko\'rsatkich': 'Jami daromad',   'Qiymat': document.getElementById('ov-revenue')   ? document.getElementById('ov-revenue').textContent   + " so'm" : '—' },
-        { 'Ko\'rsatkich': 'Spiskalar soni', 'Qiymat': document.getElementById('ov-orders')    ? document.getElementById('ov-orders').textContent           : '—' },
-        { 'Ko\'rsatkich': 'Aktiv mijozlar', 'Qiymat': document.getElementById('ov-customers') ? document.getElementById('ov-customers').textContent        : '—' },
-        { 'Ko\'rsatkich': 'Jami qarz',      'Qiymat': document.getElementById('ov-debt')      ? document.getElementById('ov-debt').textContent      + " so'm" : '—' },
-        { 'Ko\'rsatkich': 'Daromad',         'Qiymat': document.getElementById('ov-profit-income') ? document.getElementById('ov-profit-income').textContent + " so'm" : '—' },
-        { 'Ko\'rsatkich': 'Xarajat',         'Qiymat': document.getElementById('ov-profit-expense') ? document.getElementById('ov-profit-expense').textContent + " so'm" : '—' },
-        { 'Ko\'rsatkich': 'Sof foyda',       'Qiymat': document.getElementById('ov-profit-net') ? document.getElementById('ov-profit-net').textContent + " so'm" : '—' },
-      ];
-    } else if (section === 'customers') {
-      rows = [
-        { "Ko'rsatkich": 'Jami mijozlar',    'Qiymat': document.getElementById('sc-total')   ? document.getElementById('sc-total').textContent   : '—' },
-        { "Ko'rsatkich": 'Aktiv mijozlar',   'Qiymat': document.getElementById('sc-active')  ? document.getElementById('sc-active').textContent  : '—' },
-        { "Ko'rsatkich": 'Qarzdor mijozlar', 'Qiymat': document.getElementById('sc-debtors') ? document.getElementById('sc-debtors').textContent : '—' },
-        { "Ko'rsatkich": 'Yangi mijozlar',   'Qiymat': document.getElementById('sc-new')     ? document.getElementById('sc-new').textContent     : '—' },
-      ];
-    } else if (section === 'products') {
-      rows = [
-        { "Ko'rsatkich": 'Jami mahsulotlar',  'Qiymat': document.getElementById('sp-total')    ? document.getElementById('sp-total').textContent    : '—' },
-        { "Ko'rsatkich": 'Sotilgan (dona)',   'Qiymat': document.getElementById('sp-sold-qty') ? document.getElementById('sp-sold-qty').textContent : '—' },
-        { "Ko'rsatkich": 'Sotilgan (summa)',  'Qiymat': document.getElementById('sp-sold-sum') ? document.getElementById('sp-sold-sum').textContent + " so'm" : '—' },
-        { "Ko'rsatkich": 'Aktiv turlar',      'Qiymat': document.getElementById('sp-active')   ? document.getElementById('sp-active').textContent   : '—' },
-      ];
-    } else if (section === 'spiska') {
-      rows = [
-        { "Ko'rsatkich": 'Jami qarz (so\'m)', 'Qiymat': document.getElementById('ss-total-sum') ? document.getElementById('ss-total-sum').textContent + " so'm" : '—' },
-        { "Ko'rsatkich": 'Ochiq qarzlar',     'Qiymat': document.getElementById('ss-open')      ? document.getElementById('ss-open').textContent      : '—' },
-        { "Ko'rsatkich": 'Yopilgan qarzlar',  'Qiymat': document.getElementById('ss-closed')    ? document.getElementById('ss-closed').textContent    : '—' },
-      ];
-    } else if (section === 'expenses') {
-      rows = [
-        { "Ko'rsatkich": 'Jami xarajat (so\'m)', 'Qiymat': document.getElementById('se-total-sum') ? document.getElementById('se-total-sum').textContent + " so'm" : '—' },
-        { "Ko'rsatkich": 'Xarajatlar soni',      'Qiymat': document.getElementById('se-count')     ? document.getElementById('se-count').textContent     : '—' },
-        { "Ko'rsatkich": 'USD xarajat',           'Qiymat': document.getElementById('se-usd')       ? document.getElementById('se-usd').textContent       : '—' },
-      ];
-    } else if (section === 'ourdebts') {
-      rows = [
-        { "Ko'rsatkich": 'Jami qarzimiz (so\'m)', 'Qiymat': document.getElementById('od-total-sum') ? document.getElementById('od-total-sum').textContent + " so'm" : '—' },
-        { "Ko'rsatkich": "To'langan (so'm)",       'Qiymat': document.getElementById('od-paid')      ? document.getElementById('od-paid').textContent      + " so'm" : '—' },
-        { "Ko'rsatkich": 'Qolgan qarz (so\'m)',    'Qiymat': document.getElementById('od-remain')    ? document.getElementById('od-remain').textContent    + " so'm" : '—' },
-      ];
-    }
-  } catch(e) { console.error(e); }
-  return rows;
-}
-
-// ── FOYDA HISOBI UPDATE ───────────────────────────
-function updateProfitCards(revenue, expenseSum, netProfit) {
-  _set('ov-profit-income',  fmt(revenue)    + " so'm");
-  _set('ov-profit-expense', fmt(expenseSum) + " so'm");
-  _set('ov-profit-net',     fmt(netProfit)  + " so'm");
-}
-
-// ── PREV DAVR DAROMAD (trend uchun) ──────────────
-async function fetchPrevRevenue(range) {
-  try {
-    var cacheKey = 'prev_rev_' + JSON.stringify(range);
-    var cached = _cacheGet(cacheKey);
-    if (cached !== null) return cached;
-
-    var prevFrom = null, prevTo = null;
-    var now = new Date();
-    if (currentStatsPeriod === 'today') {
-      var yd = new Date(now); yd.setDate(yd.getDate() - 1);
-      prevFrom = new Date(yd.getFullYear(), yd.getMonth(), yd.getDate()).toISOString();
-      prevTo   = new Date(yd.getFullYear(), yd.getMonth(), yd.getDate(), 23, 59, 59).toISOString();
-    } else if (currentStatsPeriod === 'week') {
-      var d1 = new Date(now); d1.setDate(d1.getDate() - 14);
-      var d2 = new Date(now); d2.setDate(d2.getDate() - 7);
-      prevFrom = d1.toISOString(); prevTo = d2.toISOString();
-    } else if (currentStatsPeriod === 'month') {
-      var d3 = new Date(now); d3.setDate(d3.getDate() - 60);
-      var d4 = new Date(now); d4.setDate(d4.getDate() - 30);
-      prevFrom = d3.toISOString(); prevTo = d4.toISOString();
-    } else {
-      return 0;
-    }
-
-    var q = db.from('spiska').select('id').eq('status', 'closed');
-    if (prevFrom) q = q.gte('closed_at', prevFrom);
-    if (prevTo)   q = q.lte('closed_at', prevTo);
-    var sr = await q;
-    var ids = (sr.data || []).map(function(s){ return s.id; });
-
-    if (!ids.length) { _cacheSet(cacheKey, 0); return 0; }
-    var ir = await db.from('spiska_items').select('total_price').in('spiska_id', ids);
-    var val = (ir.data || []).reduce(function(s,i){ return s+(i.total_price||0); }, 0);
-    _cacheSet(cacheKey, val);
-    return val;
-  } catch(e) { return 0; }
-}
-
-// ── OVERVIEW STATS EXTENDED ───────────────────────
-// Mavjud loadStats funksiyasini kengaytirish (monkey-patch)
-var _origLoadStats = loadStats;
-loadStats = async function() {
-  await _origLoadStats();
-  try {
-    var range = statsGetDateRange();
-    // Foyda kartalarini to'ldirish
-    var revenue  = parseFloat((document.getElementById('ov-pr-rev')  ? document.getElementById('ov-pr-rev').textContent  : '0').replace(/\s/g,'').replace(/[^\d.]/g,'')) || 0;
-    var expSum   = parseFloat((document.getElementById('ov-pr-exp')  ? document.getElementById('ov-pr-exp').textContent  : '0').replace(/\s/g,'').replace(/[^\d.]/g,'')) || 0;
-    var netPr    = parseFloat((document.getElementById('ov-net-profit') ? document.getElementById('ov-net-profit').textContent : '0').replace(/\s/g,'').replace(/[^\d.]/g,'')) || 0;
-    var debtVal  = parseFloat((document.getElementById('ov-debt') ? document.getElementById('ov-debt').textContent : '0').replace(/\s/g,'').replace(/[^\d.]/g,'')) || 0;
-    var ordersV  = parseInt(document.getElementById('ov-orders') ? document.getElementById('ov-orders').textContent : '0') || 0;
-
-    updateProfitCards(revenue, expSum, netPr);
-
-    // Prev davr uchun trend
-    var prevRev = await fetchPrevRevenue(range);
-    generateInsightOverview({
-      revenue:     revenue,
-      prevRevenue: prevRev,
-      orders:      ordersV,
-      debt:        debtVal,
-      netProfit:   netPr,
-      expenses:    expSum
-    });
-  } catch(e) { console.error('PRO overview extend error:', e); }
-};
-
-// ── CUSTOMERS EXTENDED ────────────────────────────
-var _origLoadStatsCustomers = loadStatsCustomers;
-loadStatsCustomers = async function() {
-  await _origLoadStatsCustomers();
-  try {
-    var total   = parseInt(document.getElementById('sc-total')   ? document.getElementById('sc-total').textContent   : '0') || 0;
-    var active  = parseInt(document.getElementById('sc-active')  ? document.getElementById('sc-active').textContent  : '0') || 0;
-    var debtors = parseInt(document.getElementById('sc-debtors') ? document.getElementById('sc-debtors').textContent : '0') || 0;
-    var newC    = parseInt(document.getElementById('sc-new')     ? document.getElementById('sc-new').textContent     : '0') || 0;
-
-    // Top mijoz nomini olish
-    var topEl = document.querySelector('#sc-top5-list [style*="flex:1"]');
-    var topName = topEl ? topEl.textContent.trim().slice(0,20) : '—';
-
-    generateInsightCustomers({ total: total, active: active, debtors: debtors, newCount: newC, topName: topName });
-  } catch(e) { console.error('PRO customers extend error:', e); }
-};
-
-// ── PRODUCTS EXTENDED ─────────────────────────────
-var _origLoadStatsProducts = loadStatsProducts;
-loadStatsProducts = async function() {
-  await _origLoadStatsProducts();
-  try {
-    var cacheKey = 'products_pro_' + currentStatsPeriod;
-    var cached = _cacheGet(cacheKey);
-    var insightData;
-    if (cached) {
-      insightData = cached;
-    } else {
-      var range = statsGetDateRange();
-      var pRes = await db.from('products').select('id,name,cost_price,sell_price').eq('is_active', true);
-      var products = pRes.data || [];
-
-      var q = db.from('spiska_items').select('product_id,product_name,quantity,total_price,unit_price');
-      if (range.from) {
-        var sIds = await db.from('spiska').select('id').eq('status','closed').gte('closed_at',range.from);
-        var ids  = (sIds.data||[]).map(function(s){return s.id;});
-        if (ids.length > 0) q = q.in('spiska_id', ids);
-        else q = q.in('spiska_id', ['00000000-0000-0000-0000-000000000000']);
-      }
-      var ir = await q;
-      var items = ir.data || [];
-
-      // Aggregatsiya
-      var pm = {};
-      items.forEach(function(i){
-        var k = i.product_id || i.product_name;
-        if (!pm[k]) pm[k] = { name: i.product_name, qty: 0, revenue: 0 };
-        pm[k].qty     += i.quantity     || 0;
-        pm[k].revenue += i.total_price  || 0;
-      });
-
-      var pList = Object.values(pm).sort(function(a,b){ return b.qty - a.qty; });
-      var topProd = pList[0];
-      var lowProd = pList[pList.length - 1];
-
-      // Margin hisoblash
-      var totalMargin = 0, marginCount = 0;
-      products.forEach(function(p){
-        if (p.cost_price > 0 && p.sell_price > 0) {
-          totalMargin += Math.round(((p.sell_price - p.cost_price) / p.cost_price) * 100);
-          marginCount++;
-        }
-      });
-      var avgMargin = marginCount > 0 ? Math.round(totalMargin / marginCount) : 0;
-
-      // Total profit
-      var totalProfit = 0;
-      products.forEach(function(p){
-        var pData = pm[p.id];
-        if (pData && p.cost_price > 0) {
-          totalProfit += (pData.revenue - p.cost_price * pData.qty);
-        }
-      });
-
-      insightData = {
-        topName:     topProd ? topProd.name : '—',
-        lowName:     lowProd && lowProd !== topProd ? lowProd.name : '—',
-        lowSold:     lowProd ? lowProd.qty : 0,
-        avgMargin:   avgMargin,
-        totalProfit: Math.round(totalProfit)
-      };
-      _cacheSet(cacheKey, insightData);
-    }
-
-    generateInsightProducts(insightData);
-  } catch(e) { console.error('PRO products extend error:', e); }
-};
-
-// ── SPISKA EXTENDED ───────────────────────────────
-var _origLoadStatsSpiska = loadStatsSpiska;
-loadStatsSpiska = async function() {
-  await _origLoadStatsSpiska();
-  await loadRiskAnalysis();
-};
-
-// ── OUR DEBTS EXTENDED ────────────────────────────
-var _origLoadStatsOurDebts = loadStatsOurDebts;
-loadStatsOurDebts = async function() {
-  await _origLoadStatsOurDebts();
-  await loadOurDebtsRisk();
-};
-
-// ── WINDOW BINDINGS (PRO) ─────────────────────────
-window.exportStatsPDF   = exportStatsPDF;
-window.exportStatsExcel = exportStatsExcel;
 
 // ===================== WINDOW BINDINGS =====================
 // onclick="..." attributlar uchun barcha funksiyalarni window ga bog'lash
