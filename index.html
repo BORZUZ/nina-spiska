@@ -886,6 +886,30 @@ body{
 .btn{transition:opacity .15s,transform .1s;}
 .nav-item{transition:color .15s;}
 
+/* ===================== CUSTOM CONFIRM MODAL ===================== */
+#custom-confirm-overlay{
+  position:fixed;inset:0;z-index:8000;
+  background:rgba(0,0,0,.55);
+  display:flex;align-items:flex-end;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .22s;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+#custom-confirm-overlay.active{opacity:1;pointer-events:all;}
+#custom-confirm-box{
+  background:var(--bg-secondary);
+  border-radius:var(--radius-xl) var(--radius-xl) 0 0;
+  padding:24px 20px 28px;
+  width:100%;max-width:480px;
+  transform:translateY(100%);
+  transition:transform .28s cubic-bezier(.32,0,.67,0);
+  box-shadow:0 -4px 32px rgba(0,0,0,.12);
+}
+#custom-confirm-overlay.active #custom-confirm-box{transform:translateY(0);}
+#custom-confirm-box .cc-title{font-size:1.05rem;font-weight:700;margin-bottom:6px}
+#custom-confirm-box .cc-msg{font-size:.88rem;color:var(--text-secondary);margin-bottom:20px;line-height:1.5}
+#custom-confirm-box .cc-btns{display:flex;gap:8px}
+
 /* ===================== SMOOTH SCROLLBAR ===================== */
 /* ===================== SPOTLIGHT TOUR ===================== */
 #tour-overlay {
@@ -1561,10 +1585,55 @@ body{
       <!-- SETTINGS -->
       <div id="page-settings" class="page">
         <div class="page-content">
-          <h2 class="section-title" id="s-title" style="margin-bottom:24px">Sozlamalar</h2>
 
+          <!-- 1. ADMIN PROFIL — eng yuqorida -->
           <div class="settings-section">
-            <div class="settings-section-title" id="s-sec-shortcuts">TEZKOR HAVOLALAR</div>
+            <div class="card">
+              <div style="display:flex;align-items:center;gap:14px;padding:4px 0">
+                <div style="width:52px;height:52px;border-radius:16px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.3rem;font-weight:700;flex-shrink:0" id="settings-avatar">A</div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-weight:700;font-size:1.05rem" id="settings-admin-name">—</div>
+                  <div style="font-size:.8rem;color:var(--text-muted);margin-top:2px" id="settings-admin-username">—</div>
+                </div>
+                <span style="font-size:.68rem;font-weight:700;background:var(--accent-light);color:var(--accent);padding:3px 10px;border-radius:20px">Admin</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. MOLIYA — Xarajatlar + Qarzlar bir joyda -->
+          <div class="settings-section">
+            <div class="settings-section-title" id="s-sec-finance">MOLIYA</div>
+            <div class="card">
+              <div class="settings-item" onclick="navigate('expenses')" style="cursor:pointer">
+                <div class="settings-item-left">
+                  <div class="settings-item-icon" style="background:#FEF2F2;color:#EF4444">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                  </div>
+                  <div>
+                    <div class="settings-item-label" id="s-exp-nav-label">Xarajatlar</div>
+                    <div class="settings-item-sublabel" id="s-exp-nav-sub">Material, maosh, transport...</div>
+                  </div>
+                </div>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted)"><path d="m9 18 6-6-6-6"/></svg>
+              </div>
+              <div class="settings-item" onclick="navigate('our-debts')" style="cursor:pointer;border:none">
+                <div class="settings-item-left">
+                  <div class="settings-item-icon" style="background:#FFF7ED;color:#F97316">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+                  </div>
+                  <div>
+                    <div class="settings-item-label" id="s-debt-nav-label">Bizning qarzlarimiz</div>
+                    <div class="settings-item-sublabel" id="s-debt-nav-sub">Yetkazib beruvchi, do'st, bank...</div>
+                  </div>
+                </div>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted)"><path d="m9 18 6-6-6-6"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. HISOBOTLAR — Statistika + Tarix -->
+          <div class="settings-section">
+            <div class="settings-section-title" id="s-sec-shortcuts">HISOBOTLAR</div>
             <div class="card">
               <div class="settings-item" onclick="navigate('stats')" style="cursor:pointer">
                 <div class="settings-item-left">
@@ -1593,6 +1662,7 @@ body{
             </div>
           </div>
 
+          <!-- 4. ADMINLAR — bir kartada tugma va ro'yxat -->
           <div class="settings-section">
             <div class="settings-section-title" id="s-sec-admins">ADMINLAR BOSHQARUVI</div>
             <div class="card">
@@ -1602,8 +1672,8 @@ body{
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
                   </div>
                   <div>
-                    <div class="settings-item-label" id="s-addadmin-label">Yangi admin</div>
-                    <div class="settings-item-sublabel" id="s-addadmin-sub">Admin qo'shish</div>
+                    <div class="settings-item-label" id="s-addadmin-label">Yangi admin qo'shish</div>
+                    <div class="settings-item-sublabel" id="s-addadmin-sub">Yangi foydalanuvchi</div>
                   </div>
                 </div>
                 <button class="btn btn-primary btn-sm" id="s-addadmin-btn" onclick="openAdminSheet()">Qo'shish</button>
@@ -1615,7 +1685,7 @@ body{
                   </div>
                   <div>
                     <div class="settings-item-label" id="s-listadmin-label">Adminlar ro'yxati</div>
-                    <div class="settings-item-sublabel" id="s-listadmin-sub">Barcha adminlarni ko'rish</div>
+                    <div class="settings-item-sublabel" id="s-listadmin-sub">Barcha adminlarni boshqarish</div>
                   </div>
                 </div>
                 <button class="btn btn-ghost btn-sm" id="s-listadmin-btn" onclick="openAdminListSheet()">Ko'rish</button>
@@ -1623,29 +1693,17 @@ body{
             </div>
           </div>
 
+          <!-- 5. ILOVANI SOZLASH — Dizayn + Til bir joyda -->
           <div class="settings-section">
-            <div class="settings-section-title" id="s-sec-profile">ADMIN PROFIL</div>
+            <div class="settings-section-title" id="s-sec-theme">ILOVA SOZLAMALARI</div>
             <div class="card">
-              <div style="display:flex;align-items:center;gap:14px">
-                <div style="width:52px;height:52px;border-radius:16px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.3rem;font-weight:700;flex-shrink:0" id="settings-avatar">A</div>
-                <div>
-                  <div style="font-weight:700;font-size:1.05rem" id="settings-admin-name">—</div>
-                  <div style="font-size:.8rem;color:var(--text-muted);margin-top:2px" id="settings-admin-username">—</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="settings-section">
-            <div class="settings-section-title" id="s-sec-theme">DIZAYN</div>
-            <div class="card">
-              <div class="settings-item" style="border:none">
+              <div class="settings-item">
                 <div class="settings-item-left">
                   <div class="settings-item-icon">
                     <svg id="theme-settings-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
                   </div>
                   <div>
-                    <div class="settings-item-label" id="theme-label">Kunduz rejimi</div>
+                    <div class="settings-item-label" id="theme-label">Tungi rejim</div>
                     <div class="settings-item-sublabel" id="s-theme-sub">Ilova ko'rinishi</div>
                   </div>
                 </div>
@@ -1654,60 +1712,24 @@ body{
                   <span class="toggle-slider"></span>
                 </label>
               </div>
-            </div>
-          </div>
-
-          <div class="settings-section">
-            <div class="settings-section-title" id="s-sec-expenses">XARAJATLAR</div>
-            <div class="card">
-              <div class="settings-item" onclick="navigate('expenses')" style="cursor:pointer;border:none">
-                <div class="settings-item-left">
-                  <div class="settings-item-icon" style="background:#FEF2F2;color:#EF4444">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                  </div>
-                  <div>
-                    <div class="settings-item-label" id="s-exp-nav-label">Xarajatlar</div>
-                    <div class="settings-item-sublabel" id="s-exp-nav-sub">Material, maosh, transport...</div>
-                  </div>
+              <!-- Til tanlash -->
+              <div style="padding:12px 0 4px;border-top:1px solid var(--border)">
+                <div style="font-size:.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px" id="s-sec-lang">TIL</div>
+                <div style="display:flex;gap:8px">
+                  <label style="flex:1;display:flex;align-items:center;gap:8px;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-md);cursor:pointer;transition:border-color .18s" id="lang-opt-uz">
+                    <input type="radio" name="lang" value="uz_latin" onchange="changeLang(this.value)" style="flex-shrink:0">
+                    <span style="font-size:.85rem;font-weight:600">🇺🇿 O'zbek</span>
+                  </label>
+                  <label style="flex:1;display:flex;align-items:center;gap:8px;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-md);cursor:pointer;transition:border-color .18s" id="lang-opt-ru">
+                    <input type="radio" name="lang" value="ru" onchange="changeLang(this.value)" style="flex-shrink:0">
+                    <span style="font-size:.85rem;font-weight:600">🇷🇺 Русский</span>
+                  </label>
                 </div>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted)"><path d="m9 18 6-6-6-6"/></svg>
               </div>
             </div>
           </div>
 
-          <div class="settings-section">
-            <div class="settings-section-title" id="s-sec-our-debts">BIZNING QARZLARIMIZ</div>
-            <div class="card">
-              <div class="settings-item" onclick="navigate('our-debts')" style="cursor:pointer;border:none">
-                <div class="settings-item-left">
-                  <div class="settings-item-icon" style="background:#FFF7ED;color:#F97316">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
-                  </div>
-                  <div>
-                    <div class="settings-item-label" id="s-debt-nav-label">Bizning qarzlarimiz</div>
-                    <div class="settings-item-sublabel" id="s-debt-nav-sub">Yetkazib beruvchi, do'st, bank...</div>
-                  </div>
-                </div>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted)"><path d="m9 18 6-6-6-6"/></svg>
-              </div>
-            </div>
-          </div>
-
-          <div class="settings-section">
-            <div class="settings-section-title" id="s-sec-lang">TIL</div>
-            <div class="card">
-              <label class="lang-option">
-                <span class="lang-option-label">🇺🇿 O'zbek (Lotin)</span>
-                <input type="radio" name="lang" value="uz_latin" onchange="changeLang(this.value)">
-              </label>
-              <label class="lang-option" style="border-bottom:none">
-                <span class="lang-option-label">🇷🇺 Русский</span>
-                <input type="radio" name="lang" value="ru" onchange="changeLang(this.value)">
-              </label>
-            </div>
-          </div>
-
-          <div style="text-align:center;color:var(--text-muted);font-size:.72rem;margin-top:8px">Nina Spiska v2.0.0 — Premium</div>
+          <div style="text-align:center;color:var(--text-muted);font-size:.72rem;margin-top:4px;padding-bottom:8px">Nina Spiska v2.1.0 — Premium</div>
         </div>
       </div>
 
@@ -1781,15 +1803,15 @@ body{
           <div class="stats-grid" style="margin-bottom:16px">
             <div class="stat-card">
               <div class="stat-card-icon" style="background:#FFF7ED;color:#F97316">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
               </div>
               <div class="stat-label" id="od-stat-sum-label">Jami qarz (so'm)</div>
               <div class="stat-value" id="od-stat-sum" style="font-size:1.2rem;color:#F97316">—</div>
               <div class="stat-trend">so'm</div>
             </div>
             <div class="stat-card">
-              <div class="stat-card-icon" style="background:#EFF6FF;color:#2563EB">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+              <div class="stat-card-icon" style="background:var(--accent-light);color:var(--accent)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M9.5 10.5 12 8l2.5 2.5"/><line x1="8" y1="16" x2="16" y2="16"/></svg>
               </div>
               <div class="stat-label" id="od-stat-usd-label">Jami qarz ($)</div>
               <div class="stat-value" id="od-stat-usd" style="font-size:1.2rem;color:var(--accent)">—</div>
@@ -1797,15 +1819,15 @@ body{
             </div>
             <div class="stat-card">
               <div class="stat-card-icon" style="background:var(--danger-light);color:var(--danger)">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
               </div>
-              <div class="stat-label" id="od-stat-open-label">Ochiq</div>
+              <div class="stat-label" id="od-stat-open-label">Ochiq qarzlar</div>
               <div class="stat-value" id="od-stat-open" style="font-size:1.4rem;color:var(--danger)">—</div>
               <div class="stat-trend" id="od-stat-open-sub">ta qarz</div>
             </div>
             <div class="stat-card">
               <div class="stat-card-icon" style="background:var(--success-light);color:var(--success)">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
               </div>
               <div class="stat-label" id="od-stat-closed-label">Yopilgan</div>
               <div class="stat-value" id="od-stat-closed" style="font-size:1.4rem;color:var(--success)">—</div>
@@ -1877,7 +1899,12 @@ body{
 <div class="sheet-overlay" id="our-debt-sheet">
   <div class="sheet">
     <div class="sheet-handle"></div>
-    <h3 class="sheet-title" id="od-sheet-title">Qarz qo'shish</h3>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+      <div style="width:38px;height:38px;border-radius:11px;background:#FFF7ED;color:#F97316;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+      </div>
+      <h3 class="sheet-title" id="od-sheet-title" style="margin:0">Qarz qo'shish</h3>
+    </div>
     <input type="hidden" id="od-edit-id">
 
     <div class="form-group">
@@ -1931,7 +1958,12 @@ body{
 <div class="sheet-overlay" id="our-debt-pay-sheet">
   <div class="sheet">
     <div class="sheet-handle"></div>
-    <h3 class="sheet-title" id="od-pay-sheet-title">To'lov kiritish</h3>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+      <div id="od-pay-sheet-icon" style="width:38px;height:38px;border-radius:11px;background:var(--success-light);color:var(--success);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h3 class="sheet-title" id="od-pay-sheet-title" style="margin:0">To'lov kiritish</h3>
+    </div>
     <input type="hidden" id="od-pay-debt-id">
     <input type="hidden" id="od-pay-txn-type" value="payment">
     <div id="od-pay-info" style="margin-bottom:16px"></div>
@@ -2962,13 +2994,13 @@ function renderSpiskaDetail(s) {
         '<span class="card-row-label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> ' + t('spiska_customer') + '</span>' +
         '<strong>' + customerName + '</strong>' +
       '</div>' +
-      (customerPhone ? '<div class="card-row"><span class="card-row-label">📞 Telefon</span><span>' + customerPhone + '</span></div>' : '') +
+      (customerPhone ? '<div class="card-row"><span class="card-row-label"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.89 12 19.79 19.79 0 0 1 1.92 3.32C1.88 2.18 2.73 1 3.92 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Telefon</span><span>' + customerPhone + '</span></div>' : '') +
       '<div class="card-row">' +
-        '<span class="card-row-label">📅 ' + t('spiska_date') + '</span>' +
+        '<span class="card-row-label"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ' + t('spiska_date') + '</span>' +
         '<span>' + fmtDate(s.created_at) + '</span>' +
       '</div>' +
       '<div class="card-row" style="border:none">' +
-        '<span class="card-row-label">📊 ' + t('spiska_status') + '</span>' +
+        '<span class="card-row-label"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> ' + t('spiska_status') + '</span>' +
         (isOpen ? '<span class="badge badge-open">' + t('badge_open') + '</span>' : '<span class="badge badge-closed">' + t('badge_closed') + '</span>') +
       '</div>' +
     '</div>' +
@@ -3264,7 +3296,8 @@ async function saveSpiskaDebt(forceZero) {
 }
 
 async function confirmCloseSpiska(sid, btnEl) {
-  if (!confirm(t('spiska_close_confirm'))) return;
+  var ok = await showConfirm('Spiskani yopish', "Yopilgan spiska o'zgartirib bo'lmaydi. Davom etasizmi?", 'Ha, yopish', false);
+  if (!ok) return;
   // Tugmani bloklash
   if (btnEl) { btnEl.disabled = true; btnEl.style.opacity = '0.5'; }
   try {
@@ -3330,12 +3363,9 @@ async function confirmCloseSpiska(sid, btnEl) {
 }
 
 // ===================== SPISKA O'CHIRISH =====================
-function confirmDeleteSpiska(sid) {
-  // Ikki bosqichli tasdiqlash — xato o'chirishning oldini olish
-  var first = confirm(t('spiska_confirm1'));
-  if (!first) return;
-  var second = confirm(t('spiska_confirm2'));
-  if (!second) return;
+async function confirmDeleteSpiska(sid) {
+  var ok = await showConfirm("Spiskani o'chirish", "Bu spiska va uning barcha mahsulotlari butunlay o'chiriladi. Bu amalni bekor qilib bo'lmaydi!", "O'chirish");
+  if (!ok) return;
   deleteSpiska(sid);
 }
 
@@ -3838,9 +3868,12 @@ async function openAdminListSheet() {
 }
 
 async function toggleAdminStatus(adminId, isActive) {
-  if (!confirm(isActive ? t('customer_delete_confirm') : t('customer_name_err'))) return;
+  var title = isActive ? "Adminni o'chirish" : "Adminni faollashtirish";
+  var msg   = isActive ? "Bu admin tizimga kira olmay qoladi." : "Bu admin tizimga qayta kira oladi.";
+  var ok = await showConfirm(title, msg, isActive ? "O'chirish" : 'Faollashtirish', isActive);
+  if (!ok) return;
   await db.from('admins').update({ is_active: !isActive }).eq('id', adminId);
-  showToast(isActive ? t('customer_deleted') : t('admin_save_btn') + ' ✅');
+  showToast(isActive ? "Admin o'chirildi" : 'Admin faollashtirildi ✅');
   openAdminListSheet();
 }
 
@@ -4405,40 +4438,74 @@ async function loadStatsExpenses() {
 // ── BIZNING QARZLAR ───────────────────────────────────
 async function loadStatsOurDebts() {
   try {
-    var dr = await db.from('our_debts').select('id,amount,currency,amount_sum,status,creditor_name');
+    // Faqat our_debts dan creditor_name va status kerak (hisob uchun emas)
+    var dr = await db.from('our_debts').select('id,currency,status,creditor_name');
     var all = dr.data || [];
 
-    var totalSum = all.reduce(function(s,d){ return s+(d.currency==='usd'?0:(d.amount||0)); }, 0);
-    var totalSumAll = all.reduce(function(s,d){ return s+(d.amount_sum||0); }, 0);
-    var totalUsd = all.reduce(function(s,d){ return s+(d.currency==='usd'?(d.amount||0):0); }, 0);
-
-    // Tranzaksiyalar
+    // BARCHA hisob faqat debt_transactions dan
     var tr = await db.from('debt_transactions').select('debt_id,type,amount,currency,amount_sum');
     var txns = tr.data || [];
-    var paid = txns.filter(function(t){ return t.type==='payment'||t.type==='return'; })
-                   .reduce(function(s,t){ return s+(t.amount_sum||0); }, 0);
-    var remain = Math.max(0, totalSumAll - paid);
 
-    _set('od-total-sum', fmt(totalSumAll));
-    _set('od-total-usd', totalUsd > 0 ? '$ '+totalUsd.toFixed(2) : '$ 0');
-    _set('od-paid',   fmt(paid));
-    _set('od-remain', fmt(remain));
+    // Har bir qarz uchun txns ni guruhlash
+    var txnMap = {};
+    txns.forEach(function(tx) { (txnMap[tx.debt_id] = txnMap[tx.debt_id] || []).push(tx); });
+
+    var totalSumAll = 0, totalUsd = 0, paid = 0;
+    var top5arr = [];
+
+    // Barcha hisob amount_sum (so'm) bazasida
+    var totalDebtAll = 0, totalPaidAll = 0;
+    all.forEach(function(d) {
+      var dTxns = txnMap[d.id] || [];
+      var dDebt = 0, dPay = 0;
+      var dDebtUsdOrig = 0;   // dollar ko'rsatish uchun
+      dTxns.forEach(function(tx) {
+        var val = tx.amount_sum != null ? tx.amount_sum
+                : (tx.currency === 'usd' ? 0 : (tx.amount || 0));
+        if (tx.type === 'debt') {
+          dDebt += val;
+          if (tx.currency === 'usd') dDebtUsdOrig += tx.amount || 0;
+        } else {
+          dPay += val;
+        }
+      });
+      totalDebtAll += dDebt;
+      totalPaidAll += dPay;
+      top5arr.push({
+        name: d.creditor_name || '—',
+        total: dDebt,
+        paid: dPay,
+        remain: Math.max(0, dDebt - dPay),
+        usdOrig: dDebtUsdOrig,
+        currency: d.currency
+      });
+    });
+
+    var remainAll = Math.max(0, totalDebtAll - totalPaidAll);
+
+    _set('od-total-sum', fmt(totalDebtAll));
+    _set('od-paid',      fmt(totalPaidAll));
+    _set('od-remain',    fmt(remainAll));
 
     // Progress
-    var pct = totalSumAll > 0 ? Math.min(100, Math.round((paid/totalSumAll)*100)) : 0;
-    _set('od-progress-pct', pct+'%');
+    var pct = totalDebtAll > 0 ? Math.min(100, Math.round((totalPaidAll / totalDebtAll) * 100)) : 0;
+    _set('od-progress-pct', pct + '%');
     var pb = document.getElementById('od-progress-bar');
-    if (pb) setTimeout(function(){ pb.style.width = pct+'%'; }, 100);
+    if (pb) setTimeout(function(){ pb.style.width = pct + '%'; }, 100);
 
-    // Top 5
-    var top5 = all.sort(function(a,b){ return (b.amount_sum||0)-(a.amount_sum||0); }).slice(0,5)
-                  .map(function(d){ return {name:d.creditor_name||'—', total:d.amount_sum||0}; });
-    _renderRankList('od-top5-list', top5, function(d){ return fmt(d.total)+" so'm"; }, 'var(--danger)');
+    // Top 5 — eng katta qolgan qarzlar
+    top5arr.sort(function(a, b){ return b.remain - a.remain; });
+    var top5 = top5arr.slice(0, 5);
+    _renderRankList('od-top5-list', top5, function(d){
+      var str = fmt(d.remain) + " so'm";
+      if (d.currency === 'usd' && d.usdOrig > 0) str = fmt(d.remain) + " so'm";
+      return str;
+    }, 'var(--danger)');
 
     // Pie chart
     _renderPieChart('od-pie-chart', [
-      {label:"To'langan", value:paid,   color:'#10B981'},
-      {label:'Qolgan',    value:remain, color:'#EF4444'}
+      {label: "To'langan", value: totalPaidAll, color: '#10B981'},
+      {label: 'Qolgan',    value: remainAll,    color: '#EF4444'}
     ]);
   } catch(e){ console.error(e); }
 }
@@ -4748,7 +4815,8 @@ async function saveCustomer() {
 }
 
 async function deleteCustomer(id) {
-  if (!confirm(t('customer_delete_confirm'))) return;
+  var ok = await showConfirm("Mijozni o'chirish", "Bu mijoz ro'yxatdan o'chiriladi. Uning spiskalari saqlanib qoladi.", "O'chirish");
+  if (!ok) return;
   await db.from('customers').update({is_active:false}).eq('id', id);
   showToast(t('customer_deleted'));
   loadCustomers();
@@ -4870,7 +4938,8 @@ async function saveProduct() {
 }
 
 async function deleteProduct(id) {
-  if (!confirm(t('product_delete_confirm'))) return;
+  var ok = await showConfirm("Mahsulotni o'chirish", "Bu mahsulot ro'yxatdan o'chiriladi.", "O'chirish");
+  if (!ok) return;
   await db.from('products').update({is_active:false}).eq('id', id);
   showToast(t('product_deleted'));
   loadProducts();
@@ -6580,7 +6649,8 @@ async function saveExpense() {
 }
 
 async function deleteExpense(id) {
-  if (!confirm(t('exp_delete_confirm'))) return;
+  var ok = await showConfirm("Xarajatni o'chirish", "Bu xarajat yozuvi butunlay o'chiriladi.", "O'chirish");
+  if (!ok) return;
   try {
     var res = await db.from('expenses').delete().eq('id', id);
     if (res.error) throw res.error;
@@ -6600,29 +6670,60 @@ var currentOdFilter = 'all';
 var currentOdDebtId  = null;  // detail page uchun
 
 // ── HELPER: qarz uchun balance hisoblash ───────────
+// QOIDA: BARCHA hisob amount_sum (so'm) orqali.
+// amount_sum = USD txn uchun (amount * rate), UZS txn uchun (amount).
+// Valyuta farqi yo'q — so'm universal o'lchov.
 function odCalcBalance(debt, txns) {
-  // txns: debt_transactions rows (type: 'debt'|'payment'|'return')
-  // balance = sum(debt) - sum(payment) - sum(return)
-  var totalDebtSum = 0, totalDebtUsd = 0;
-  var totalPaySum  = 0, totalPayUsd  = 0;
+  var debtSum = 0, paySum = 0;
+  var debtUsd = 0, payUsd = 0;
+  var lastRate = 0;
+
   (txns || []).forEach(function(tx) {
-    if (tx.type === 'debt') {
-      if (tx.currency === 'usd') totalDebtUsd += tx.amount || 0;
-      else totalDebtSum += tx.amount_sum || tx.amount || 0;
+    // amount_sum — so'mdagi qiymat. Agar null bo'lsa to'g'ri hisoblash
+    var val;
+    if (tx.amount_sum != null && tx.amount_sum > 0) {
+      val = tx.amount_sum;
+    } else if (tx.currency === 'usd' && tx.amount && tx.rate) {
+      val = Math.round(tx.amount * tx.rate);
     } else {
-      // 'payment' VA 'return' — ikkalasi ham qarzni kamaytiradi
-      if (tx.currency === 'usd') totalPayUsd += tx.amount || 0;
-      else totalPaySum += tx.amount_sum || tx.amount || 0;
+      val = tx.amount || 0;
+    }
+
+    if (tx.currency === 'usd' && tx.rate) lastRate = tx.rate;
+
+    if (tx.type === 'debt') {
+      debtSum += val;
+      if (tx.currency === 'usd') debtUsd += (tx.amount || 0);
+    } else {
+      paySum += val;
+      if (tx.currency === 'usd') payUsd += (tx.amount || 0);
     }
   });
-  if (debt.currency === 'usd') {
-    var bal = Math.max(0, (debt.amount || 0) + totalDebtUsd - totalPayUsd);
-    return { remain: bal, remainStr: '$' + bal.toFixed(2), isClosed: bal <= 0.001 };
+
+  var remain = Math.max(0, debtSum - paySum);
+  var remainUsd = Math.max(0, debtUsd - payUsd);
+
+  // Ko'rsatish formati
+  var remainStr;
+  if (debt.currency === 'usd' && remainUsd > 0) {
+    remainStr = '$' + remainUsd.toFixed(2) + ' ≈ ' + fmt(remain) + " so'm";
+  } else if (remain > 0) {
+    remainStr = fmt(remain) + " so'm";
   } else {
-    var orig = debt.amount_sum || debt.amount || 0;
-    var bal2 = Math.max(0, orig + totalDebtSum - totalPaySum);
-    return { remain: bal2, remainStr: fmt(bal2) + " so'm", isClosed: bal2 <= 0 };
+    remainStr = "0 so'm";
   }
+
+  return {
+    remain: remain,
+    remainUsd: remainUsd,
+    remainStr: remainStr,
+    isClosed: remain <= 0,
+    lastRate: lastRate,
+    debtSum: debtSum,
+    paySum: paySum,
+    debtUsd: debtUsd,
+    payUsd: payUsd
+  };
 }
 
 // ── FILTER ─────────────────────────────────────────
@@ -6659,19 +6760,19 @@ async function loadOurDebts() {
     }
 
     // ─ Statistika ──────────────────────────────────
-    var totalSum = 0, totalUsd = 0, openCount = 0, closedCount = 0;
+    var totalRemain = 0, totalRemainUsd = 0, openCount = 0, closedCount = 0;
     allList.forEach(function(d) {
       var bal = odCalcBalance(d, d.debt_transactions || []);
       if (d.status === 'open') {
         openCount++;
-        if (d.currency === 'usd') totalUsd += bal.remain;
-        else totalSum += bal.remain;
+        totalRemain += bal.remain;
+        totalRemainUsd += bal.remainUsd;
       } else {
         closedCount++;
       }
     });
-    var e2 = document.getElementById('od-stat-sum');   if (e2) e2.textContent = fmt(totalSum);
-    var e3 = document.getElementById('od-stat-usd');   if (e3) e3.textContent = '$' + totalUsd.toFixed(2);
+    var e2 = document.getElementById('od-stat-sum');   if (e2) e2.textContent = fmt(totalRemain);
+    var e3 = document.getElementById('od-stat-usd');   if (e3) e3.textContent = totalRemainUsd > 0 ? '$' + totalRemainUsd.toFixed(2) : '—';
     var e4 = document.getElementById('od-stat-open');  if (e4) e4.textContent = openCount;
     var e5 = document.getElementById('od-stat-closed');if (e5) e5.textContent = closedCount;
 
@@ -6688,20 +6789,52 @@ async function loadOurDebts() {
       var txns   = debt.debt_transactions || [];
       var bal    = odCalcBalance(debt, txns);
       var isOpen = debt.status === 'open';
-      var color  = isOpen ? '#F97316' : 'var(--success)';
+      var accentCol = isOpen ? '#F97316' : 'var(--success)';
+      var accentBg  = isOpen ? '#FFF7ED' : 'var(--success-light)';
       var ini    = (debt.creditor_name || '?').charAt(0).toUpperCase();
       var bgColor = randomColor(debt.creditor_name || '');
 
-      return '<div class="list-item" onclick="odOpenDetail(\'' + debt.id + '\')">' +
-        '<div style="width:42px;height:42px;border-radius:12px;background:' + bgColor + '20;color:' + bgColor + ';display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;flex-shrink:0">' + ini + '</div>' +
-        '<div class="list-item-info">' +
-          '<div class="list-item-title">' + (debt.creditor_name || '—') + '</div>' +
-          '<div class="list-item-subtitle">' + (debt.phone ? '📞 ' + debt.phone + ' · ' : '') + fmtDateShort(debt.created_at) + '</div>' +
+      // Qancha tranzaksiya bor
+      var txCount = txns.length;
+      var payCount = txns.filter(function(t){ return t.type === 'payment' || t.type === 'return'; }).length;
+
+      return '<div class="list-item" onclick="odOpenDetail(\'' + debt.id + '\')" style="padding:14px 16px;align-items:stretch;gap:14px">' +
+        // Avatar
+        '<div style="width:44px;height:44px;border-radius:13px;background:' + bgColor + '18;color:' + bgColor + ';display:flex;align-items:center;justify-content:center;font-size:1.05rem;font-weight:800;flex-shrink:0;border:1.5px solid ' + bgColor + '28">' + ini + '</div>' +
+
+        // Asosiy ma'lumot
+        '<div class="list-item-info" style="gap:5px">' +
+          '<div class="list-item-title" style="font-size:.92rem">' + (debt.creditor_name || '—') + '</div>' +
+          '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">' +
+            // Sana
+            '<span style="display:inline-flex;align-items:center;gap:3px;font-size:.7rem;color:var(--text-muted)">' +
+              '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
+              fmtDateShort(debt.created_at) +
+            '</span>' +
+            // Telefon
+            (debt.phone
+              ? '<span style="display:inline-flex;align-items:center;gap:3px;font-size:.7rem;color:var(--text-muted)">' +
+                  '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.89 12 19.79 19.79 0 0 1 1.92 3.32C1.88 2.18 2.73 1 3.92 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>' +
+                  debt.phone +
+                '</span>'
+              : '') +
+            // To'lovlar soni
+            (payCount > 0
+              ? '<span style="display:inline-flex;align-items:center;gap:3px;font-size:.7rem;color:var(--success)">' +
+                  '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+                  payCount + ' to\'lov' +
+                '</span>'
+              : '') +
+          '</div>' +
         '</div>' +
-        '<div class="list-item-right">' +
-          '<div style="font-weight:800;font-family:JetBrains Mono,monospace;font-size:.88rem;color:' + color + '">' + bal.remainStr + '</div>' +
-          '<span class="badge ' + (isOpen ? 'badge-open' : 'badge-closed') + '" style="font-size:.6rem;padding:2px 7px">' +
-            (isOpen ? t('debt_open') : t('debt_closed_status')) +
+
+        // O'ng tomon — summa + badge
+        '<div class="list-item-right" style="gap:6px;justify-content:center">' +
+          '<div style="font-weight:800;font-family:JetBrains Mono,monospace;font-size:.85rem;color:' + accentCol + ';text-align:right;line-height:1.2">' + bal.remainStr + '</div>' +
+          '<span style="display:inline-flex;align-items:center;gap:3px;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:' + accentCol + ';background:' + accentBg + ';padding:3px 8px;border-radius:20px">' +
+            (isOpen
+              ? '<svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg> Ochiq'
+              : '<svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Yopiq') +
           '</span>' +
         '</div>' +
       '</div>';
@@ -6747,28 +6880,38 @@ function renderOurDebtDetail(debt, txns) {
   var bal    = odCalcBalance(debt, txns);
   var isOpen = debt.status === 'open';
 
-  // Jami qarz (barcha +debt txns)
-  var totalDebtSum = 0, totalDebtUsd = 0;
-  var totalPaySum  = 0, totalPayUsd  = 0;
+  // Jami qarz va to'lovlar — faqat amount_sum (so'm) orqali
+  var totalDebtSum = 0, totalPaySum = 0;
+  var totalDebtUsdOrig = 0, totalPayUsdOrig = 0;
+  var debtRate = 0;
   txns.forEach(function(tx) {
-    if (tx.type === 'debt') {
-      if (tx.currency === 'usd') totalDebtUsd += tx.amount || 0;
-      else totalDebtSum += tx.amount_sum || tx.amount || 0;
+    var val;
+    if (tx.amount_sum != null && tx.amount_sum > 0) {
+      val = tx.amount_sum;
+    } else if (tx.currency === 'usd' && tx.amount && tx.rate) {
+      val = Math.round(tx.amount * tx.rate);
     } else {
-      if (tx.currency === 'usd') totalPayUsd += tx.amount || 0;
-      else totalPaySum += tx.amount_sum || tx.amount || 0;
+      val = tx.amount || 0;
+    }
+    if (tx.currency === 'usd' && tx.rate) debtRate = tx.rate;
+    if (tx.type === 'debt') {
+      totalDebtSum += val;
+      if (tx.currency === 'usd') totalDebtUsdOrig += (tx.amount || 0);
+    } else {
+      totalPaySum += val;
+      if (tx.currency === 'usd') totalPayUsdOrig += (tx.amount || 0);
     }
   });
 
-  // origStr — asosiy qarz
+  // origStr va paidStr — ko'rsatish uchun
   var origStr, paidStr;
-  if (debt.currency === 'usd') {
-    var orig = debt.amount || 0;
-    origStr = '$' + orig.toFixed(2) + (debt.amount_sum ? ' \u2248 ' + fmt(debt.amount_sum) + " so'm" : '');
-    paidStr = '$' + totalPayUsd.toFixed(2);
+  if (debt.currency === 'usd' && totalDebtUsdOrig > 0) {
+    origStr = '$' + totalDebtUsdOrig.toFixed(2) + ' ≈ ' + fmt(totalDebtSum) + " so'm";
+    var paidUsdDisplay = totalPayUsdOrig > 0 ? '$' + totalPayUsdOrig.toFixed(2) + ' ≈ ' : '';
+    paidStr = paidUsdDisplay + fmt(totalPaySum) + " so'm";
   } else {
-    origStr = fmt(debt.amount_sum || debt.amount || 0) + " so'm";
-    paidStr = fmt(totalPaySum) + " so'm";
+    origStr = fmt(totalDebtSum) + " so'm";
+    paidStr = fmt(totalPaySum)  + " so'm";
   }
 
   var adminName = (debt.admins && debt.admins.full_name) || '—';
@@ -6782,139 +6925,210 @@ function renderOurDebtDetail(debt, txns) {
       var isDebt   = tx.type === 'debt';
       var isReturn = tx.type === 'return';
       var txAdmin  = (tx.admins && tx.admins.full_name) || '—';
-      var sign = isDebt ? '+' : '-';
+      var sign = isDebt ? '+' : '−';
       var amt;
       if (tx.currency === 'usd') {
         amt = sign + '$' + (tx.amount || 0).toFixed(2) +
-          (tx.amount_sum ? ' \u2248 ' + fmt(tx.amount_sum) + " so'm" : '');
+          (tx.amount_sum ? ' ≈ ' + fmt(tx.amount_sum) + " so'm" : '');
       } else {
         amt = sign + fmt(tx.amount_sum || tx.amount || 0) + " so'm";
       }
-      // Rang: qarz=danger, to'lov=success, qaytarish=warning(orange)
-      var col, bgCol, icon, label;
+
+      var col, bgCol, iconSvg, labelText, labelBg;
       if (isDebt) {
-        col   = 'var(--danger)';
-        bgCol = 'var(--danger-light)';
-        icon  = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
-        label = t('debt_add_btn');
+        col      = 'var(--danger)';
+        bgCol    = 'var(--danger-light)';
+        labelBg  = 'rgba(239,68,68,.1)';
+        labelText = t('debt_add_btn');
+        iconSvg  = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
       } else if (isReturn) {
-        col   = '#F97316';
-        bgCol = '#FFF7ED';
-        icon  = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>';
-        label = t('debt_return_btn');
+        col      = '#F97316';
+        bgCol    = '#FFF7ED';
+        labelBg  = 'rgba(249,115,22,.1)';
+        labelText = t('debt_return_btn');
+        iconSvg  = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>';
       } else {
-        col   = 'var(--success)';
-        bgCol = 'var(--success-light)';
-        icon  = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
-        label = t('debt_pay_btn');
+        col      = 'var(--success)';
+        bgCol    = 'var(--success-light)';
+        labelBg  = 'rgba(16,185,129,.1)';
+        labelText = t('debt_pay_btn');
+        iconSvg  = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>';
       }
-      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border)">' +
-        '<div style="display:flex;align-items:center;gap:8px">' +
-          '<div style="width:28px;height:28px;border-radius:8px;background:' + bgCol + ';color:' + col + ';display:flex;align-items:center;justify-content:center;flex-shrink:0">' + icon + '</div>' +
-          '<div>' +
-            '<div style="font-size:.82rem;font-weight:700;color:' + col + '">' + amt + '</div>' +
-            '<div style="font-size:.7rem;color:var(--text-muted)">' + fmtDate(tx.created_at) + (tx.note ? ' · ' + tx.note : '') + ' · ' + txAdmin + '</div>' +
+
+      return '<div style="display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--border)">' +
+        // Ikona
+        '<div style="width:34px;height:34px;border-radius:10px;background:' + bgCol + ';color:' + col + ';display:flex;align-items:center;justify-content:center;flex-shrink:0">' +
+          iconSvg +
+        '</div>' +
+        // Matn
+        '<div style="flex:1;min-width:0">' +
+          '<div style="font-size:.85rem;font-weight:700;color:' + col + ';font-family:JetBrains Mono,monospace">' + amt + '</div>' +
+          '<div style="display:flex;align-items:center;gap:5px;margin-top:3px;flex-wrap:wrap">' +
+            '<span style="font-size:.68rem;color:var(--text-muted);display:inline-flex;align-items:center;gap:3px">' +
+              '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
+              fmtDate(tx.created_at) +
+            '</span>' +
+            (tx.note
+              ? '<span style="font-size:.68rem;color:var(--text-muted);display:inline-flex;align-items:center;gap:3px">' +
+                  '· ' + tx.note +
+                '</span>'
+              : '') +
+            '<span style="font-size:.68rem;color:var(--text-muted);display:inline-flex;align-items:center;gap:3px">' +
+              '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
+              txAdmin +
+            '</span>' +
           '</div>' +
         '</div>' +
-        '<span style="font-size:.68rem;font-weight:700;color:' + col + ';background:' + bgCol + ';padding:2px 7px;border-radius:10px">' + label + '</span>' +
+        // Label badge
+        '<span style="font-size:.65rem;font-weight:700;color:' + col + ';background:' + labelBg + ';padding:3px 8px;border-radius:20px;white-space:nowrap;border:1px solid ' + bgCol + '">' + labelText + '</span>' +
       '</div>';
     }).join('');
   } else {
-    histHtml = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:.82rem">' + t('debt_no_history') + '</div>';
+    histHtml =
+      '<div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:28px 20px">' +
+        '<div style="width:44px;height:44px;border-radius:12px;background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;color:var(--text-muted)">' +
+          '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
+        '</div>' +
+        '<div style="font-size:.82rem;color:var(--text-muted)">' + t('debt_no_history') + '</div>' +
+      '</div>';
   }
 
-  // ─ Progress bar ───────────────────────────────────
-  var origNum = debt.currency === 'usd' ? (debt.amount || 0) : (debt.amount_sum || debt.amount || 0);
-  var paidNum = debt.currency === 'usd' ? totalPayUsd : totalPaySum;
+  // ─ Progress bar — amount_sum (so'm) bazasida ────────────────────────────
+  var origNum = totalDebtSum;   // jami qarz (so'm)
+  var paidNum = totalPaySum;    // to'langan (so'm)
   var pct = origNum > 0 ? Math.min(100, Math.round((paidNum / origNum) * 100)) : 0;
 
   el.innerHTML =
+    // Orqaga tugma
     '<button class="back-btn" onclick="navigate(\'our-debts\')">' +
-      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>' +
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>' +
       ' ' + t('spiska_back') +
     '</button>' +
 
-    // Avatar + ism
-    '<div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">' +
-      '<div style="width:52px;height:52px;border-radius:16px;background:' + bgColor + '20;color:' + bgColor + ';display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:800;flex-shrink:0">' + ini + '</div>' +
+    // ── Header: Avatar + ism + badge ──
+    '<div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;padding:16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm)">' +
+      '<div style="width:56px;height:56px;border-radius:16px;background:' + bgColor + '18;color:' + bgColor + ';display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:800;flex-shrink:0;border:2px solid ' + bgColor + '30">' + ini + '</div>' +
       '<div style="flex:1;min-width:0">' +
-        '<div style="font-size:1.15rem;font-weight:800;letter-spacing:-.02em">' + (debt.creditor_name || '—') + '</div>' +
-        (debt.phone ? '<div style="font-size:.82rem;color:var(--text-muted)">📞 ' + debt.phone + '</div>' : '') +
+        '<div style="font-size:1.2rem;font-weight:800;letter-spacing:-.02em;line-height:1.2">' + (debt.creditor_name || '—') + '</div>' +
+        (debt.phone
+          ? '<div style="display:inline-flex;align-items:center;gap:5px;font-size:.8rem;color:var(--text-muted);margin-top:4px">' +
+              '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.89 12 19.79 19.79 0 0 1 1.92 3.32C1.88 2.18 2.73 1 3.92 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>' +
+              debt.phone +
+            '</div>'
+          : '') +
       '</div>' +
-      '<span class="badge ' + (isOpen ? 'badge-open' : 'badge-closed') + '">' +
-        (isOpen ? t('debt_open') : t('debt_closed_status')) +
-      '</span>' +
+      '<div>' +
+        '<span style="display:inline-flex;align-items:center;gap:4px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:5px 10px;border-radius:20px;' +
+          (isOpen ? 'background:#FFF7ED;color:#F97316' : 'background:var(--success-light);color:var(--success)') + '">' +
+          (isOpen
+            ? '<svg width="7" height="7" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg> Ochiq'
+            : '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> Yopilgan') +
+        '</span>' +
+        '<div style="display:inline-flex;align-items:center;gap:4px;font-size:.7rem;color:var(--text-muted);margin-top:6px;white-space:nowrap">' +
+          '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
+          fmtDate(debt.created_at) +
+        '</div>' +
+      '</div>' +
     '</div>' +
 
-    // Info karta
+    // ── Info karta ──
     '<div class="card" style="margin-bottom:12px">' +
+      // Izoh (agar bor bo'lsa)
+      (debt.note
+        ? '<div class="card-row">' +
+            '<span class="card-row-label">' +
+              '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>' +
+              ' Izoh' +
+            '</span>' +
+            '<span style="font-size:.85rem;color:var(--text-secondary)">' + debt.note + '</span>' +
+          '</div>'
+        : '') +
+      // Jami qarz
       '<div class="card-row">' +
-        '<span class="card-row-label">📅 ' + t('spiska_date') + '</span>' +
-        '<span>' + fmtDate(debt.created_at) + '</span>' +
+        '<span class="card-row-label">' +
+          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>' +
+          ' Jami qarz' +
+        '</span>' +
+        '<span style="font-weight:700;color:var(--danger);font-family:JetBrains Mono,monospace;font-size:.9rem">' + origStr + '</span>' +
       '</div>' +
-      (debt.note ? '<div class="card-row"><span class="card-row-label">📝 ' + t("tg_note") + '</span><span>' + debt.note + '</span></div>' : '') +
+      // To'langan
       '<div class="card-row">' +
-        '<span class="card-row-label">💸 Jami qarz</span>' +
-        '<span style="font-weight:700;color:var(--danger)">' + origStr + '</span>' +
+        '<span class="card-row-label">' +
+          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+          ' ' + t("debt_paid") +
+        '</span>' +
+        '<span style="font-weight:700;color:var(--success);font-family:JetBrains Mono,monospace;font-size:.9rem">' + paidStr + '</span>' +
       '</div>' +
-      '<div class="card-row">' +
-        '<span class="card-row-label">✅ ' + t("debt_paid") + '</span>' +
-        '<span style="font-weight:700;color:var(--success)">' + paidStr + '</span>' +
-      '</div>' +
+
       // Progress bar
-      '<div style="margin:12px 0 4px">' +
-        '<div style="display:flex;justify-content:space-between;margin-bottom:4px">' +
-          '<span style="font-size:.72rem;color:var(--text-muted)">' + t("debt_paid") + '</span>' +
-          '<span style="font-size:.72rem;font-weight:700;color:' + (pct >= 100 ? 'var(--success)' : 'var(--warning)') + '">' + pct + '%</span>' +
+      '<div style="padding:14px 0 8px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
+          '<span style="font-size:.72rem;font-weight:600;color:var(--text-muted)">To\'lov holati</span>' +
+          '<span style="font-size:.75rem;font-weight:800;color:' + (pct >= 100 ? 'var(--success)' : pct > 50 ? 'var(--warning)' : 'var(--danger)') + '">' + pct + '%</span>' +
         '</div>' +
-        '<div style="height:6px;border-radius:3px;background:var(--bg-tertiary);overflow:hidden">' +
-          '<div style="height:100%;border-radius:3px;width:' + pct + '%;background:' + (pct >= 100 ? 'var(--success)' : 'var(--warning)') + ';transition:width .4s"></div>' +
+        '<div style="height:8px;border-radius:4px;background:var(--bg-tertiary);overflow:hidden">' +
+          '<div style="height:100%;border-radius:4px;width:' + pct + '%;background:' +
+            (pct >= 100 ? 'var(--success)' : pct > 50 ? 'var(--warning)' : 'var(--danger)') +
+            ';transition:width .6s cubic-bezier(.22,1,.36,1)"></div>' +
         '</div>' +
       '</div>' +
-      '<div class="card-row" style="border:none;padding-top:12px">' +
-        '<span class="card-row-label" style="font-weight:700;color:' + (isOpen ? '#F97316' : 'var(--success)') + '">📊 ' + t("debt_remaining") + '</span>' +
-        '<span style="font-size:1.2rem;font-weight:800;color:' + (isOpen ? '#F97316' : 'var(--success)') + '">' + bal.remainStr + '</span>' +
+
+      // Qolgan qarz — highlight
+      '<div style="margin-top:4px;padding:12px 14px;border-radius:var(--radius-md);background:' + (isOpen ? '#FFF7ED' : 'var(--success-light)') + ';border:1px solid ' + (isOpen ? 'rgba(249,115,22,.2)' : 'rgba(16,185,129,.2)') + ';display:flex;align-items:center;justify-content:space-between">' +
+        '<div style="display:flex;align-items:center;gap:6px">' +
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="' + (isOpen ? '#F97316' : 'var(--success)') + '" stroke-width="2.5" stroke-linecap="round">' +
+            (isOpen
+              ? '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'
+              : '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>') +
+          '</svg>' +
+          '<span style="font-size:.78rem;font-weight:700;color:' + (isOpen ? '#F97316' : 'var(--success)') + '">' + t("debt_remaining") + '</span>' +
+        '</div>' +
+        '<span style="font-size:1.15rem;font-weight:800;color:' + (isOpen ? '#F97316' : 'var(--success)') + ';font-family:JetBrains Mono,monospace">' + bal.remainStr + '</span>' +
       '</div>' +
     '</div>' +
 
-    // Action tugmalar
+    // ── Action tugmalar ──
     (isOpen
-      ? '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">' +
+      ? '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">' +
           // 1-qator: To'lash + Qaytarish
-          '<div style="display:flex;gap:8px">' +
-            '<button class="btn btn-full" onclick="odOpenAddTxnSheet(\'payment\',\'' + debt.id + '\')" style="height:48px;background:var(--success);color:#fff;border:none;flex:1">' +
-              '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' +
-              ' ' + t("debt_pay_btn") +
+          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">' +
+            '<button class="btn btn-full" onclick="odOpenAddTxnSheet(\'payment\',\'' + debt.id + '\')" style="height:52px;background:var(--success);color:#fff;border:none;flex-direction:column;gap:3px;border-radius:var(--radius-md)">' +
+              '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+              '<span style="font-size:.72rem;font-weight:700">' + t("debt_pay_btn") + '</span>' +
             '</button>' +
-            '<button class="btn btn-full" onclick="odOpenAddTxnSheet(\'return\',\'' + debt.id + '\')" style="height:48px;background:#FFF7ED;color:#F97316;border:1.5px solid rgba(249,115,22,.3);flex:1">' +
-              '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>' +
-              ' ' + t("debt_return_btn") +
+            '<button class="btn btn-full" onclick="odOpenAddTxnSheet(\'return\',\'' + debt.id + '\')" style="height:52px;background:#FFF7ED;color:#F97316;border:1.5px solid rgba(249,115,22,.25);flex-direction:column;gap:3px;border-radius:var(--radius-md)">' +
+              '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>' +
+              '<span style="font-size:.72rem;font-weight:700">' + t("debt_return_btn") + '</span>' +
             '</button>' +
           '</div>' +
-          // 2-qator: +Qarz + O'chirish
+          // 2-qator: Qarz qo'sh + O'chir
           '<div style="display:flex;gap:8px">' +
-            '<button class="btn btn-full" onclick="odOpenAddTxnSheet(\'debt\',\'' + debt.id + '\')" style="height:38px;background:var(--bg-tertiary);color:var(--text-secondary);border:1.5px solid var(--border);flex:1;font-size:.8rem">' +
-              '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
-              ' ' + t("debt_add_btn") +
+            '<button class="btn btn-ghost btn-full" onclick="odOpenAddTxnSheet(\'debt\',\'' + debt.id + '\')" style="height:40px;flex:1;font-size:.82rem;gap:6px">' +
+              '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
+              t("debt_add_btn") +
             '</button>' +
-            '<button class="btn" onclick="deleteOurDebt(\'' + debt.id + '\')" style="height:38px;width:38px;padding:0;background:var(--danger-light);color:var(--danger);border:1.5px solid rgba(239,68,68,.25);flex-shrink:0">' +
-              '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>' +
+            '<button class="btn" onclick="deleteOurDebt(\'' + debt.id + '\')" style="height:40px;width:40px;padding:0;background:var(--danger-light);color:var(--danger);border:1.5px solid rgba(239,68,68,.2);flex-shrink:0;border-radius:var(--radius-sm)">' +
+              '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>' +
             '</button>' +
           '</div>' +
         '</div>'
-      : '<div style="display:flex;gap:8px;margin-bottom:16px">' +
-          '<div class="info-banner" style="flex:1">' +
-            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>' +
-            ' ' + t("debt_closed_toast") +
+      : '<div style="display:flex;gap:8px;margin-bottom:20px">' +
+          '<div class="info-banner" style="flex:1;display:flex;align-items:center;gap:8px">' +
+            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+            t("debt_closed_toast") +
           '</div>' +
-          '<button class="btn" onclick="deleteOurDebt(\'' + debt.id + '\')" style="height:46px;width:46px;padding:0;background:var(--danger-light);color:var(--danger);border:1.5px solid rgba(239,68,68,.25);flex-shrink:0">' +
-            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>' +
+          '<button class="btn" onclick="deleteOurDebt(\'' + debt.id + '\')" style="height:46px;width:46px;padding:0;background:var(--danger-light);color:var(--danger);border:1.5px solid rgba(239,68,68,.2);flex-shrink:0;border-radius:var(--radius-sm)">' +
+            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>' +
           '</button>' +
         '</div>'
     ) +
 
-    // Tarix
-    '<div class="section-label">' + t("debt_history_title") + ' (' + txns.length + ')</div>' +
+    // ── Tarix sarlavha ──
+    '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">' +
+      '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--text-muted)"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
+      '<span class="section-label" style="margin:0">' + t("debt_history_title") + '</span>' +
+      '<span style="font-size:.68rem;font-weight:700;background:var(--bg-tertiary);color:var(--text-muted);padding:2px 8px;border-radius:20px">' + txns.length + '</span>' +
+    '</div>' +
     '<div class="card">' + histHtml + '</div>';
 }
 
@@ -6954,7 +7168,9 @@ function calcOdEquiv() {
   }
 }
 
+var _odSaving = false;
 async function saveOurDebt() {
+  if (_odSaving) return;
   var creditor = document.getElementById('od-creditor').value.trim();
   var phone    = document.getElementById('od-phone').value.trim();
   var note     = document.getElementById('od-note').value.trim();
@@ -6966,8 +7182,9 @@ async function saveOurDebt() {
   if (!amount || amount<=0){ showToast(t('payment_amount_err'), 'error'); return; }
   if (currency==='usd' && !rate){ showToast(t('debt_rate_label') + ' kiritilmagan!', 'error'); return; }
 
+  _odSaving = true;
   var btn = btnStart('od-save-btn', t('saving'));
-  if (!btn) return;
+  if (!btn) { _odSaving = false; return; }
   try {
     // 1. our_debts jadvaliga qarz yaratiш
     var debtData = {
@@ -7020,6 +7237,7 @@ async function saveOurDebt() {
   } catch(e) {
     showToast(e.message, 'error');
   } finally {
+    _odSaving = false;
     btnEnd(btn);
   }
 }
@@ -7039,12 +7257,20 @@ function odOpenAddTxnSheet(txnType, debtId) {
   document.getElementById('od-pay-rate-group').style.display = 'none';
   document.querySelector('input[name="od-pay-currency"][value="sum"]').checked = true;
 
-  // Sheet sarlavhasi
+  // Sheet sarlavhasi va ikonasi
   var titleEl = document.getElementById('od-pay-sheet-title');
+  var iconEl  = document.getElementById('od-pay-sheet-icon');
   if (titleEl) {
-    if (txnType === 'payment') titleEl.textContent = t('debt_pay_title');
-    else if (txnType === 'return') titleEl.textContent = t('debt_return_title');
-    else titleEl.textContent = t('debt_add_btn');
+    if (txnType === 'payment') {
+      titleEl.textContent = t('debt_pay_title');
+      if (iconEl) { iconEl.style.background = 'var(--success-light)'; iconEl.style.color = 'var(--success)'; iconEl.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>'; }
+    } else if (txnType === 'return') {
+      titleEl.textContent = t('debt_return_title');
+      if (iconEl) { iconEl.style.background = '#FFF7ED'; iconEl.style.color = '#F97316'; iconEl.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>'; }
+    } else {
+      titleEl.textContent = t('debt_add_btn');
+      if (iconEl) { iconEl.style.background = 'var(--danger-light)'; iconEl.style.color = 'var(--danger)'; iconEl.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>'; }
+    }
   }
 
   // Tugma rangi
@@ -7121,7 +7347,9 @@ function calcOdPayEquiv() {
   }
 }
 
+var _odPaySaving = false;
 async function saveOurDebtPayment() {
+  if (_odPaySaving) return;
   var debtId   = document.getElementById('od-pay-debt-id').value;
   var txnType  = document.getElementById('od-pay-txn-type').value || 'payment';
   var amtRaw   = document.getElementById('od-pay-amount').value;
@@ -7131,6 +7359,9 @@ async function saveOurDebtPayment() {
   var note     = document.getElementById('od-pay-note').value.trim();
 
   // ── Validatsiya ──────────────────────────────────
+  if (!debtId) {
+    showToast('Qarz topilmadi!', 'error'); return;
+  }
   if (!amtRaw || isNaN(amount) || amount <= 0) {
     showToast(t('payment_amount_err'), 'error'); return;
   }
@@ -7138,8 +7369,9 @@ async function saveOurDebtPayment() {
     showToast(t('debt_rate_label') + ' kiritilmagan!', 'error'); return;
   }
 
+  _odPaySaving = true;
   var btn = btnStart('od-pay-save-btn', t('saving'));
-  if (!btn) return;
+  if (!btn) { _odPaySaving = false; return; }
 
   try {
     // 1. Qarz ma'lumotlarini olish
@@ -7155,17 +7387,15 @@ async function saveOurDebtPayment() {
         .select('type, amount, currency, amount_sum').eq('debt_id', debtId);
       var bal = odCalcBalance(debt, tr0.data || []);
 
-      // Miqdor qolgan qarzdan oshmasligi kerak
-      var payInBase;
-      if (debt.currency === 'usd') {
-        payInBase = currency === 'usd' ? amount : (rate > 0 ? amount / rate : 0);
-      } else {
-        payInBase = currency === 'usd' ? Math.round(amount * rate) : amount;
-      }
+      // Miqdor qolgan qarzdan oshmasligi kerak (amount_sum — so'm bazasida taqqoslash)
+      // bal.remain = so'mdagi qoldiq
+      var payAmountSum = currency === 'usd'
+        ? Math.round(amount * rate)   // USD to'lov → so'mga aylantiramiz
+        : amount;                     // So'm to'lov → to'g'ridan
       var errLabel = txnType === 'return' ? t('debt_return_btn') : t('debt_pay_btn');
-      if (payInBase > bal.remain + 0.01) {
+      if (payAmountSum > bal.remain + 1) {
         showToast(errLabel + ": qolgan qarzdan (" + bal.remainStr + ") ko'p bo'lishi mumkin emas!", 'error');
-        btnEnd(btn); return;
+        btnEnd(btn); _odPaySaving = false; return;
       }
     }
 
@@ -7232,17 +7462,17 @@ async function saveOurDebtPayment() {
   } catch(e) {
     showToast(e.message, 'error');
   } finally {
+    _odPaySaving = false;
     btnEnd(btn);
   }
 }
 
 // ── O'CHIRISH ─────────────────────────────────────
 async function deleteOurDebt(debtId) {
-  if (!confirm(t('debt_delete_confirm'))) return;
+  var ok = await showConfirm("Qarzni o'chirish", "Bu qarz va uning barcha to'lov tarixi o'chiriladi. Bu amalni bekor qilib bo'lmaydi!", "O'chirish");
+  if (!ok) return;
   try {
-    // Avval tranzaksiyalarni o'chirish
     await db.from('debt_transactions').delete().eq('debt_id', debtId);
-    // Keyin qarzni
     var res = await db.from('our_debts').delete().eq('id', debtId);
     if (res.error) throw res.error;
     showToast(t('debt_deleted'));
@@ -7251,6 +7481,28 @@ async function deleteOurDebt(debtId) {
     showToast(e.message, 'error');
   }
 }
+
+// ===================== CUSTOM CONFIRM =====================
+var _ccResolve = null;
+function showConfirm(title, msg, okLabel, okDanger) {
+  return new Promise(function(resolve) {
+    _ccResolve = resolve;
+    document.getElementById('cc-title').textContent = title || 'Ishonchingiz komilmi?';
+    document.getElementById('cc-msg').textContent = msg || '';
+    var okBtn = document.getElementById('cc-ok-btn');
+    okBtn.textContent = okLabel || 'Ha';
+    okBtn.style.background = okDanger !== false ? 'var(--danger)' : 'var(--accent)';
+    document.getElementById('custom-confirm-overlay').classList.add('active');
+  });
+}
+function ccResolve(result) {
+  document.getElementById('custom-confirm-overlay').classList.remove('active');
+  if (_ccResolve) { _ccResolve(result); _ccResolve = null; }
+}
+// Overlay tashqarisiga bosib yopish
+document.getElementById('custom-confirm-overlay').addEventListener('click', function(e) {
+  if (e.target === this) ccResolve(false);
+});
 
 // ===================== WINDOW BINDINGS =====================
 // onclick="..." attributlar uchun barcha funksiyalarni window ga bog'lash
@@ -7321,6 +7573,18 @@ window.odOpenDetail = odOpenDetail;
 window.tourNext = tourNext;
 window.tourFinish = tourFinish;
 </script>
+
+<!-- ============ CUSTOM CONFIRM MODAL ============ -->
+<div id="custom-confirm-overlay">
+  <div id="custom-confirm-box">
+    <div class="cc-title" id="cc-title">Ishonchingiz komilmi?</div>
+    <div class="cc-msg" id="cc-msg">Bu amalni bekor qilib bo'lmaydi.</div>
+    <div class="cc-btns">
+      <button class="btn btn-ghost btn-full" id="cc-cancel-btn" onclick="ccResolve(false)" style="height:46px">Bekor</button>
+      <button class="btn btn-full" id="cc-ok-btn" onclick="ccResolve(true)" style="height:46px;background:var(--danger);color:#fff;border:none">O'chirish</button>
+    </div>
+  </div>
+</div>
 
 <!-- ============ SPOTLIGHT TOUR ============ -->
 <div id="tour-overlay">
