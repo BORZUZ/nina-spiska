@@ -868,29 +868,60 @@ body{
   .stats-grid{grid-template-columns:repeat(4,1fr);}
 }
 
-/* ===================== MARKAZIY SPISKA TUGMASI ===================== */
+/* ===================== MARKAZIY SPISKA TUGMASI — Apple Elevated ===================== */
 .nav-spiska-center{
   position:relative;
-  min-width:64px;
-  margin-top:-20px;
+  min-width:68px;
+  margin-top:-28px;
+  z-index:10;
 }
 .nav-spiska-fab{
-  width:52px;height:52px;
-  background:var(--accent);
-  border-radius:16px;
+  width:58px;height:58px;
+  background:linear-gradient(145deg,#1a8fff,#007AFF,#0062CC);
+  border-radius:20px;
   display:flex;align-items:center;justify-content:center;
   color:#fff;
-  box-shadow:0 4px 16px rgba(var(--accent-rgb),.45);
-  transition:all .2s;
+  box-shadow:
+    0 6px 20px rgba(0,122,255,.5),
+    0 2px 6px rgba(0,122,255,.3),
+    0 0 0 3px rgba(255,255,255,.9);
+  transition:all .2s cubic-bezier(.34,1.56,.64,1);
   margin:0 auto;
 }
+[data-theme="dark"] .nav-spiska-fab{
+  box-shadow:
+    0 6px 20px rgba(10,132,255,.5),
+    0 2px 6px rgba(10,132,255,.3),
+    0 0 0 3px rgba(40,40,42,.9);
+}
 .nav-spiska-center:active .nav-spiska-fab{
-  transform:scale(.92);
-  box-shadow:0 2px 8px rgba(var(--accent-rgb),.3);
+  transform:scale(.88);
+  box-shadow:0 2px 8px rgba(0,122,255,.35);
 }
 .nav-spiska-center.active .nav-spiska-fab{
-  background:var(--accent-hover);
-  box-shadow:0 6px 20px rgba(var(--accent-rgb),.5);
+  background:linear-gradient(145deg,#0a84ff,#0062CC,#004499);
+  box-shadow:
+    0 8px 24px rgba(0,122,255,.55),
+    0 2px 6px rgba(0,122,255,.3),
+    0 0 0 3px rgba(255,255,255,.9);
+}
+
+/* Boshqa nav-itemlar — Apple style subtle active */
+.nav-item:not(.nav-spiska-center){
+  flex:1;
+}
+.nav-item:not(.nav-spiska-center) .nav-icon-wrap{
+  transition:transform .15s,background .15s;
+}
+.nav-item:not(.nav-spiska-center):active .nav-icon-wrap{
+  transform:scale(.85);
+}
+.nav-item.active:not(.nav-spiska-center) .nav-icon-wrap{
+  background:var(--accent-light);
+  border-radius:12px;
+}
+.nav-item.active:not(.nav-spiska-center) svg{
+  color:var(--accent);
 }
 
 /* ===================== SETTINGS SCROLL FIX ===================== */
@@ -1733,7 +1764,29 @@ body{
             </div>
           </div>
 
-          <!-- 5. ILOVANI SOZLASH — Dizayn + Til bir joyda -->
+          <!-- 5. OVOZ EFFEKTLARI -->
+          <div class="settings-section">
+            <div class="settings-section-title">OVOZ EFFEKTLARI</div>
+            <div class="card">
+              <div class="settings-item" style="border:none">
+                <div class="settings-item-left">
+                  <div class="settings-item-icon" style="background:#F0EEFF;color:#7C3AED">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                  </div>
+                  <div>
+                    <div class="settings-item-label">Ovoz effektlari</div>
+                    <div class="settings-item-sublabel">Tugmalar va harakatlar ovozi</div>
+                  </div>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" id="sound-toggle" onchange="toggleSoundEnabled(this.checked)" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. ILOVANI SOZLASH — Dizayn + Til bir joyda -->
           <div class="settings-section">
             <div class="settings-section-title" id="s-sec-theme">ILOVA SOZLAMALARI</div>
             <div class="card">
@@ -2469,6 +2522,7 @@ function toggleTheme() {
   if (currentAdmin) db.from('admins').update({theme:next}).eq('id', currentAdmin.id);
 }
 function changeTheme(isDark) {
+  soundToggle();
   var theme = isDark ? 'dark' : 'light';
   setTheme(theme);
   if (currentAdmin) db.from('admins').update({theme:theme}).eq('id', currentAdmin.id);
@@ -2515,6 +2569,8 @@ function debounce(fn, delay) {
 // ===================== TOAST =====================
 function showToast(msg, type) {
   type = type || 'success';
+  if (type === 'success') soundSuccess();
+  else if (type === 'error') soundError();
   var old = document.querySelector('.toast');
   if (old) { clearTimeout(old._timeout); old.remove(); }
   var t = document.createElement('div');
@@ -2665,6 +2721,7 @@ function updateAdminUI() {
 
 // ===================== ROUTER =====================
 function navigate(page, data) {
+  soundTap();
   document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
   document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
   document.querySelectorAll('.sidebar-nav-item').forEach(function(n) { n.classList.remove('active'); });
@@ -3469,6 +3526,7 @@ async function confirmCloseSpiska(sid, btnEl) {
 async function confirmDeleteSpiska(sid) {
   var ok = await showConfirm("Spiskani o'chirish", "Bu spiska va uning barcha mahsulotlari butunlay o'chiriladi. Bu amalni bekor qilib bo'lmaydi!", "O'chirish");
   if (!ok) return;
+  soundDelete();
   deleteSpiska(sid);
 }
 
@@ -3529,6 +3587,7 @@ async function deleteSpiska(sid) {
 
 async function removeItem(itemId) {
   try {
+    soundDelete();
     await db.from('spiska_items').delete().eq('id', itemId);
     var ir = await db.from('spiska_items').select('total_price').eq('spiska_id', currentSpiskaId);
     var total = (ir.data||[]).reduce(function(s, i) { return s + i.total_price; }, 0);
@@ -5187,6 +5246,9 @@ function loadSettings() {
   document.querySelectorAll('input[name="lang"]').forEach(function(r) {
     r.checked = r.value === lang;
   });
+  // Ovoz toggle holatini ko'rsatish
+  var sToggle = document.getElementById('sound-toggle');
+  if (sToggle) sToggle.checked = _soundEnabled;
 }
 
 // ===================== I18N — TO'LIQ TARJIMA TIZIMI =====================
@@ -6537,11 +6599,13 @@ window.addEventListener('resize', function() {
 
 // ===================== SHEET HELPERS =====================
 function showSheet(id) {
+  soundSheetOpen();
   var sheet = document.getElementById(id);
   sheet.classList.add('show');
   sheet.onclick = function(e) { if (e.target === sheet) hideSheet(id); };
 }
 function hideSheet(id) {
+  soundSheetClose();
   var sheet = document.getElementById(id);
   sheet.classList.remove('show');
 }
@@ -7159,6 +7223,7 @@ async function deleteExpense(id) {
     t('exp_delete_confirm_btn')
   );
   if (!ok) return;
+  soundDelete();
   try {
     var res = await db.from('expenses').delete().eq('id', id);
     if (res.error) throw res.error;
@@ -7993,6 +8058,7 @@ async function saveOurDebtPayment() {
 async function deleteOurDebt(debtId) {
   var ok = await showConfirm("Qarzni o'chirish", "Bu qarz va uning barcha to'lov tarixi o'chiriladi. Bu amalni bekor qilib bo'lmaydi!", "O'chirish");
   if (!ok) return;
+  soundDelete();
   try {
     await db.from('debt_transactions').delete().eq('debt_id', debtId);
     var res = await db.from('our_debts').delete().eq('id', debtId);
@@ -8025,6 +8091,107 @@ function ccResolve(result) {
 document.getElementById('custom-confirm-overlay').addEventListener('click', function(e) {
   if (e.target === this) ccResolve(false);
 });
+
+// ===================== APPLE SOUND SYSTEM =====================
+var _audioCtx = null;
+var _soundEnabled = true;
+
+// localStorage dan ovoz holatini o'qish
+(function(){
+  try {
+    var saved = localStorage.getItem('ns_sound_enabled');
+    if (saved !== null) _soundEnabled = saved === 'true';
+  } catch(e) {}
+})();
+
+function _getAudioCtx() {
+  if (!_audioCtx) {
+    try { _audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
+  }
+  // iOS: Context suspended bo'lishi mumkin, resume qilamiz
+  if (_audioCtx && _audioCtx.state === 'suspended') {
+    _audioCtx.resume();
+  }
+  return _audioCtx;
+}
+
+function _playTone(opts) {
+  if (!_soundEnabled) return;
+  var ctx = _getAudioCtx();
+  if (!ctx) return;
+  try {
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = opts.type || 'sine';
+    osc.frequency.setValueAtTime(opts.freq || 440, ctx.currentTime);
+    if (opts.freqEnd) {
+      osc.frequency.exponentialRampToValueAtTime(opts.freqEnd, ctx.currentTime + (opts.dur || 0.08));
+    }
+    gain.gain.setValueAtTime(opts.vol || 0.18, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + (opts.dur || 0.08));
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + (opts.dur || 0.08));
+  } catch(e) {}
+}
+
+// --- Sound effektlari ---
+
+// Oddiy tap — nav bosish, tugma bosish
+function soundTap() {
+  _playTone({ freq:640, freqEnd:480, type:'sine', vol:0.10, dur:0.055 });
+}
+
+// Sheet ochilishi — whoosh
+function soundSheetOpen() {
+  _playTone({ freq:280, freqEnd:520, type:'sine', vol:0.12, dur:0.18 });
+}
+
+// Sheet yopilishi — reverse whoosh
+function soundSheetClose() {
+  _playTone({ freq:480, freqEnd:260, type:'sine', vol:0.09, dur:0.14 });
+}
+
+// Muvaffaqiyat — ding-ding
+function soundSuccess() {
+  _playTone({ freq:783, freqEnd:880, type:'sine', vol:0.15, dur:0.10 });
+  setTimeout(function(){
+    _playTone({ freq:1046, freqEnd:1174, type:'sine', vol:0.12, dur:0.14 });
+  }, 100);
+}
+
+// Xatolik — buzz
+function soundError() {
+  _playTone({ freq:180, freqEnd:120, type:'sawtooth', vol:0.14, dur:0.18 });
+}
+
+// O'chirish — pastga tushish
+function soundDelete() {
+  _playTone({ freq:420, freqEnd:180, type:'sine', vol:0.13, dur:0.22 });
+}
+
+// Yangi element qo'shish — pop
+function soundAdd() {
+  _playTone({ freq:520, freqEnd:680, type:'sine', vol:0.13, dur:0.09 });
+}
+
+// Toggle switch
+function soundToggle() {
+  _playTone({ freq:560, freqEnd:480, type:'sine', vol:0.09, dur:0.06 });
+}
+
+// Ovozni yoqish/o'chirish
+function toggleSoundEnabled(val) {
+  _soundEnabled = val;
+  try { localStorage.setItem('ns_sound_enabled', val ? 'true' : 'false'); } catch(e) {}
+  // toggle holatini yangilash
+  var toggle = document.getElementById('sound-toggle');
+  if (toggle) toggle.checked = val;
+  if (val) soundSuccess();
+}
+
+window.toggleSoundEnabled = toggleSoundEnabled;
 
 // ===================== WINDOW BINDINGS =====================
 // onclick="..." attributlar uchun barcha funksiyalarni window ga bog'lash
