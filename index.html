@@ -10,71 +10,96 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
-/* ===================== DESIGN TOKENS ===================== */
+/* ===================== DESIGN TOKENS — Apple Style ===================== */
 :root,[data-theme="light"]{
-  --bg-primary:#F8FAFC;
+  /* Backgrounds — iOS system background hierarchy */
+  --bg-primary:#F2F2F7;
   --bg-secondary:#FFFFFF;
-  --bg-tertiary:#F1F5F9;
+  --bg-tertiary:#EFEFF4;
   --bg-card:#FFFFFF;
-  --bg-input:#F1F5F9;
-  --bg-hover:#F8FAFC;
-  --text-primary:#0F172A;
-  --text-secondary:#475569;
-  --text-muted:#94A3B8;
-  --accent:#2563EB;
-  --accent-light:#EFF6FF;
-  --accent-hover:#1D4ED8;
-  --accent-rgb:37,99,235;
-  --success:#10B981;
-  --success-light:#ECFDF5;
-  --danger:#EF4444;
-  --danger-light:#FEF2F2;
-  --warning:#F59E0B;
-  --warning-light:#FFFBEB;
-  --border:#E2E8F0;
-  --border-focus:#2563EB;
-  --shadow-xs:0 1px 2px rgba(0,0,0,.05);
-  --shadow-sm:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
-  --shadow-md:0 4px 12px rgba(0,0,0,.08),0 2px 4px rgba(0,0,0,.04);
-  --shadow-lg:0 10px 32px rgba(0,0,0,.1),0 4px 8px rgba(0,0,0,.04);
+  --bg-input:#EFEFF4;
+  --bg-hover:#F2F2F7;
+
+  /* Typography — Apple text hierarchy */
+  --text-primary:#000000;
+  --text-secondary:#3C3C43;
+  --text-muted:#8E8E93;
+
+  /* Accent — Apple Blue */
+  --accent:#007AFF;
+  --accent-light:#E8F1FF;
+  --accent-hover:#0062CC;
+  --accent-rgb:0,122,255;
+
+  /* Semantic colors — Apple palette */
+  --success:#34C759;
+  --success-light:#E8F9ED;
+  --danger:#FF3B30;
+  --danger-light:#FFF0EF;
+  --warning:#FF9500;
+  --warning-light:#FFF4E5;
+
+  /* Borders — Apple hairline */
+  --border:rgba(60,60,67,.12);
+  --border-focus:#007AFF;
+
+  /* Shadows — Apple soft elevation */
+  --shadow-xs:0 1px 3px rgba(0,0,0,.04);
+  --shadow-sm:0 2px 8px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.03);
+  --shadow-md:0 4px 16px rgba(0,0,0,.08),0 2px 4px rgba(0,0,0,.04);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.10),0 2px 8px rgba(0,0,0,.04);
   --shadow-xl:0 20px 60px rgba(0,0,0,.12);
-  --radius-xs:6px;
-  --radius-sm:8px;
-  --radius-md:12px;
-  --radius-lg:16px;
-  --radius-xl:20px;
-  --radius-2xl:24px;
+
+  /* Radii — Apple rounded */
+  --radius-xs:8px;
+  --radius-sm:10px;
+  --radius-md:14px;
+  --radius-lg:18px;
+  --radius-xl:22px;
+  --radius-2xl:28px;
+
   --nav-height:64px;
-  --bottom-nav-height:72px;
+  --bottom-nav-height:76px;
   --sidebar-width:240px;
 }
 [data-theme="dark"]{
-  --bg-primary:#020617;
-  --bg-secondary:#0F172A;
-  --bg-tertiary:#1E293B;
-  --bg-card:#0F172A;
-  --bg-input:#1E293B;
-  --bg-hover:#1E293B;
-  --text-primary:#E2E8F0;
-  --text-secondary:#94A3B8;
-  --text-muted:#475569;
-  --accent:#3B82F6;
-  --accent-light:#1E3A5F;
-  --accent-hover:#60A5FA;
-  --accent-rgb:59,130,246;
-  --success:#34D399;
-  --success-light:#064E3B;
-  --danger:#F87171;
-  --danger-light:#450A0A;
-  --warning:#FCD34D;
-  --warning-light:#451A03;
-  --border:#1E293B;
-  --border-focus:#3B82F6;
-  --shadow-xs:0 1px 2px rgba(0,0,0,.3);
-  --shadow-sm:0 1px 3px rgba(0,0,0,.4);
-  --shadow-md:0 4px 12px rgba(0,0,0,.5);
-  --shadow-lg:0 10px 32px rgba(0,0,0,.6);
-  --shadow-xl:0 20px 60px rgba(0,0,0,.7);
+  /* Backgrounds — iOS dark system backgrounds */
+  --bg-primary:#000000;
+  --bg-secondary:#1C1C1E;
+  --bg-tertiary:#2C2C2E;
+  --bg-card:#1C1C1E;
+  --bg-input:#2C2C2E;
+  --bg-hover:#3A3A3C;
+
+  /* Typography */
+  --text-primary:#FFFFFF;
+  --text-secondary:rgba(235,235,245,.6);
+  --text-muted:rgba(235,235,245,.3);
+
+  /* Accent — Apple Blue dark */
+  --accent:#0A84FF;
+  --accent-light:#0A2540;
+  --accent-hover:#409CFF;
+  --accent-rgb:10,132,255;
+
+  /* Semantic colors — dark */
+  --success:#30D158;
+  --success-light:#0A2E14;
+  --danger:#FF453A;
+  --danger-light:#2E0B09;
+  --warning:#FF9F0A;
+  --warning-light:#2E1B00;
+
+  /* Borders */
+  --border:rgba(84,84,88,.65);
+  --border-focus:#0A84FF;
+
+  /* Shadows */
+  --shadow-xs:0 1px 3px rgba(0,0,0,.4);
+  --shadow-sm:0 2px 8px rgba(0,0,0,.5);
+  --shadow-md:0 4px 16px rgba(0,0,0,.6);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.7);
+  --shadow-xl:0 20px 60px rgba(0,0,0,.8);
 }
 
 /* ===================== RESET & BASE ===================== */
@@ -229,15 +254,21 @@ body{
 /* ===================== TOP HEADER ===================== */
 .top-header{
   height:var(--nav-height);
-  background:var(--bg-secondary);
-  border-bottom:1px solid var(--border);
+  background:rgba(255,255,255,.82);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:0.5px solid rgba(60,60,67,.15);
   display:flex;align-items:center;justify-content:space-between;
   padding:0 16px;
   position:sticky;
   top:0;
   z-index:100;
   width:100%;
-  box-shadow:var(--shadow-xs);
+  box-shadow:none;
+}
+[data-theme="dark"] .top-header{
+  background:rgba(28,28,30,.88);
+  border-bottom:0.5px solid rgba(84,84,88,.5);
 }
 .header-left{display:flex;align-items:center;gap:12px}
 .header-logo-icon{
@@ -267,19 +298,24 @@ body{
   width:100%;
   max-width:480px;
   height:var(--bottom-nav-height);
-  background:var(--bg-secondary);
-  border-top:1px solid var(--border);
+  background:rgba(255,255,255,.82);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  backdrop-filter:blur(20px) saturate(180%);
+  border-top:0.5px solid rgba(60,60,67,.2);
   display:flex;
   align-items:center;
   justify-content:space-around;
   padding:0 4px;
   padding-bottom:env(safe-area-inset-bottom, 0px);
   z-index:200;
-  box-shadow:0 -2px 16px rgba(0,0,0,.06);
-  /* GPU acceleration */
+  box-shadow:0 -0.5px 0 rgba(0,0,0,.08);
   will-change:transform;
   -webkit-transform:translateX(-50%) translateZ(0);
   transform:translateX(-50%) translateZ(0);
+}
+[data-theme="dark"] #bottom-nav{
+  background:rgba(28,28,30,.88);
+  border-top:0.5px solid rgba(84,84,88,.55);
 }
 .nav-item{
   display:flex;flex-direction:column;align-items:center;gap:3px;
@@ -289,14 +325,14 @@ body{
   color:var(--text-muted);
   position:relative;
 }
-.nav-item:active{transform:scale(.92);}
+.nav-item:active{transform:scale(.88);}
 .nav-item.active{color:var(--accent);}
 .nav-item.active .nav-dot{
   position:absolute;bottom:4px;left:50%;transform:translateX(-50%);
   width:4px;height:4px;border-radius:50%;background:var(--accent);
 }
 .nav-icon-wrap{
-  width:42px;height:28px;border-radius:10px;
+  width:44px;height:30px;border-radius:12px;
   display:flex;align-items:center;justify-content:center;
   transition:all .2s;
 }
@@ -334,15 +370,15 @@ body{
 .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px}
 .stat-card{
   background:var(--bg-card);
-  border:1px solid var(--border);
+  border:none;
   border-radius:var(--radius-lg);
   padding:18px 16px;
   position:relative;
   overflow:hidden;
   box-shadow:var(--shadow-sm);
-  transition:transform .2s,box-shadow .2s;
+  transition:transform .2s;
 }
-.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.stat-card:active{transform:scale(.97);}
 .stat-card-icon{
   width:40px;height:40px;border-radius:12px;
   display:flex;align-items:center;justify-content:center;
@@ -350,7 +386,7 @@ body{
 }
 .stat-card-icon.blue{background:var(--accent-light);color:var(--accent);}
 .stat-card-icon.green{background:var(--success-light);color:var(--success);}
-.stat-card-icon.purple{background:#F5F3FF;color:#7C3AED;}
+.stat-card-icon.purple{background:#F0EEFF;color:#7C3AED;}
 .stat-card-icon.amber{background:var(--warning-light);color:var(--warning);}
 [data-theme="dark"] .stat-card-icon.purple{background:#2E1065;}
 .stat-label{font-size:.72rem;font-weight:600;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
@@ -360,35 +396,35 @@ body{
 /* ===================== CARDS ===================== */
 .card{
   background:var(--bg-card);
-  border:1px solid var(--border);
+  border:none;
   border-radius:var(--radius-lg);
   padding:16px;
   box-shadow:var(--shadow-sm);
 }
 .card-row{
   display:flex;align-items:center;justify-content:space-between;gap:12px;
-  padding:12px 0;border-bottom:1px solid var(--border);
+  padding:12px 0;border-bottom:0.5px solid rgba(60,60,67,.1);
 }
+[data-theme="dark"] .card-row{border-bottom:0.5px solid rgba(84,84,88,.4);}
 .card-row:last-child{border-bottom:none;padding-bottom:0}
 .card-row:first-child{padding-top:0}
 .card-row-label{font-size:.82rem;color:var(--text-muted);display:flex;align-items:center;gap:6px}
 
 /* ===================== LIST ITEMS ===================== */
-.list-container{display:flex;flex-direction:column;gap:8px}
+.list-container{display:flex;flex-direction:column;gap:10px}
 .list-item{
   background:var(--bg-card);
-  border:1px solid var(--border);
-  border-radius:var(--radius-md);
+  border:none;
+  border-radius:var(--radius-lg);
   padding:14px 16px;
   display:flex;align-items:center;gap:12px;
   cursor:pointer;
-  transition:transform .18s,box-shadow .18s,background .18s;
-  box-shadow:var(--shadow-xs);
+  transition:transform .15s,opacity .15s;
+  box-shadow:var(--shadow-sm);
 }
-.list-item:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);background:var(--bg-secondary);}
-.list-item:active{transform:scale(.99);background:var(--bg-hover);}
+.list-item:active{transform:scale(.98);opacity:.85;}
 .list-item-avatar{
-  width:42px;height:42px;border-radius:12px;
+  width:44px;height:44px;border-radius:14px;
   background:var(--accent-light);
   display:flex;align-items:center;justify-content:center;
   color:var(--accent);flex-shrink:0;
@@ -419,134 +455,138 @@ body{
 /* ===================== BUTTONS ===================== */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:7px;
-  padding:10px 18px;
-  border-radius:var(--radius-md);
-  font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:600;
+  padding:12px 20px;
+  border-radius:var(--radius-lg);
+  font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;
   border:none;cursor:pointer;
-  transition:all .18s;white-space:nowrap;
+  transition:all .15s;white-space:nowrap;
   position:relative;overflow:hidden;
+  letter-spacing:-.01em;
 }
-.btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:background .18s;}
-.btn:hover::after{background:rgba(255,255,255,.08);}
-.btn:active{transform:scale(.96);}
-.btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;}
+.btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:background .15s;}
+.btn:hover::after{background:rgba(255,255,255,.1);}
+.btn:active{transform:scale(.95);opacity:.9;}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;}
 .btn-primary{
   background:var(--accent);color:#fff;
-  box-shadow:0 2px 8px rgba(var(--accent-rgb),.35);
+  box-shadow:0 2px 12px rgba(var(--accent-rgb),.35);
 }
-.btn-primary:hover{background:var(--accent-hover);box-shadow:0 4px 16px rgba(var(--accent-rgb),.4);}
-.btn-success{background:var(--success);color:#fff;box-shadow:0 2px 8px rgba(16,185,129,.3);}
-.btn-danger{background:var(--danger);color:#fff;box-shadow:0 2px 8px rgba(239,68,68,.25);}
+.btn-primary:hover{background:var(--accent-hover);box-shadow:0 4px 20px rgba(var(--accent-rgb),.4);}
+.btn-success{background:var(--success);color:#fff;box-shadow:0 2px 10px rgba(52,199,89,.3);}
+.btn-danger{background:var(--danger);color:#fff;box-shadow:0 2px 10px rgba(255,59,48,.25);}
 .btn-ghost{
   background:var(--bg-tertiary);
   color:var(--text-secondary);
-  border:1.5px solid var(--border);
+  border:none;
 }
 .btn-ghost:hover{background:var(--bg-hover);color:var(--text-primary);}
 .btn-icon{
-  width:36px;height:36px;padding:0;
-  border-radius:var(--radius-sm);
+  width:38px;height:38px;padding:0;
+  border-radius:var(--radius-md);
   background:var(--bg-tertiary);
   color:var(--text-secondary);
-  border:1.5px solid var(--border);
+  border:none;
   cursor:pointer;
   display:flex;align-items:center;justify-content:center;
-  transition:all .18s;flex-shrink:0;
+  transition:all .15s;flex-shrink:0;
 }
 .btn-icon:hover{background:var(--bg-hover);color:var(--text-primary);}
-.btn-icon-danger{background:var(--danger-light);color:var(--danger);border-color:transparent;}
-.btn-icon-danger:hover{opacity:.85;}
+.btn-icon-danger{background:var(--danger-light);color:var(--danger);border:none;}
+.btn-icon-danger:hover{opacity:.8;}
 .btn-fab{
-  width:52px;height:52px;border-radius:16px;
+  width:54px;height:54px;border-radius:18px;
   background:var(--accent);color:#fff;
-  box-shadow:0 4px 16px rgba(var(--accent-rgb),.45);
+  box-shadow:0 4px 20px rgba(var(--accent-rgb),.45);
   border:none;cursor:pointer;transition:all .2s;
   display:flex;align-items:center;justify-content:center;
 }
-.btn-fab:hover{transform:scale(1.06);box-shadow:0 6px 24px rgba(var(--accent-rgb),.5);}
-.btn-fab:active{transform:scale(.94);}
+.btn-fab:hover{transform:scale(1.06);box-shadow:0 6px 28px rgba(var(--accent-rgb),.5);}
+.btn-fab:active{transform:scale(.93);}
 .btn-full{width:100%}
-.btn-sm{padding:7px 14px;font-size:.8rem;}
+.btn-sm{padding:8px 14px;font-size:.82rem;border-radius:var(--radius-md);}
 
 /* ===================== FORMS ===================== */
-.form-group{margin-bottom:16px}
+.form-group{margin-bottom:18px}
 .form-label{
   display:block;font-size:.72rem;font-weight:700;
-  color:var(--text-muted);margin-bottom:6px;
+  color:var(--text-muted);margin-bottom:7px;
   text-transform:uppercase;letter-spacing:.06em;
 }
 .form-input,.form-select,.form-textarea{
-  width:100%;padding:12px 14px;
+  width:100%;padding:13px 16px;
   background:var(--bg-input);
-  border:1.5px solid var(--border);
+  border:none;
   border-radius:var(--radius-md);
-  font-family:'DM Sans',sans-serif;font-size:.9rem;
+  font-family:'DM Sans',sans-serif;font-size:.95rem;
   color:var(--text-primary);
   transition:all .18s;outline:none;appearance:none;
 }
 .form-input:focus,.form-select:focus,.form-textarea:focus{
-  border-color:var(--border-focus);
   background:var(--bg-secondary);
-  box-shadow:0 0 0 3px rgba(var(--accent-rgb),.12);
+  box-shadow:0 0 0 3.5px rgba(var(--accent-rgb),.18);
 }
 .form-input::placeholder,.form-textarea::placeholder{color:var(--text-muted)}
-.form-textarea{resize:none;min-height:80px;line-height:1.5}
+.form-textarea{resize:none;min-height:84px;line-height:1.5}
 .form-select{
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238E8E93' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;padding-right:38px;cursor:pointer;
 }
 .form-hint{font-size:.72rem;color:var(--text-muted);margin-top:5px}
 .input-with-icon{position:relative;}
-.input-with-icon input{padding-left:40px;}
-.input-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;}
+.input-with-icon input{padding-left:42px;}
+.input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;}
 
 /* ===================== SEARCH ===================== */
 .search-wrap{position:relative;margin-bottom:16px}
-.search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none}
+.search-wrap svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none}
 .search-input{
-  width:100%;padding:10px 14px 10px 40px;
+  width:100%;padding:11px 16px 11px 42px;
   background:var(--bg-input);
-  border:1.5px solid var(--border);
+  border:none;
   border-radius:var(--radius-md);
-  font-family:'DM Sans',sans-serif;font-size:.88rem;
+  font-family:'DM Sans',sans-serif;font-size:.9rem;
   color:var(--text-primary);outline:none;transition:all .18s;
 }
-.search-input:focus{border-color:var(--border-focus);background:var(--bg-secondary);box-shadow:0 0 0 3px rgba(var(--accent-rgb),.12);}
+.search-input:focus{background:var(--bg-secondary);box-shadow:0 0 0 3.5px rgba(var(--accent-rgb),.18);}
 .search-input::placeholder{color:var(--text-muted)}
 
 /* ===================== FILTER TABS ===================== */
 .filter-tabs{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none}
 .filter-tabs::-webkit-scrollbar{display:none}
 .filter-tab{
-  padding:7px 14px;border-radius:20px;
-  font-size:.78rem;font-weight:600;
-  border:1.5px solid var(--border);
-  background:var(--bg-secondary);color:var(--text-muted);
+  padding:7px 16px;border-radius:20px;
+  font-size:.8rem;font-weight:600;
+  border:none;
+  background:var(--bg-tertiary);color:var(--text-secondary);
   cursor:pointer;white-space:nowrap;transition:all .18s;
 }
-.filter-tab.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(var(--accent-rgb),.3);}
+.filter-tab.active{background:var(--accent);color:#fff;box-shadow:0 2px 10px rgba(var(--accent-rgb),.3);}
 
 /* ===================== BOTTOM SHEET / MODAL ===================== */
 .sheet-overlay{
   position:fixed;inset:0;
-  background:rgba(0,0,0,.5);
+  background:rgba(0,0,0,.4);
   z-index:300;
   display:none;align-items:flex-end;
-  backdrop-filter:blur(4px);
-  -webkit-backdrop-filter:blur(4px);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
 }
-.sheet-overlay.show{display:flex;animation:fadeIn .2s ease}
+.sheet-overlay.show{display:flex;animation:fadeIn .25s ease}
 .sheet{
   width:100%;max-width:480px;margin:0 auto;
   background:var(--bg-secondary);
-  border-radius:var(--radius-xl) var(--radius-xl) 0 0;
+  border-radius:var(--radius-2xl) var(--radius-2xl) 0 0;
   padding:8px 20px 36px;
   max-height:92vh;overflow-y:auto;
-  animation:slideUp .3s cubic-bezier(.22,1,.36,1);
+  animation:slideUp .32s cubic-bezier(.22,1,.36,1);
 }
 .sheet-handle{
-  width:36px;height:4px;background:var(--border);
-  border-radius:2px;margin:8px auto 20px;
+  width:36px;height:5px;
+  background:rgba(60,60,67,.18);
+  border-radius:3px;margin:10px auto 20px;
+}
+[data-theme="dark"] .sheet-handle{
+  background:rgba(255,255,255,.15);
 }
 .sheet-title{font-size:1.1rem;font-weight:700;margin-bottom:20px;letter-spacing:-.02em}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
@@ -1736,6 +1776,8 @@ body{
       <!-- XARAJATLAR SAHIFASI -->
       <div id="page-expenses" class="page">
         <div class="page-content">
+
+          <!-- Header -->
           <div class="section-header">
             <button class="back-btn" onclick="navigate('settings')" style="margin:0">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
@@ -1746,21 +1788,28 @@ body{
             </button>
           </div>
 
-          <!-- Filter -->
-          <div class="filter-tabs" style="margin-bottom:12px">
-            <button class="filter-tab active" id="ft-exp-month" onclick="filterExpenses(this,'month')">Oy</button>
-            <button class="filter-tab" id="ft-exp-week" onclick="filterExpenses(this,'week')">Hafta</button>
-            <button class="filter-tab" id="ft-exp-all" onclick="filterExpenses(this,'all')">Hammasi</button>
+          <!-- Period filter -->
+          <div class="filter-tabs" style="margin-bottom:16px">
+            <button class="filter-tab active" id="ft-exp-month" onclick="filterExpenses(this,'month')" data-t="ft_stats_month">Oy</button>
+            <button class="filter-tab" id="ft-exp-week"  onclick="filterExpenses(this,'week')"  data-t="ft_stats_week">Hafta</button>
+            <button class="filter-tab" id="ft-exp-all"   onclick="filterExpenses(this,'all')"   data-t="spiska_all">Hammasi</button>
+            <button class="filter-tab" id="ft-exp-custom" onclick="filterExpenses(this,'custom')" data-t="ft_stats_custom">Maxsus</button>
+          </div>
+          <!-- Custom sana -->
+          <div id="exp-custom-dates" style="display:none;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+            <input type="date" id="exp-date-from" style="font-size:.78rem;padding:5px 8px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-input);color:var(--text-primary)" onchange="loadExpenses()">
+            <span style="font-size:.75rem;color:var(--text-muted)">—</span>
+            <input type="date" id="exp-date-to" style="font-size:.78rem;padding:5px 8px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-input);color:var(--text-primary)" onchange="loadExpenses()">
           </div>
 
-          <!-- Umumiy kartalar -->
+          <!-- ── STAT KARTALAR ── -->
           <div class="stats-grid" style="margin-bottom:16px">
-            <div class="stat-card">
-              <div class="stat-card-icon" style="background:#FEF2F2;color:#EF4444">
+            <div class="stat-card" style="border:1.5px solid rgba(239,68,68,.2);background:var(--danger-light)">
+              <div class="stat-card-icon" style="background:rgba(239,68,68,.15);color:#EF4444">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
               </div>
-              <div class="stat-label" id="exp-stat-sum-label">Jami (so'm)</div>
-              <div class="stat-value" id="exp-stat-sum" style="font-size:1.2rem;color:var(--danger)">—</div>
+              <div class="stat-label" id="exp-stat-sum-label" style="color:#EF4444">Jami (so'm)</div>
+              <div class="stat-value" id="exp-stat-sum" style="font-size:1.3rem;color:#EF4444">—</div>
               <div class="stat-trend" id="exp-stat-sum-period">so'm</div>
             </div>
             <div class="stat-card">
@@ -1768,12 +1817,61 @@ body{
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
               </div>
               <div class="stat-label" id="exp-stat-usd-label">Jami ($)</div>
-              <div class="stat-value" id="exp-stat-usd" style="font-size:1.2rem;color:var(--accent)">—</div>
+              <div class="stat-value" id="exp-stat-usd" style="font-size:1.3rem;color:var(--accent)">—</div>
               <div class="stat-trend">dollar</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-icon amber">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+              </div>
+              <div class="stat-label" id="exp-stat-count-label">Yozuvlar soni</div>
+              <div class="stat-value" id="exp-stat-count" style="font-size:1.4rem">—</div>
+              <div class="stat-trend" id="exp-stat-count-sub">ta xarajat</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-icon" style="background:var(--success-light);color:var(--success)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+              </div>
+              <div class="stat-label" id="exp-stat-avg-label">O'rtacha</div>
+              <div class="stat-value" id="exp-stat-avg" style="font-size:1rem;color:var(--success)">—</div>
+              <div class="stat-trend">so'm/yozuv</div>
             </div>
           </div>
 
-          <!-- Ro'yxat -->
+          <!-- ── OYLIK GRAFIK ── -->
+          <div class="chart-wrap" style="margin-bottom:16px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+              <div class="chart-title" style="margin:0" id="exp-chart-title">Oylik xarajatlar</div>
+            </div>
+            <div class="bar-chart" id="exp-monthly-chart" style="height:100px">
+              <div style="display:flex;align-items:center;justify-content:center;width:100%;color:var(--text-muted);font-size:.82rem">Yuklanmoqda...</div>
+            </div>
+          </div>
+
+          <!-- ── KATEGORIYA BREAKDOWN ── -->
+          <div class="chart-wrap" style="margin-bottom:16px">
+            <div class="chart-title" id="exp-cat-title">Kategoriya bo'yicha</div>
+            <div id="exp-cat-breakdown">
+              <div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">Yuklanmoqda...</div>
+            </div>
+          </div>
+
+          <!-- ── SORT + QIDIRUV ── -->
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+            <div class="search-wrap" style="flex:1;margin:0">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="search" class="search-input" id="exp-search" placeholder="Kategoriya yoki izoh..." oninput="filterExpensesList(this.value)">
+            </div>
+            <select id="exp-sort" onchange="loadExpenses()" style="padding:9px 10px;border:1.5px solid var(--border);border-radius:var(--radius-md);background:var(--bg-input);color:var(--text-primary);font-size:.8rem;font-family:'DM Sans',sans-serif;cursor:pointer;outline:none">
+              <option value="newest" id="exp-sort-newest">Yangi</option>
+              <option value="oldest" id="exp-sort-oldest">Eski</option>
+              <option value="highest" id="exp-sort-highest">Katta ↓</option>
+              <option value="lowest" id="exp-sort-lowest">Kichik ↑</option>
+            </select>
+          </div>
+
+          <!-- ── XARAJATLAR RO'YXATI ── -->
+          <div class="section-label" id="exp-list-label">XARAJATLAR TARIXI</div>
           <div id="expenses-list" class="list-container"></div>
         </div>
       </div>
@@ -2009,19 +2107,21 @@ body{
 <div class="sheet-overlay" id="expense-sheet">
   <div class="sheet">
     <div class="sheet-handle"></div>
-    <h3 class="sheet-title" id="expense-sheet-title">Xarajat qo'shish</h3>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+      <div id="exp-sheet-icon" style="width:38px;height:38px;border-radius:11px;background:#FEF2F2;color:#EF4444;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <h3 class="sheet-title" id="expense-sheet-title" style="margin:0">Xarajat qo'shish</h3>
+    </div>
     <input type="hidden" id="expense-edit-id">
 
+    <!-- KATEGORIYA: hybrid (tanlash + o'zi yozish) -->
     <div class="form-group">
       <label class="form-label" id="exp-cat-label-form">KATEGORIYA *</label>
-      <select class="form-input" id="expense-category">
-        <option value="material" id="exp-cat-material-opt">Material</option>
-        <option value="transport" id="exp-cat-transport-opt">Transport</option>
-        <option value="salary" id="exp-cat-salary-opt">Maosh</option>
-        <option value="utility" id="exp-cat-utility-opt">Kommunal</option>
-        <option value="rent" id="exp-cat-rent-opt">Ijara</option>
-        <option value="other" id="exp-cat-other-opt">Boshqa</option>
-      </select>
+      <!-- Tezkor tugmalar -->
+      <div id="exp-cat-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px"></div>
+      <!-- O'zi yozish -->
+      <input type="text" class="form-input" id="expense-category-input" placeholder="Kategoriya nomi yoki yuqoridan tanlang..." oninput="onExpCatInput(this.value)" style="font-size:.88rem">
     </div>
 
     <div class="form-group">
@@ -2053,6 +2153,9 @@ body{
       <input type="number" class="form-input" id="expense-rate" placeholder="Masalan: 12800" min="0" oninput="calcExpEquiv()">
       <div id="exp-equiv" style="margin-top:8px;padding:8px 12px;background:var(--accent-light);border-radius:var(--radius-sm);font-size:.82rem;color:var(--accent);font-weight:600;display:none"></div>
     </div>
+
+    <!-- Tahrirlash tarixi (faqat edit rejimida ko'rinadi) -->
+    <div id="exp-edit-history" style="display:none;margin-bottom:12px;padding:10px 12px;background:var(--bg-tertiary);border-radius:var(--radius-md);font-size:.75rem;color:var(--text-muted)"></div>
 
     <div style="display:flex;gap:8px;margin-top:4px">
       <button class="btn btn-ghost btn-full" onclick="hideSheet('expense-sheet')" style="height:46px">Bekor</button>
@@ -4098,8 +4201,6 @@ async function savePayment() {
 }
 
 // ===================== STATISTIKA =====================
-var currentStatsPeriod = 'month';
-
 // ===================== STATISTIKA PRO =====================
 var currentStatsSub    = 'overview';
 var currentStatsPeriod = 'month';
@@ -4382,10 +4483,13 @@ async function loadStatsExpenses() {
     if (range.from) q = q.gte('created_at', range.from);
     if (range.to)   q = q.lte('created_at', range.to);
     var er = await q.order('created_at', {ascending:false});
+    if (er.error) throw er.error;
     var list = er.data || [];
 
-    var totalSum = list.reduce(function(s,e){ return s+(e.amount_sum||(e.currency==='sum'?e.amount:0)||0); }, 0);
-    var totalUsd = list.reduce(function(s,e){ return s+(e.currency==='usd'?e.amount:0); }, 0);
+    // Yagona _calcExpTotals — Xarajatlar sahifasi bilan bir xil hisoblash
+    var totals = _calcExpTotals(list);
+    var totalSum = totals.totalSum;
+    var totalUsd = totals.totalUsd;
 
     _set('se-total-sum', fmt(totalSum));
     _set('se-total-usd', totalUsd > 0 ? '$ '+totalUsd.toFixed(2) : '');
@@ -4396,7 +4500,7 @@ async function loadStatsExpenses() {
     var cats = {}; list.forEach(function(e){
       var c = e.category || e.note || 'Boshqa';
       if (!cats[c]) cats[c] = 0;
-      cats[c] += e.amount_sum||(e.currency==='sum'?e.amount:0)||0;
+      cats[c] += e.amount_sum||(e.currency==='sum'||e.currency==='uzs'?e.amount:0)||0;
     });
     var catList = Object.keys(cats).map(function(c){ return {name:c, total:cats[c]}; }).sort(function(a,b){ return b.total-a.total; });
     var catEl = document.getElementById('se-cat-list');
@@ -4421,7 +4525,7 @@ async function loadStatsExpenses() {
     }
 
     // Top xarajatlar
-    var top = list.slice(0,5).map(function(e){ return {name:(e.note||e.category||'Xarajat'), total:e.amount_sum||(e.currency==='sum'?e.amount:0)||0}; });
+    var top = list.slice(0,5).map(function(e){ return {name:(e.note||e.category||'Xarajat'), total:e.amount_sum||(e.currency==='sum'||e.currency==='uzs'?e.amount:0)||0}; });
     _renderRankList('se-top-list', top, function(e){ return fmt(e.total)+" so'm"; }, 'var(--danger)');
 
     // Oylik bar chart
@@ -4429,10 +4533,10 @@ async function loadStatsExpenses() {
     months.forEach(function(m){
       m.val = list.filter(function(e){
         return new Date(e.created_at) >= new Date(m.from) && new Date(e.created_at) <= new Date(m.to);
-      }).reduce(function(s,e){ return s+(e.amount_sum||(e.currency==='sum'?e.amount:0)||0); }, 0);
+      }).reduce(function(s,e){ return s+(e.amount_sum||(e.currency==='sum'||e.currency==='uzs'?e.amount:0)||0); }, 0);
     });
     _renderBarChart('se-bar-chart', months, 'var(--danger)', function(v){ return v>0?fmt(Math.round(v/1000))+'K':''; });
-  } catch(e){ console.error(e); }
+  } catch(e){ console.error('loadStatsExpenses xato:', e); }
 }
 
 // ── BIZNING QARZLAR ───────────────────────────────────
@@ -5278,19 +5382,41 @@ var LANGS = {
     preview_hint2: 'Telefon tugmasi: Ovoz balandligi + Quvvat',
     copy_success: 'Matn nusxalandi! 📋 Telegramga joylashtiring',
     exp_title: 'Xarajatlar', exp_add_btn: "Xarajat qo'shish",
+    exp_edit_title: 'Xarajatni tahrirlash',
     exp_empty: "Xarajatlar yo'q", exp_empty_sub: "Yangi xarajat qo'shing",
     exp_total_sum: "Jami (so'm)", exp_total_usd: 'Jami ($)',
+    exp_count_label: 'Yozuvlar soni', exp_count_sub: 'ta xarajat',
+    exp_avg_label: "O'rtacha",
+    exp_chart_title: 'Oylik xarajatlar',
+    exp_cat_breakdown_title: "Kategoriya bo'yicha",
+    exp_list_label: 'XARAJATLAR TARIXI',
+    exp_sort_newest: 'Yangi', exp_sort_oldest: 'Eski',
+    exp_sort_highest: 'Katta ↓', exp_sort_lowest: 'Kichik ↑',
     exp_cat_label: 'KATEGORIYA *', exp_note_label: 'IZOH (NIMA UCHUN, KIMGA)',
     exp_note_ph: "Masalan: material sotib olindi, Vася ga maosh...",
     exp_amount_label: 'SUMMA *', exp_currency_label: 'VALYUTA',
     exp_rate_label: "DOLLAR KURSI (so'm)",
     exp_rate_ph: "Masalan: 12800", exp_equiv_label: "So'mdagi ekvivalent",
-    exp_save_btn: 'Saqlash', exp_delete_confirm: "Xarajatni o'chirasizmi?",
-    exp_saved: "Xarajat saqlandi", exp_deleted: "Xarajat o'chirildi",
+    exp_save_btn: 'Saqlash',
+    exp_edit_btn: 'Tahrirlash', exp_delete_btn: "O'chirish",
+    exp_edited_badge: 'Tahrirlangan',
+    exp_created_by: "Qo'shgan", exp_edited_by: 'Tahrirlagan',
+    exp_edited_unknown: 'Admin',
+    exp_delete_confirm_title: "Xarajatni o'chirish",
+    exp_delete_confirm_msg: "Bu xarajat butunlay o'chiriladi. Bekor qilib bo'lmaydi!",
+    exp_delete_confirm_btn: "O'chirish",
+    exp_delete_confirm: "Xarajatni o'chirasizmi?",
+    exp_cat_err: "Kategoriya kiriting yoki tanlang!",
+    exp_rate_err: "Dollar kursini kiriting!",
+    exp_load_err: "Xarajat yuklanmadi",
+    exp_saved: "Xarajat saqlandi", exp_updated: "Xarajat tahrirlandi ✅",
+    exp_deleted: "Xarajat o'chirildi",
+    exp_delete_err: "O'chirishda xato",
     exp_cat_material: 'Material', exp_cat_transport: 'Transport',
     exp_cat_salary: 'Maosh', exp_cat_utility: 'Kommunal',
     exp_cat_rent: 'Ijara', exp_cat_other: 'Boshqa',
-    exp_tg_new: "YANGI XARAJAT",
+    exp_tg_new: "YANGI XARAJAT", exp_tg_edited: "XARAJAT TAHRIRLANDI",
+    tg_category: 'Kategoriya',
     exp_stats_label: 'Xarajatlar', exp_stats_sub: "Jami xarajat (so'm)",
     exp_net_label: "SOF FOYDA (xarajatlar chegirilgan)",
     debt_title: "Bizning qarzlarimiz", debt_add_btn: "Qarz qo'shish",
@@ -5597,19 +5723,41 @@ var LANGS = {
     preview_hint2: 'Кнопки телефона: Громкость + Питание',
     copy_success: 'Текст скопирован! 📋 Вставьте в Telegram',
     exp_title: 'Расходы', exp_add_btn: 'Добавить расход',
+    exp_edit_title: 'Редактировать расход',
     exp_empty: 'Нет расходов', exp_empty_sub: 'Добавьте новый расход',
     exp_total_sum: 'Итого (сум)', exp_total_usd: 'Итого ($)',
+    exp_count_label: 'Количество', exp_count_sub: 'записей',
+    exp_avg_label: 'Среднее',
+    exp_chart_title: 'Расходы по месяцам',
+    exp_cat_breakdown_title: 'По категориям',
+    exp_list_label: 'ИСТОРИЯ РАСХОДОВ',
+    exp_sort_newest: 'Новые', exp_sort_oldest: 'Старые',
+    exp_sort_highest: 'Большие ↓', exp_sort_lowest: 'Малые ↑',
     exp_cat_label: 'КАТЕГОРИЯ *', exp_note_label: 'ПРИМЕЧАНИЕ (НА ЧТО, КОМУ)',
     exp_note_ph: 'Напр: куплен материал, зарплата Васе...',
     exp_amount_label: 'СУММА *', exp_currency_label: 'ВАЛЮТА',
     exp_rate_label: 'КУРС ДОЛЛАРА (сум)',
     exp_rate_ph: 'Напр: 12800', exp_equiv_label: 'Эквивалент в сумах',
-    exp_save_btn: 'Сохранить', exp_delete_confirm: 'Удалить расход?',
-    exp_saved: 'Расход сохранён', exp_deleted: 'Расход удалён',
+    exp_save_btn: 'Сохранить',
+    exp_edit_btn: 'Редактировать', exp_delete_btn: 'Удалить',
+    exp_edited_badge: 'Изменено',
+    exp_created_by: 'Добавил', exp_edited_by: 'Изменил',
+    exp_edited_unknown: 'Администратор',
+    exp_delete_confirm_title: 'Удалить расход',
+    exp_delete_confirm_msg: 'Запись будет удалена навсегда. Это действие нельзя отменить!',
+    exp_delete_confirm_btn: 'Удалить',
+    exp_delete_confirm: 'Удалить расход?',
+    exp_cat_err: 'Введите или выберите категорию!',
+    exp_rate_err: 'Введите курс доллара!',
+    exp_load_err: 'Расход не загружен',
+    exp_saved: 'Расход сохранён', exp_updated: 'Расход изменён ✅',
+    exp_deleted: 'Расход удалён',
+    exp_delete_err: 'Ошибка удаления',
     exp_cat_material: 'Материал', exp_cat_transport: 'Транспорт',
     exp_cat_salary: 'Зарплата', exp_cat_utility: 'Коммунальные',
     exp_cat_rent: 'Аренда', exp_cat_other: 'Другое',
-    exp_tg_new: 'НОВЫЙ РАСХОД',
+    exp_tg_new: 'НОВЫЙ РАСХОД', exp_tg_edited: 'РАСХОД ИЗМЕНЁН',
+    tg_category: 'Категория',
     exp_stats_label: 'Расходы', exp_stats_sub: 'Итого расходов (сум)',
     exp_net_label: 'ЧИСТАЯ ПРИБЫЛЬ (с учётом расходов)',
     debt_title: 'Наши долги', debt_add_btn: 'Добавить долг',
@@ -6056,8 +6204,19 @@ function applyLang() {
   sid('ft-exp-month',        d.ft_stats_month);
   sid('ft-exp-week',         d.ft_stats_week);
   sid('ft-exp-all',          d.spiska_all);
+  sid('ft-exp-custom',       d.ft_stats_custom);
   sid('exp-stat-sum-label',  d.exp_total_sum);
   sid('exp-stat-usd-label',  d.exp_total_usd);
+  sid('exp-stat-count-label',d.exp_count_label);
+  sid('exp-stat-count-sub',  d.exp_count_sub);
+  sid('exp-stat-avg-label',  d.exp_avg_label);
+  sid('exp-chart-title',     d.exp_chart_title);
+  sid('exp-cat-title',       d.exp_cat_breakdown_title);
+  sid('exp-list-label',      d.exp_list_label);
+  sid('exp-sort-newest',     d.exp_sort_newest);
+  sid('exp-sort-oldest',     d.exp_sort_oldest);
+  sid('exp-sort-highest',    d.exp_sort_highest);
+  sid('exp-sort-lowest',     d.exp_sort_lowest);
   sid('expense-sheet-title', d.exp_add_btn);
   sid('exp-cat-label-form',  d.exp_cat_label);
   sid('exp-note-label-form', d.exp_note_label);
@@ -6065,16 +6224,14 @@ function applyLang() {
   sid('exp-amount-label-form',   d.exp_amount_label);
   sid('exp-rate-label-form', d.exp_rate_label);
   sid('exp-save-btn',        d.exp_save_btn);
-  sid('exp-cat-material-opt', d.exp_cat_material);
-  sid('exp-cat-transport-opt', d.exp_cat_transport);
-  sid('exp-cat-salary-opt',   d.exp_cat_salary);
-  sid('exp-cat-utility-opt',  d.exp_cat_utility);
-  sid('exp-cat-rent-opt',     d.exp_cat_rent);
-  sid('exp-cat-other-opt',    d.exp_cat_other);
+  var expCatInput = document.getElementById('expense-category-input');
+  if (expCatInput) expCatInput.placeholder = d.exp_cat_label.replace(' *','') + '...';
   var expNote = document.getElementById('expense-note');
   if (expNote) expNote.placeholder = d.exp_note_ph;
   var expRate = document.getElementById('expense-rate');
   if (expRate) expRate.placeholder = d.exp_rate_ph;
+  var expSearch = document.getElementById('exp-search');
+  if (expSearch) expSearch.placeholder = d.exp_search_ph || (d.exp_cat_label.replace(' *','') + ' / ' + d.exp_note_label.split('(')[0].trim() + '...');
 
   // === OUR-DEBTS ===
   sid('s-sec-our-debts',       d.debt_title);
@@ -6464,12 +6621,102 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ===================== XARAJATLAR =====================
 var currentExpensePeriod = 'month';
+var _expSearchQuery = '';
 
+// ── KATEGORIYA CHIP TIZIMI ─────────────────────────
+var EXP_DEFAULT_CATS = ['Material','Transport','Maosh','Kommunal','Ijara','Boshqa'];
+var _expSelectedCat = '';
+
+function expGetAllCats() {
+  var custom = [];
+  try { custom = JSON.parse(localStorage.getItem('nina_exp_cats') || '[]'); } catch(e) {}
+  var all = EXP_DEFAULT_CATS.slice();
+  custom.forEach(function(c) { if (all.indexOf(c) < 0) all.push(c); });
+  return all;
+}
+
+function expSaveCustomCat(cat) {
+  if (!cat || EXP_DEFAULT_CATS.indexOf(cat) >= 0) return;
+  var custom = [];
+  try { custom = JSON.parse(localStorage.getItem('nina_exp_cats') || '[]'); } catch(e) {}
+  if (custom.indexOf(cat) < 0) { custom.push(cat); localStorage.setItem('nina_exp_cats', JSON.stringify(custom)); }
+}
+
+function renderExpCatChips(selectedCat) {
+  _expSelectedCat = selectedCat || '';
+  var cats = expGetAllCats();
+  var el = document.getElementById('exp-cat-chips');
+  if (!el) return;
+  el.innerHTML = cats.map(function(c) {
+    var isActive = c === _expSelectedCat;
+    return '<button type="button" onclick="selectExpCat(\'' + c.replace(/'/g, "\\'") + '\')" style="' +
+      'padding:5px 12px;border-radius:20px;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;' +
+      'border:1.5px solid ' + (isActive ? 'var(--accent)' : 'var(--border)') + ';' +
+      'background:' + (isActive ? 'var(--accent)' : 'var(--bg-tertiary)') + ';' +
+      'color:' + (isActive ? '#fff' : 'var(--text-secondary)') + ';transition:all .15s">' + c + '</button>';
+  }).join('');
+}
+
+function selectExpCat(cat) {
+  _expSelectedCat = cat;
+  var inp = document.getElementById('expense-category-input');
+  if (inp) inp.value = cat;
+  renderExpCatChips(cat);
+}
+
+function onExpCatInput(val) {
+  _expSelectedCat = val.trim();
+  renderExpCatChips(_expSelectedCat);
+  var inp = document.getElementById('expense-category-input');
+  if (inp) inp.value = val;
+}
+
+// ── PERIOD FILTER ──────────────────────────────────
 function filterExpenses(btn, period) {
   currentExpensePeriod = period;
   document.querySelectorAll('#page-expenses .filter-tab').forEach(function(b){ b.classList.remove('active'); });
   btn.classList.add('active');
-  loadExpenses();
+  var customEl = document.getElementById('exp-custom-dates');
+  if (customEl) customEl.style.display = period === 'custom' ? 'flex' : 'none';
+  if (period !== 'custom') loadExpenses();
+}
+
+function expGetDateRange() {
+  var now = new Date();
+  var from = null, to = null;
+  if (currentExpensePeriod === 'month') {
+    from = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+  } else if (currentExpensePeriod === 'week') {
+    var d7 = new Date(now); d7.setDate(d7.getDate() - 7);
+    from = d7.toISOString();
+  } else if (currentExpensePeriod === 'custom') {
+    var f = document.getElementById('exp-date-from');
+    var t2 = document.getElementById('exp-date-to');
+    if (f && f.value) from = new Date(f.value).toISOString();
+    if (t2 && t2.value) to = new Date(t2.value + 'T23:59:59').toISOString();
+  }
+  return { from: from, to: to };
+}
+
+// ── QIDIRUV ─────────────────────────────────────────
+function filterExpensesList(q) {
+  _expSearchQuery = (q || '').toLowerCase().trim();
+  _renderExpensesList(window._expCachedList || []);
+}
+
+// ── ASOSIY YUKLASH ───────────────────────────────────
+// ── YAGONA HISOBLASH YORDAMCHI ────────────────────────
+// Statistika va Xarajatlar sahifasi uchun bir xil mantig'
+function _calcExpTotals(list) {
+  var totalSum = 0, totalUsd = 0;
+  list.forEach(function(e) {
+    // amount_sum — har doim so'mdagi qiymat (UZS yoki USD konvertatsiya)
+    // Bu Statistika bilan bir xil hisoblash usuli
+    totalSum += e.amount_sum || (e.currency === 'sum' || e.currency === 'uzs' ? (e.amount || 0) : 0);
+    if (e.currency === 'usd') totalUsd += e.amount || 0;
+  });
+  var avg = list.length > 0 ? Math.round(totalSum / list.length) : 0;
+  return { totalSum: totalSum, totalUsd: totalUsd, avg: avg };
 }
 
 async function loadExpenses() {
@@ -6477,108 +6724,340 @@ async function loadExpenses() {
   if (!el) return;
   showLoading(el);
 
-  try {
-    var now = new Date();
-    var fromDate = null;
-    if (currentExpensePeriod === 'month') {
-      fromDate = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-    } else if (currentExpensePeriod === 'week') {
-      var d7 = new Date(now); d7.setDate(d7.getDate() - 7);
-      fromDate = d7.toISOString();
-    }
+  // Grafik va breakdown ni ham loading qilamiz
+  var chartEl = document.getElementById('exp-monthly-chart');
+  var catEl   = document.getElementById('exp-cat-breakdown');
+  if (chartEl) chartEl.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;width:100%;color:var(--text-muted);font-size:.82rem">Yuklanmoqda...</div>';
+  if (catEl)   catEl.innerHTML   = '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">Yuklanmoqda...</div>';
 
-    var q = db.from('expenses').select('*, admins(full_name)').order('created_at', {ascending: false});
-    if (fromDate) q = q.gte('created_at', fromDate);
+  try {
+    var range = expGetDateRange();
+    // expenses jadvalida admins ga bir nechta FK bo'lishi mumkin (admin_id, updated_by).
+    // Shuning uchun join ishlatmaymiz — select('*') bilan admin_id ni olamiz, nom alohida yuklaymiz.
+    var q = db.from('expenses').select('*').order('created_at', {ascending: false});
+    if (range.from) q = q.gte('created_at', range.from);
+    if (range.to)   q = q.lte('created_at', range.to);
     var res = await q;
+
+    // Xato tekshiruvi
+    if (res.error) throw res.error;
+
     var list = res.data || [];
 
-    // Umumiy summalar
-    var totalSum = 0, totalUsd = 0;
+    // Admin nomlarini alohida yuklaymiz (join ishlatmasdan — ambiguous FK muammosi)
+    var adminIds = [];
     list.forEach(function(e) {
-      if (e.currency === 'usd') {
-        totalUsd += e.amount || 0;
-        totalSum += (e.amount_sum || 0);
-      } else {
-        totalSum += e.amount || 0;
+      if (e.admin_id && adminIds.indexOf(e.admin_id) < 0) adminIds.push(e.admin_id);
+    });
+    var adminMap = {};
+    if (adminIds.length > 0) {
+      var ar = await db.from('admins').select('id,full_name').in('id', adminIds);
+      if (!ar.error && ar.data) {
+        ar.data.forEach(function(a) { adminMap[a.id] = a.full_name || '—'; });
       }
+    }
+    // Har bir expense ga admin nomini qo'shamiz
+    list = list.map(function(e) {
+      return Object.assign({}, e, { _adminName: adminMap[e.admin_id] || '—' });
     });
 
-    var sumEl = document.getElementById('exp-stat-sum');
-    var usdEl = document.getElementById('exp-stat-usd');
-    if (sumEl) sumEl.textContent = fmt(totalSum);
-    if (usdEl) usdEl.textContent = '$' + totalUsd.toFixed(2);
+    // Cache — keyingi filter/sort/qidiruv uchun
+    window._expCachedList = list;
 
-    if (!list.length) {
-      el.innerHTML = renderEmpty(
-        '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
-        t('exp_empty'), t('exp_empty_sub')
-      );
-      return;
-    }
+    // ── STAT KARTALAR — Statistika bilan bir xil hisoblash ──
+    var totals = _calcExpTotals(list);
 
-    el.innerHTML = list.map(function(e) {
-      var catLabel = getExpCatLabel(e.category);
-      var amountStr = e.currency === 'usd'
-        ? '$' + e.amount.toFixed(2) + (e.amount_sum ? ' ≈ ' + fmt(e.amount_sum) + " so'm" : '')
-        : fmt(e.amount) + " so'm";
-      var adminName = (e.admins && e.admins.full_name) || '—';
-      return '<div class="list-item" style="cursor:default">' +
-        '<div class="list-item-avatar" style="background:#FEF2F2;color:#EF4444;flex-shrink:0">' +
-          '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' +
-        '</div>' +
-        '<div class="list-item-info">' +
-          '<div class="list-item-title">' + catLabel + (e.note ? ' — ' + e.note : '') + '</div>' +
-          '<div class="list-item-subtitle">' + fmtDate(e.created_at) + ' · ' + adminName + '</div>' +
-        '</div>' +
-        '<div class="list-item-right">' +
-          '<div style="font-weight:700;color:var(--danger);font-family:JetBrains Mono,monospace;font-size:.85rem;text-align:right">' + amountStr + '</div>' +
-          '<button class="btn-icon btn-icon-danger" style="width:28px;height:28px;margin-top:4px" onclick="deleteExpense(' + e.id + ')">' +
-            '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>' +
-          '</button>' +
-        '</div>' +
-      '</div>';
-    }).join('');
+    _setEl('exp-stat-sum',   fmt(totals.totalSum));
+    _setEl('exp-stat-usd',   '$' + totals.totalUsd.toFixed(2));
+    _setEl('exp-stat-count', list.length);
+    _setEl('exp-stat-avg',   fmt(totals.avg));
 
-  } catch(e) {
-    var el2 = document.getElementById('expenses-list');
-    if (el2) el2.innerHTML = '<div class="empty-state"><div class="empty-text">Xato: ' + e.message + '</div></div>';
+    // ── OYLIK GRAFIK ──────────────────────────────
+    _renderExpMonthlyChart(list);
+
+    // ── KATEGORIYA BREAKDOWN ──────────────────────
+    _renderExpCatBreakdown(list, totals.totalSum);
+
+    // ── RO'YXAT ───────────────────────────────────
+    _renderExpensesList(list);
+
+  } catch(err) {
+    console.error('loadExpenses xato:', err);
+    if (el) el.innerHTML = '<div class="empty-state"><div class="empty-text">Xato: ' + (err.message || err) + '</div></div>';
   }
 }
 
-function getExpCatLabel(cat) {
-  var d = LANGS[getLang()] || LANGS['uz_latin'];
-  var map = {
-    material: d.exp_cat_material,
-    transport: d.exp_cat_transport,
-    salary: d.exp_cat_salary,
-    utility: d.exp_cat_utility,
-    rent: d.exp_cat_rent,
-    other: d.exp_cat_other
-  };
-  return map[cat] || cat;
+// ── OYLIK GRAFIK ─────────────────────────────────────
+function _renderExpMonthlyChart(list) {
+  var chartEl = document.getElementById('exp-monthly-chart');
+  if (!chartEl) return;
+
+  var now = new Date();
+  var months = [];
+  for (var i = 5; i >= 0; i--) {
+    var d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    months.push({
+      label: d.toLocaleDateString('uz-UZ', {month:'short'}),
+      from:  new Date(d.getFullYear(), d.getMonth(), 1),
+      to:    new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59),
+      val:   0
+    });
+  }
+
+  list.forEach(function(e) {
+    var d = new Date(e.created_at);
+    // _calcExpTotals bilan bir xil hisoblash: amount_sum ustunlik, fallback amount (UZS)
+    var val = e.amount_sum || (e.currency === 'sum' || e.currency === 'uzs' ? (e.amount || 0) : 0);
+    months.forEach(function(m) {
+      if (d >= m.from && d <= m.to) m.val += val;
+    });
+  });
+
+  var maxVal = Math.max.apply(null, months.map(function(m){ return m.val; })) || 1;
+  var isCurrentMonth = function(i){ return i === 5; };
+
+  chartEl.innerHTML = months.map(function(m, i) {
+    var h = Math.max((m.val / maxVal) * 100, m.val > 0 ? 6 : 0);
+    var displayVal = m.val > 0 ? (fmt(Math.round(m.val / 1000)) + 'K') : '';
+    return '<div class="bar-wrap">' +
+      '<div class="bar-val" style="color:var(--danger);font-size:.6rem">' + displayVal + '</div>' +
+      '<div style="flex:1;display:flex;align-items:flex-end;width:100%">' +
+        '<div class="bar" style="height:' + h + '%;background:' + (isCurrentMonth(i) ? '#EF4444' : 'rgba(239,68,68,.2)') + '">' +
+          '<span class="bar-label">' + m.label + '</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
 }
 
-function openExpenseSheet(id) {
-  document.getElementById('expense-edit-id').value = id || '';
-  document.getElementById('expense-category').value = 'material';
+// ── KATEGORIYA BREAKDOWN ─────────────────────────────
+function _renderExpCatBreakdown(list, totalSum) {
+  var catEl = document.getElementById('exp-cat-breakdown');
+  if (!catEl) return;
+
+  if (!list.length) {
+    catEl.innerHTML = '<div style="text-align:center;padding:12px;color:var(--text-muted);font-size:.82rem">Ma\'lumot yo\'q</div>';
+    return;
+  }
+
+  // Kategoriya bo'yicha guruh
+  var cats = {};
+  list.forEach(function(e) {
+    var cat = e.category || 'Boshqa';
+    // _calcExpTotals bilan bir xil hisoblash
+    var val = e.amount_sum || (e.currency === 'sum' || e.currency === 'uzs' ? (e.amount || 0) : 0);
+    if (!cats[cat]) cats[cat] = { sum: 0, count: 0 };
+    cats[cat].sum   += val;
+    cats[cat].count += 1;
+  });
+
+  var catList = Object.keys(cats).map(function(c) {
+    return { name: c, sum: cats[c].sum, count: cats[c].count };
+  }).sort(function(a, b){ return b.sum - a.sum; });
+
+  var catColors = ['#EF4444','#F97316','#F59E0B','#10B981','#3B82F6','#8B5CF6','#EC4899','#14B8A6','#64748B'];
+  var maxCat = catList[0] ? catList[0].sum : 1;
+
+  catEl.innerHTML = catList.map(function(c, i) {
+    var pct    = totalSum > 0 ? Math.round((c.sum / totalSum) * 100) : 0;
+    var barPct = maxCat  > 0 ? Math.round((c.sum / maxCat)   * 100) : 0;
+    var col    = catColors[i % catColors.length];
+    return '<div style="margin-bottom:12px">' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">' +
+        '<div style="display:flex;align-items:center;gap:8px">' +
+          '<div style="width:10px;height:10px;border-radius:50%;background:' + col + ';flex-shrink:0"></div>' +
+          '<span style="font-size:.85rem;font-weight:600">' + c.name + '</span>' +
+          '<span style="font-size:.68rem;color:var(--text-muted);background:var(--bg-tertiary);padding:1px 6px;border-radius:8px">' + c.count + ' ta</span>' +
+        '</div>' +
+        '<div style="text-align:right">' +
+          '<span style="font-size:.82rem;font-weight:700;color:' + col + ';font-family:JetBrains Mono,monospace">' + fmt(c.sum) + " so'm</span>" +
+          '<span style="font-size:.68rem;color:var(--text-muted);margin-left:5px">' + pct + '%</span>' +
+        '</div>' +
+      '</div>' +
+      '<div style="height:5px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">' +
+        '<div style="height:100%;width:' + barPct + '%;background:' + col + ';border-radius:3px;transition:width .6s cubic-bezier(.22,1,.36,1)"></div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+// ── RO'YXAT RENDER ────────────────────────────────────
+function _renderExpensesList(list) {
+  var el = document.getElementById('expenses-list');
+  if (!el) return;
+
+  // Qidiruv filtri
+  var filtered = list;
+  if (_expSearchQuery) {
+    filtered = list.filter(function(e) {
+      var cat  = (e.category || '').toLowerCase();
+      var note = (e.note || '').toLowerCase();
+      return cat.indexOf(_expSearchQuery) >= 0 || note.indexOf(_expSearchQuery) >= 0;
+    });
+  }
+
+  // Sort
+  var sortEl = document.getElementById('exp-sort');
+  var sort   = sortEl ? sortEl.value : 'newest';
+  filtered = filtered.slice().sort(function(a, b) {
+    if (sort === 'oldest')  return new Date(a.created_at) - new Date(b.created_at);
+    if (sort === 'highest') {
+      var va = a.currency === 'usd' ? (a.amount_sum || 0) : (a.amount || 0);
+      var vb = b.currency === 'usd' ? (b.amount_sum || 0) : (b.amount || 0);
+      return vb - va;
+    }
+    if (sort === 'lowest') {
+      var va2 = a.currency === 'usd' ? (a.amount_sum || 0) : (a.amount || 0);
+      var vb2 = b.currency === 'usd' ? (b.amount_sum || 0) : (b.amount || 0);
+      return va2 - vb2;
+    }
+    // newest (default)
+    return new Date(b.created_at) - new Date(a.created_at);
+  });
+
+  if (!filtered.length) {
+    el.innerHTML = renderEmpty(
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+      t('exp_empty'), _expSearchQuery ? "Qidiruv natijasi yo'q" : t('exp_empty_sub')
+    );
+    return;
+  }
+
+  var catColors = {
+    'Material':'#F97316','Transport':'#3B82F6','Maosh':'#10B981',
+    'Kommunal':'#8B5CF6','Ijara':'#EF4444','Boshqa':'#64748B'
+  };
+
+  el.innerHTML = filtered.map(function(e) {
+    var catLabel  = e.category || '—';
+    var catColor  = catColors[catLabel] || '#64748B';
+    var amountStr = e.currency === 'usd'
+      ? '$' + (e.amount || 0).toFixed(2) + (e.amount_sum ? ' ≈ ' + fmt(e.amount_sum) + " so'm" : '')
+      : fmt(e.amount) + " so'm";
+    var adminName = e._adminName || (e.admins && e.admins.full_name) || '—';
+    var isEdited  = e.updated_at && e.updated_at !== e.created_at;
+
+    return '<div class="list-item" style="cursor:default;align-items:flex-start;padding:14px 16px">' +
+      // Avatar
+      '<div style="width:42px;height:42px;border-radius:12px;background:' + catColor + '18;color:' + catColor + ';display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.8rem;font-weight:800;border:1.5px solid ' + catColor + '28">' +
+        catLabel.charAt(0).toUpperCase() +
+      '</div>' +
+      '<div class="list-item-info" style="gap:3px">' +
+        '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">' +
+          '<span style="font-size:.88rem;font-weight:700">' + catLabel + '</span>' +
+          (isEdited ? '<span style="font-size:.6rem;background:var(--warning-light);color:var(--warning);padding:1px 6px;border-radius:8px;font-weight:700">✏️ ' + t('exp_edited_badge') + '</span>' : '') +
+        '</div>' +
+        (e.note ? '<div style="font-size:.78rem;color:var(--text-secondary)">' + e.note + '</div>' : '') +
+        '<div style="font-size:.7rem;color:var(--text-muted);display:flex;align-items:center;gap:4px;margin-top:2px">' +
+          '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
+          fmtDate(e.created_at) + ' · ' + adminName +
+        '</div>' +
+      '</div>' +
+      '<div class="list-item-right" style="gap:5px;align-items:flex-end">' +
+        '<div style="font-weight:800;color:var(--danger);font-family:JetBrains Mono,monospace;font-size:.85rem;text-align:right;white-space:nowrap">' + amountStr + '</div>' +
+        '<div style="display:flex;gap:4px">' +
+          '<button class="btn-icon" style="width:28px;height:28px" onclick="editExpense(\'' + e.id + '\')" title="' + t('exp_edit_btn') + '">' +
+            '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>' +
+          '</button>' +
+          '<button class="btn-icon btn-icon-danger" style="width:28px;height:28px" onclick="deleteExpense(\'' + e.id + '\')" title="' + t('exp_delete_btn') + '">' +
+            '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>' +
+          '</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function _setEl(id, val) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = (val === null || val === undefined) ? '—' : val;
+}
+
+function getExpCatLabel(cat) { return cat || 'Boshqa'; }
+
+// ── SHEET: YANGI ─────────────────────────────────────
+function openExpenseSheet() {
+  document.getElementById('expense-edit-id').value = '';
+  document.getElementById('expense-category-input').value = '';
   document.getElementById('expense-note').value = '';
   document.getElementById('expense-amount').value = '';
   document.getElementById('expense-rate').value = '';
   document.getElementById('exp-equiv').style.display = 'none';
   document.getElementById('exp-rate-group').style.display = 'none';
+  document.getElementById('exp-edit-history').style.display = 'none';
   document.querySelector('input[name="exp-currency"][value="sum"]').checked = true;
   var title = document.getElementById('expense-sheet-title');
   if (title) title.textContent = t('exp_add_btn');
-  applyLang();
+  _expSelectedCat = '';
+  renderExpCatChips('');
   showSheet('expense-sheet');
+}
+
+// ── SHEET: TAHRIRLASH ────────────────────────────────
+async function editExpense(id) {
+  try {
+    var res = await db.from('expenses')
+      .select('*')
+      .eq('id', id).single();
+    if (res.error) throw res.error;
+    var e = res.data;
+
+    // Admin nomini alohida yuklaymiz
+    var createdAdminName = '—';
+    if (e.admin_id) {
+      var ar = await db.from('admins').select('full_name').eq('id', e.admin_id).single();
+      if (!ar.error && ar.data) createdAdminName = ar.data.full_name || '—';
+    }
+
+    document.getElementById('expense-edit-id').value = e.id;
+    document.getElementById('expense-category-input').value = e.category || '';
+    document.getElementById('expense-note').value   = e.note || '';
+    document.getElementById('expense-amount').value = e.amount || '';
+    document.getElementById('expense-rate').value   = e.rate || '';
+
+    var cur = e.currency || 'sum';
+    document.querySelector('input[name="exp-currency"][value="' + cur + '"]').checked = true;
+    document.getElementById('exp-rate-group').style.display = cur === 'usd' ? 'block' : 'none';
+    if (cur === 'usd' && e.amount && e.rate) {
+      var eq = document.getElementById('exp-equiv');
+      eq.style.display = 'block';
+      eq.textContent = "So'mdagi ekvivalent: " + fmt(Math.round(e.amount * e.rate)) + " so'm";
+    }
+
+    _expSelectedCat = e.category || '';
+    renderExpCatChips(_expSelectedCat);
+
+    // Tarix bloki
+    var histEl = document.getElementById('exp-edit-history');
+    var createdAdmin = createdAdminName;
+    var isEdited     = e.updated_at && e.updated_at !== e.created_at;
+    histEl.style.display = 'block';
+    histEl.innerHTML =
+      '<div style="display:flex;flex-direction:column;gap:5px">' +
+        '<div style="display:flex;align-items:center;gap:6px">' +
+          '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
+          '<span>' + t('exp_created_by') + ': <b>' + createdAdmin + '</b> — ' + fmtDate(e.created_at) + '</span>' +
+        '</div>' +
+        (isEdited
+          ? '<div style="display:flex;align-items:center;gap:6px;color:var(--warning)">' +
+              '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>' +
+              '<span>' + t('exp_edited_by') + ': <b>' + t('exp_edited_unknown') + '</b> — ' + fmtDate(e.updated_at) + '</span>' +
+            '</div>'
+          : '') +
+      '</div>';
+
+    var title = document.getElementById('expense-sheet-title');
+    if (title) title.textContent = t('exp_edit_title');
+    showSheet('expense-sheet');
+  } catch(err) {
+    showToast(t('exp_load_err') + ': ' + err.message, 'error');
+  }
 }
 
 function toggleExpCurrency() {
   var isUsd = document.querySelector('input[name="exp-currency"]:checked').value === 'usd';
   document.getElementById('exp-rate-group').style.display = isUsd ? 'block' : 'none';
-  if (!isUsd) {
-    document.getElementById('exp-equiv').style.display = 'none';
-  }
+  if (!isUsd) document.getElementById('exp-equiv').style.display = 'none';
   calcExpEquiv();
 }
 
@@ -6586,7 +7065,7 @@ function calcExpEquiv() {
   var isUsd = document.querySelector('input[name="exp-currency"]:checked').value === 'usd';
   if (!isUsd) return;
   var amount = parseFloat(document.getElementById('expense-amount').value) || 0;
-  var rate = parseFloat(document.getElementById('expense-rate').value) || 0;
+  var rate   = parseFloat(document.getElementById('expense-rate').value) || 0;
   var equivEl = document.getElementById('exp-equiv');
   if (amount > 0 && rate > 0) {
     equivEl.style.display = 'block';
@@ -6596,51 +7075,75 @@ function calcExpEquiv() {
   }
 }
 
+// ── SAQLASH ───────────────────────────────────────────
 async function saveExpense() {
-  var category = document.getElementById('expense-category').value;
-  var note = document.getElementById('expense-note').value.trim();
-  var amount = parseFloat(document.getElementById('expense-amount').value);
+  var editId   = document.getElementById('expense-edit-id').value;
+  var category = (document.getElementById('expense-category-input').value || '').trim();
+  var note     = document.getElementById('expense-note').value.trim();
+  var amount   = parseFloat(document.getElementById('expense-amount').value);
   var currency = document.querySelector('input[name="exp-currency"]:checked').value;
-  var rate = parseFloat(document.getElementById('expense-rate').value) || 0;
+  var rate     = parseFloat(document.getElementById('expense-rate').value) || 0;
 
+  if (!category) { showToast(t('exp_cat_err'), 'error'); document.getElementById('expense-category-input').focus(); return; }
   if (!amount || amount <= 0) { showToast(t('payment_amount_err'), 'error'); return; }
-  if (currency === 'usd' && !rate) { showToast(t('exp_rate_label'), 'error'); return; }
+  if (currency === 'usd' && !rate) { showToast(t('exp_rate_err'), 'error'); return; }
+
+  expSaveCustomCat(category);
 
   var btn = btnStart('expense-save-btn', t('saving'));
   if (!btn) return;
 
   try {
     var data = {
-      category: category,
-      note: note || null,
-      amount: amount,
-      currency: currency,
+      category:   category,
+      note:       note || null,
+      amount:     amount,
+      currency:   currency,
       amount_sum: currency === 'usd' ? Math.round(amount * rate) : amount,
-      rate: currency === 'usd' ? rate : null,
-      admin_id: currentAdmin.id
+      rate:       currency === 'usd' ? rate : null
     };
 
-    var res = await db.from('expenses').insert(data);
-    if (res.error) throw res.error;
-
-    // Telegram xabar
-    var catLabel = getExpCatLabel(category);
-    var amountStr = currency === 'usd'
+    var isEdit   = !!editId;
+    var amtStr   = currency === 'usd'
       ? '$' + amount.toFixed(2) + ' ≈ ' + fmt(Math.round(amount * rate)) + ' ' + t('som')
       : fmt(amount) + ' ' + t('som');
-    sendTelegramMessage(
-      '💸 <b>' + t('exp_tg_new') + '</b>\n\n' +
-      '📂 <b>Kategoriya:</b> ' + tgEscape(catLabel) + '\n' +
-      (note ? '📝 <b>' + t('tg_note') + ':</b> ' + tgEscape(note) + '\n' : '') +
-      '💰 <b>Summa:</b> ' + amountStr + '\n' +
-      '👨\u200d💼 <b>' + t('tg_admin') + ':</b> ' + tgEscape(currentAdmin.full_name || '—') + '\n' +
-      '📅 <b>' + t('tg_date') + ':</b> ' + fmtDate(new Date().toISOString()) + '\n\n' +
-      '<i>' + t('tg_system') + '</i>'
-    );
+
+    if (isEdit) {
+      data.updated_at = new Date().toISOString();
+      data.updated_by = currentAdmin.id;
+      var res = await db.from('expenses').update(data).eq('id', editId);
+      if (res.error) throw res.error;
+      showToast(t('exp_updated'));
+      sendTelegramMessage(
+        '✏️ <b>' + t('exp_tg_edited') + '</b>\n\n' +
+        '📂 <b>' + t('tg_category') + ':</b> ' + tgEscape(category) + '\n' +
+        (note ? '📝 <b>' + t('tg_note') + ':</b> ' + tgEscape(note) + '\n' : '') +
+        '💰 <b>' + t('tg_amount') + ':</b> ' + amtStr + '\n' +
+        '👨‍💼 <b>' + t('tg_admin') + ':</b> ' + tgEscape(currentAdmin.full_name || '—') + '\n' +
+        '📅 <b>' + t('tg_date') + ':</b> ' + fmtDate(new Date().toISOString()) + '\n\n' +
+        '<i>' + t('tg_system') + '</i>'
+      );
+    } else {
+      data.admin_id = currentAdmin.id;
+      var res2 = await db.from('expenses').insert(data);
+      if (res2.error) throw res2.error;
+      showToast(t('exp_saved'));
+      sendTelegramMessage(
+        '💸 <b>' + t('exp_tg_new') + '</b>\n\n' +
+        '📂 <b>' + t('tg_category') + ':</b> ' + tgEscape(category) + '\n' +
+        (note ? '📝 <b>' + t('tg_note') + ':</b> ' + tgEscape(note) + '\n' : '') +
+        '💰 <b>' + t('tg_amount') + ':</b> ' + amtStr + '\n' +
+        '👨‍💼 <b>' + t('tg_admin') + ':</b> ' + tgEscape(currentAdmin.full_name || '—') + '\n' +
+        '📅 <b>' + t('tg_date') + ':</b> ' + fmtDate(new Date().toISOString()) + '\n\n' +
+        '<i>' + t('tg_system') + '</i>'
+      );
+    }
 
     hideSheet('expense-sheet');
-    showToast(t('exp_saved'));
+    // Xarajatlar sahifasini yangilaymiz
     loadExpenses();
+    // Agar Statistika sahifasi ochiq bo'lsa, uni ham yangilaymiz
+    if (currentStatsSub === 'expenses') loadStatsExpenses();
   } catch(e) {
     showToast(e.message, 'error');
   } finally {
@@ -6648,16 +7151,35 @@ async function saveExpense() {
   }
 }
 
+// ── O'CHIRISH ─────────────────────────────────────────
 async function deleteExpense(id) {
-  var ok = await showConfirm("Xarajatni o'chirish", "Bu xarajat yozuvi butunlay o'chiriladi.", "O'chirish");
+  var ok = await showConfirm(
+    t('exp_delete_confirm_title'),
+    t('exp_delete_confirm_msg'),
+    t('exp_delete_confirm_btn')
+  );
   if (!ok) return;
   try {
     var res = await db.from('expenses').delete().eq('id', id);
     if (res.error) throw res.error;
     showToast(t('exp_deleted'));
-    loadExpenses();
+    // Cache dan ham olib tashlaymiz — reload qilmasdan
+    if (window._expCachedList) {
+      window._expCachedList = window._expCachedList.filter(function(e){ return String(e.id) !== String(id); });
+      _renderExpensesList(window._expCachedList);
+      // Stat kartalarni qayta hisoblash — yagona _calcExpTotals orqali
+      var totals2 = _calcExpTotals(window._expCachedList);
+      _setEl('exp-stat-sum',   fmt(totals2.totalSum));
+      _setEl('exp-stat-usd',   '$' + totals2.totalUsd.toFixed(2));
+      _setEl('exp-stat-count', window._expCachedList.length);
+      _setEl('exp-stat-avg',   fmt(totals2.avg));
+      _renderExpMonthlyChart(window._expCachedList);
+      _renderExpCatBreakdown(window._expCachedList, totals2.totalSum);
+      // Agar Statistika sahifasi Xarajatlar bo'limida ochiq bo'lsa — uni ham yangilaymiz
+      if (currentStatsSub === 'expenses') loadStatsExpenses();
+    }
   } catch(e) {
-    showToast(e.message, 'error');
+    showToast(t('exp_delete_err') + ': ' + e.message, 'error');
   }
 }
 
@@ -7538,10 +8060,14 @@ window.statsLoadCurrent = statsLoadCurrent;
 window.switchChartMode = switchChartMode;
 window.filterExpenses = filterExpenses;
 window.openExpenseSheet = openExpenseSheet;
+window.editExpense = editExpense;
 window.saveExpense = saveExpense;
 window.deleteExpense = deleteExpense;
 window.toggleExpCurrency = toggleExpCurrency;
 window.calcExpEquiv = calcExpEquiv;
+window.onExpCatInput = onExpCatInput;
+window.selectExpCat = selectExpCat;
+window.filterExpensesList = filterExpensesList;
 window.filterCustomers = filterCustomers;
 window.searchCustomers = searchCustomers;
 window.loadCustomerDetail = loadCustomerDetail;
