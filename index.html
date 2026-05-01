@@ -754,36 +754,115 @@ body{
 .toggle input:checked+.toggle-slider{background:var(--accent);border-color:var(--accent)}
 .toggle input:checked+.toggle-slider::before{transform:translateX(20px) translateY(-50%)}
 
-/* ===================== LOGIN ===================== */
+/* ===================== LOGIN — Apple Style ===================== */
 #login-page{
-  display:flex;min-height:100vh;
-  align-items:center;justify-content:center;
-  padding:24px;background:var(--bg-primary);
+  display:flex;
+  min-height:100vh;
+  min-height:100dvh;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:var(--bg-primary);
+  transition:background .3s;
 }
 .login-card{
-  width:100%;max-width:380px;
-  background:var(--bg-secondary);
-  border:1px solid var(--border);
-  border-radius:var(--radius-2xl);
-  padding:36px 28px;
-  box-shadow:var(--shadow-xl);
+  width:100%;
+  max-width:380px;
+  animation:loginCardIn .45s cubic-bezier(.22,1,.36,1);
 }
-.login-logo{text-align:center;margin-bottom:32px}
+@keyframes loginCardIn{
+  from{opacity:0;transform:translateY(28px) scale(.97)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.login-logo{text-align:center;margin-bottom:40px}
 .login-logo-icon{
-  width:72px;height:72px;background:var(--accent);
-  border-radius:22px;
+  width:80px;height:80px;
+  background:linear-gradient(145deg,#1a8fff,#007AFF,#0055CC);
+  border-radius:26px;
   display:flex;align-items:center;justify-content:center;
-  color:#fff;margin:0 auto 16px;
-  box-shadow:0 8px 24px rgba(var(--accent-rgb),.35);
+  color:#fff;margin:0 auto 20px;
+  box-shadow:
+    0 10px 30px rgba(0,122,255,.4),
+    0 2px 8px rgba(0,122,255,.2),
+    inset 0 1px 0 rgba(255,255,255,.25);
 }
-.login-title{font-size:1.5rem;font-weight:800;letter-spacing:-.04em}
-.login-subtitle{font-size:.85rem;color:var(--text-muted);margin-top:4px}
+.login-title{
+  font-size:1.75rem;font-weight:800;
+  letter-spacing:-.05em;
+  color:var(--text-primary);
+}
+.login-subtitle{
+  font-size:.88rem;color:var(--text-muted);
+  margin-top:6px;font-weight:500;
+}
+
+/* Inputlar — Apple filled style */
+.login-field{
+  margin-bottom:12px;
+}
+.login-field-inner{
+  position:relative;
+  background:var(--bg-secondary);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-sm);
+  overflow:hidden;
+}
+.login-field-inner input{
+  width:100%;
+  padding:16px 16px 16px 50px;
+  background:transparent;
+  border:none;
+  font-family:'DM Sans',sans-serif;
+  font-size:.95rem;
+  color:var(--text-primary);
+  outline:none;
+  -webkit-appearance:none;
+}
+.login-field-inner input::placeholder{color:var(--text-muted)}
+.login-field-inner .login-field-icon{
+  position:absolute;left:16px;top:50%;
+  transform:translateY(-50%);
+  color:var(--text-muted);
+  pointer-events:none;
+}
+.login-field-hint{
+  font-size:.72rem;color:var(--text-muted);
+  margin-top:5px;padding-left:4px;
+}
 .login-error{
-  background:var(--danger-light);color:var(--danger);
-  padding:10px 14px;border-radius:var(--radius-md);
-  font-size:.82rem;margin-bottom:16px;
-  border:1px solid rgba(239,68,68,.2);
+  background:var(--danger-light);
+  color:var(--danger);
+  padding:12px 16px;
+  border-radius:var(--radius-md);
+  font-size:.84rem;
+  margin-bottom:14px;
   display:flex;align-items:center;gap:8px;
+  font-weight:500;
+}
+.login-btn-wrap{
+  margin-top:8px;
+}
+.login-btn-main{
+  width:100%;height:52px;
+  background:linear-gradient(145deg,#1a8fff,#007AFF,#0062CC);
+  border:none;border-radius:var(--radius-lg);
+  color:#fff;
+  font-family:'DM Sans',sans-serif;
+  font-size:1rem;font-weight:700;
+  letter-spacing:-.01em;
+  cursor:pointer;
+  box-shadow:0 4px 18px rgba(0,122,255,.4);
+  transition:all .15s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.login-btn-main:active{transform:scale(.97);opacity:.9;}
+.login-btn-main:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+.login-version{
+  text-align:center;
+  font-size:.7rem;
+  color:var(--text-muted);
+  margin-top:24px;
+  font-weight:500;
 }
 
 /* ===================== STATS SUB TABS ===================== */
@@ -937,7 +1016,38 @@ body{
   padding:13px 0;
 }
 
-/* ===================== PERFORMANCE OPTIMIZATSIYA ===================== */
+/* ===================== PULL TO REFRESH ===================== */
+#ptr-indicator{
+  position:fixed;
+  top:calc(var(--nav-height) + 8px);
+  left:50%;transform:translateX(-50%);
+  z-index:500;
+  display:flex;align-items:center;justify-content:center;
+  width:40px;height:40px;
+  background:var(--bg-secondary);
+  border-radius:50%;
+  box-shadow:var(--shadow-md);
+  opacity:0;
+  transition:opacity .2s;
+  pointer-events:none;
+}
+#ptr-indicator.ptr-visible{opacity:1;}
+#ptr-indicator.ptr-loading .ptr-arrow{display:none;}
+#ptr-indicator.ptr-loading .ptr-spinner{display:block;}
+#ptr-indicator svg.ptr-arrow{
+  transition:transform .2s;
+  color:var(--accent);
+}
+#ptr-indicator .ptr-spinner{
+  display:none;
+  width:20px;height:20px;
+  border:2px solid var(--border);
+  border-top-color:var(--accent);
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+}
+
+
 /* Og'ir animatsiyalarni o'chirish */
 .card:hover{transform:none!important;}
 .list-item:hover{transform:none!important;box-shadow:var(--shadow-sm)!important;}
@@ -1158,45 +1268,66 @@ body{
 <!-- PAGE TRANSITION -->
 <div id="page-transition"></div>
 
+<!-- PULL TO REFRESH INDICATOR -->
+<div id="ptr-indicator">
+  <svg class="ptr-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+  <div class="ptr-spinner"></div>
+</div>
+
 
 <!-- LOGIN PAGE -->
 <div id="login-page">
   <div class="login-card">
     <div class="login-logo">
       <div class="login-logo-icon">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
-          <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
           <polyline points="10 9 9 9 8 9"/>
         </svg>
       </div>
       <h1 class="login-title">Nina Spiska</h1>
       <p class="login-subtitle">Admin hisobingizga kiring</p>
     </div>
-    <div class="form-group" id="telegram-id-group">
-      <label class="form-label">TELEGRAM ID</label>
-      <div class="input-with-icon">
-        <span class="input-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+
+    <!-- Telegram ID -->
+    <div class="login-field" id="telegram-id-group">
+      <div class="login-field-inner">
+        <span class="login-field-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
         </span>
-        <input type="number" id="manual-telegram-id" class="form-input" placeholder="Masalan: 6595579022" style="padding-left:40px">
+        <input type="number" id="manual-telegram-id" placeholder="Telegram ID (masalan: 123456789)">
       </div>
-      <div class="form-hint">/myid buyrug'i orqali oling</div>
+      <div class="login-field-hint">/myid buyrug'i orqali oling</div>
     </div>
-    <div class="form-group">
-      <label class="form-label">PAROL</label>
-      <div class="input-with-icon">
-        <span class="input-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+
+    <!-- Parol -->
+    <div class="login-field">
+      <div class="login-field-inner">
+        <span class="login-field-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         </span>
-        <input type="password" id="login-password" class="form-input" placeholder="Parolni kiriting" style="padding-left:40px">
+        <input type="password" id="login-password" placeholder="Parol">
       </div>
     </div>
+
+    <!-- Xato -->
     <div id="login-error" class="login-error hidden">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
       <span id="login-error-text"></span>
     </div>
-    <button class="btn btn-primary btn-full" id="login-btn" style="height:48px;font-size:.95rem">Kirish</button>
+
+    <!-- Kirish tugmasi -->
+    <div class="login-btn-wrap">
+      <button class="login-btn-main" id="login-btn" onclick="handleLogin()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        Kirish
+      </button>
+    </div>
+
+    <div class="login-version">Nina Spiska v2.1.0 · Premium</div>
   </div>
 </div>
 
@@ -2569,8 +2700,8 @@ function debounce(fn, delay) {
 // ===================== TOAST =====================
 function showToast(msg, type) {
   type = type || 'success';
-  if (type === 'success') soundSuccess();
-  else if (type === 'error') soundError();
+  if (type === 'success') { soundSuccess(); hapticSuccess(); }
+  else if (type === 'error') { soundError(); hapticError(); }
   var old = document.querySelector('.toast');
   if (old) { clearTimeout(old._timeout); old.remove(); }
   var t = document.createElement('div');
@@ -2603,7 +2734,7 @@ async function handleLogin() {
   }
   var btn = document.getElementById('login-btn');
   btn.disabled = true;
-  btn.innerHTML = '<div class="spinner" style="width:18px;height:18px;border-width:2px;margin-right:8px;display:inline-block"></div>Kirilmoqda...';
+  btn.innerHTML = '<div class="spinner" style="width:18px;height:18px;border-width:2px;border-color:rgba(255,255,255,.3);border-top-color:#fff;display:inline-block"></div>';
   document.getElementById('login-error').classList.add('hidden');
   try {
     // 1-usul: verify_admin_password RPC orqali tekshirish
@@ -2668,7 +2799,7 @@ async function handleLogin() {
     showLoginError(t('login_err_conn') + (e.message || t('toast_error_retry')));
   } finally {
     btn.disabled = false;
-    btn.innerHTML = 'Kirish';
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Kirish';
   }
 }
 
@@ -2720,8 +2851,13 @@ function updateAdminUI() {
 }
 
 // ===================== ROUTER =====================
+var currentPage = null;
+var lastNavData = null;
+
 function navigate(page, data) {
-  soundTap();
+  soundTap(); hapticLight();
+  currentPage = page;
+  lastNavData = data;
   document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
   document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
   document.querySelectorAll('.sidebar-nav-item').forEach(function(n) { n.classList.remove('active'); });
@@ -2866,7 +3002,7 @@ async function loadSpiskaList() {
       return;
     }
     el.innerHTML = list.map(function(s) { return createSpiskaItem(s); }).join('');
-  } catch(e) { el.innerHTML = '<div class="empty-state"><div class="empty-text">Xato yuz berdi</div></div>'; }
+  } catch(e) { el.innerHTML = '<div class="empty-state"><div class="empty-text">' + t("err_generic") + '</div></div>'; }
 }
 
 var searchSpiska = debounce(function(q) {
@@ -2926,9 +3062,11 @@ async function sendTelegramMessage(text) {
       ids.push(adminId);
     }
   }
+  var failedCount = 0;
+  var totalCount = ids.length;
   for (var i = 0; i < ids.length; i++) {
     try {
-      await fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
+      var resp = await fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -2937,14 +3075,44 @@ async function sendTelegramMessage(text) {
           parse_mode: 'HTML'
         })
       });
+      if (!resp.ok) {
+        failedCount++;
+        console.warn('Telegram javob xatosi:', resp.status, ids[i]);
+      }
     } catch(e) {
+      failedCount++;
       console.warn('Telegram xabar yuborilmadi:', e);
     }
+  }
+  // Agar barcha xabarlar yuborilmagan bo'lsa — admin'ga bildirish
+  if (failedCount === totalCount && totalCount > 0) {
+    showToast(t('err_telegram_failed'), 'error');
+  } else if (failedCount > 0) {
+    showToast(t('err_telegram_partial').replace('{0}', failedCount).replace('{1}', totalCount), 'error');
   }
 }
 
 function tgEscape(str) {
   return (str || '—').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// XSS himoyasi — HTML ichiga matn qo'yishdan oldin "tozalaydi"
+function htmlEscape(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+// onclick="..." ichidagi matn uchun (qo'shtirnoq xavfsiz qilish)
+function attrEscape(s) {
+  return String(s == null ? '' : s)
+    .replace(/\\/g,'\\\\')
+    .replace(/'/g,"\\'")
+    .replace(/"/g,'&quot;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;');
 }
 
 // ===================== NEW SPISKA =====================
@@ -3019,7 +3187,7 @@ async function loadSpiskaDetail(spiskaId) {
     s.extra_debt = s.extra_debt || 0;
     renderSpiskaDetail(s);
   } catch(e) {
-    el.innerHTML = '<div class="empty-state"><div class="empty-text">Xato yuz berdi</div></div>';
+    el.innerHTML = '<div class="empty-state"><div class="empty-text">' + t("err_generic") + '</div></div>';
   }
 }
 
@@ -3048,7 +3216,7 @@ function renderSpiskaDetail(s) {
         return '<div class="spiska-item-row">' +
           '<div class="spiska-item-num">' + (i+1) + '</div>' +
           '<div style="flex:1;min-width:0">' +
-            '<div class="spiska-item-name">' + item.product_name + '</div>' +
+            '<div class="spiska-item-name">' + htmlEscape(item.product_name) + '</div>' +
             '<div class="spiska-item-detail">' + item.quantity + ' × ' + fmt(item.unit_price) + " so'm</div>" +
           '</div>' +
           '<div style="display:flex;align-items:center;gap:6px;flex-shrink:0">' +
@@ -3378,7 +3546,7 @@ function fallbackCopy(text) {
     document.execCommand('copy');
     showToast(t('copy_success'), 'success');
   } catch(e) {
-    showToast('Nusxalab bo\'lmadi', 'error');
+    showToast(t('err_copy_fail'), 'error');
   }
   document.body.removeChild(ta);
 }
@@ -3456,7 +3624,7 @@ async function saveSpiskaDebt(forceZero) {
 }
 
 async function confirmCloseSpiska(sid, btnEl) {
-  var ok = await showConfirm('Spiskani yopish', "Yopilgan spiska o'zgartirib bo'lmaydi. Davom etasizmi?", 'Ha, yopish', false);
+  var ok = await showConfirm(t('confirm_close_spiska_title'), t('confirm_close_spiska_msg'), t('confirm_close_yes'), false);
   if (!ok) return;
   // Tugmani bloklash
   if (btnEl) { btnEl.disabled = true; btnEl.style.opacity = '0.5'; }
@@ -3472,14 +3640,23 @@ async function confirmCloseSpiska(sid, btnEl) {
     // extra_debt — bu mijozning OLDINGI qarzi, u customer_debts da allaqachon bor.
     // Agar extra_debt qo'shsak — 2 marta hisoblanib ketadi!
     if (s && s.customer_id && productTotal > 0) {
-      var dr = await db.from('customer_debts').select('*').eq('customer_id', s.customer_id).maybeSingle();
-      if (dr.data) {
-        await db.from('customer_debts').update({
-          balance: (dr.data.balance || 0) + productTotal,
-          updated_at: new Date().toISOString()
-        }).eq('customer_id', s.customer_id);
-      } else {
-        await db.from('customer_debts').insert({ customer_id: s.customer_id, balance: productTotal });
+      // Atomar qarz oshirish (race condition'dan himoya)
+      var rpcRes = await db.rpc('change_customer_debt', {
+        p_customer_id: s.customer_id,
+        p_amount: productTotal
+      });
+      if (rpcRes.error) {
+        // Agar RPC ishlamasa — eski usul (zaxira)
+        console.warn('RPC ishlamadi, eski usul:', rpcRes.error);
+        var dr = await db.from('customer_debts').select('*').eq('customer_id', s.customer_id).maybeSingle();
+        if (dr.data) {
+          await db.from('customer_debts').update({
+            balance: (dr.data.balance || 0) + productTotal,
+            updated_at: new Date().toISOString()
+          }).eq('customer_id', s.customer_id);
+        } else {
+          await db.from('customer_debts').insert({ customer_id: s.customer_id, balance: productTotal });
+        }
       }
     }
 
@@ -3524,9 +3701,9 @@ async function confirmCloseSpiska(sid, btnEl) {
 
 // ===================== SPISKA O'CHIRISH =====================
 async function confirmDeleteSpiska(sid) {
-  var ok = await showConfirm("Spiskani o'chirish", "Bu spiska va uning barcha mahsulotlari butunlay o'chiriladi. Bu amalni bekor qilib bo'lmaydi!", "O'chirish");
+  var ok = await showConfirm(t('confirm_delete_spiska_title'), t('confirm_delete_spiska_msg'), t('confirm_delete_btn'));
   if (!ok) return;
-  soundDelete();
+  soundDelete(); hapticWarning();
   deleteSpiska(sid);
 }
 
@@ -3587,7 +3764,7 @@ async function deleteSpiska(sid) {
 
 async function removeItem(itemId) {
   try {
-    soundDelete();
+    soundDelete(); hapticWarning();
     await db.from('spiska_items').delete().eq('id', itemId);
     var ir = await db.from('spiska_items').select('total_price').eq('spiska_id', currentSpiskaId);
     var total = (ir.data||[]).reduce(function(s, i) { return s + i.total_price; }, 0);
@@ -3661,7 +3838,7 @@ async function addItemToSpiska() {
   var productId = document.getElementById('selected-product-id').value;
   var quantity = parseFloat(document.getElementById('item-quantity').value);
   if (!productId) { showToast(t('add_item_select_err'), 'error'); return; }
-  if (!quantity || quantity <= 0) { showToast('Miqdor kiriting', 'error'); return; }
+  if (!quantity || quantity <= 0) { showToast(t('err_quantity_empty'), 'error'); return; }
 
   // Tugmani bloklash — qayta bosilmasin
   var btn = document.getElementById('add-item-btn');
@@ -3782,23 +3959,28 @@ function renderCustomersList(list, el, debts) {
     var ini = initials(c.full_name);
     var color = randomColor(c.full_name);
     var debt = debts[c.id] || 0;
+    var safeName = htmlEscape(c.full_name);
+    var safePhone = htmlEscape(c.phone || '—');
+    var attrName  = attrEscape(c.full_name);
+    var attrPhone = attrEscape(c.phone || '');
+    var attrNote  = attrEscape(c.note || '');
     var debtBadge = debt > 0
       ? '<span class="debt-badge has-debt">💸 ' + fmt(debt) + " so'm</span>"
       : '<span class="debt-badge no-debt">✓ ' + t('customer_no_debt') + '</span>';
     var debtBtn = debt > 0
-      ? '<button class="btn btn-ghost btn-sm" style="border-color:var(--danger);color:var(--danger);font-size:.72rem;padding:4px 8px;height:auto" onclick="event.stopPropagation();openDebtManageSheet(\'' + c.id + '\',\'' + c.full_name.replace(/'/g,"\\'") + '\',' + debt + ')">'+t('customer_debt_label').replace(':','')+'</button>'
-      : '<button class="btn btn-ghost btn-sm" style="font-size:.72rem;padding:4px 8px;height:auto" onclick="event.stopPropagation();openDebtManageSheet(\'' + c.id + '\',\'' + c.full_name.replace(/'/g,"\\'") + '\',0)">+'+t('customer_debt_label').replace(':','')+'</button>';
+      ? '<button class="btn btn-ghost btn-sm" style="border-color:var(--danger);color:var(--danger);font-size:.72rem;padding:4px 8px;height:auto" onclick="event.stopPropagation();openDebtManageSheet(\'' + c.id + '\',\'' + attrName + '\',' + debt + ')">'+t('customer_debt_label').replace(':','')+'</button>'
+      : '<button class="btn btn-ghost btn-sm" style="font-size:.72rem;padding:4px 8px;height:auto" onclick="event.stopPropagation();openDebtManageSheet(\'' + c.id + '\',\'' + attrName + '\',0)">+'+t('customer_debt_label').replace(':','')+'</button>';
     return '<div class="list-item" onclick="loadCustomerDetail(\'' + c.id + '\')">' +
       '<div class="list-item-avatar" style="background:' + color + '20;color:' + color + ';font-weight:700;font-size:.82rem">' + ini + '</div>' +
       '<div class="list-item-info">' +
-        '<div class="list-item-title">' + c.full_name + '</div>' +
-        '<div class="list-item-subtitle">' + (c.phone || '—') + '</div>' +
+        '<div class="list-item-title">' + safeName + '</div>' +
+        '<div class="list-item-subtitle">' + safePhone + '</div>' +
         '<div style="margin-top:4px">' + debtBadge + '</div>' +
       '</div>' +
       '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">' +
         debtBtn +
         '<div style="display:flex;gap:4px">' +
-          '<button class="btn-icon" style="width:28px;height:28px" onclick="event.stopPropagation();openCustomerSheet(\'' + c.id + '\',\'' + c.full_name.replace(/'/g,"\\'") + '\',\'' + (c.phone||'') + '\',\'' + (c.note||'') + '\')">' +
+          '<button class="btn-icon" style="width:28px;height:28px" onclick="event.stopPropagation();openCustomerSheet(\'' + c.id + '\',\'' + attrName + '\',\'' + attrPhone + '\',\'' + attrNote + '\')">' +
             '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>' +
           '</button>' +
           '<button class="btn-icon btn-icon-danger" style="width:28px;height:28px" onclick="event.stopPropagation();deleteCustomer(\'' + c.id + '\')">' +
@@ -3909,7 +4091,7 @@ async function saveDebtChange() {
     hideSheet('debt-manage-sheet');
     showToast(actionText);
     loadCustomers();
-  } catch(e) { showToast('Xato: ' + e.message, 'error'); }
+  } catch(e) { showToast(t('err_generic') + ': ' + e.message, 'error'); }
   finally { btnEnd(btn); }
 }
 
@@ -3992,7 +4174,7 @@ async function saveAdmin() {
 
   } catch(e) {
     console.error(e);
-    showToast('Xato: ' + (e.message || e), 'error');
+    showToast(t('err_generic') + ': ' + (e.message || e), 'error');
   } finally {
     if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = t('admin_save_btn'); }
   }
@@ -4026,7 +4208,7 @@ async function openAdminListSheet() {
         '</div>' +
       '</div>';
     }).join('');
-  } catch(e) { el.innerHTML = '<div style="color:var(--danger);padding:16px">Xato: ' + e.message + '</div>'; }
+  } catch(e) { el.innerHTML = '<div style="color:var(--danger);padding:16px">' + t('err_generic') + ': ' + e.message + '</div>'; }
 }
 
 async function toggleAdminStatus(adminId, isActive) {
@@ -4035,7 +4217,7 @@ async function toggleAdminStatus(adminId, isActive) {
   var ok = await showConfirm(title, msg, isActive ? "O'chirish" : 'Faollashtirish', isActive);
   if (!ok) return;
   await db.from('admins').update({ is_active: !isActive }).eq('id', adminId);
-  showToast(isActive ? "Admin o'chirildi" : 'Admin faollashtirildi ✅');
+  showToast(isActive ? t('admin_deactivated') : t('admin_activated'));
   openAdminListSheet();
 }
 
@@ -4066,7 +4248,7 @@ async function loadCustomerDetail(customerId) {
 
     renderCustomerDetail(c, spiskalar, debt, payments);
   } catch(e) {
-    el.innerHTML = '<div class="empty-state"><div class="empty-text">Xato: ' + e.message + '</div></div>';
+    el.innerHTML = '<div class="empty-state"><div class="empty-text">' + t("err_generic") + ': ' + e.message + '</div></div>';
   }
 }
 
@@ -4229,11 +4411,19 @@ async function savePayment() {
       admin_id: currentAdmin.id
     });
 
-    // Qarzni kamaytirish
-    var dr = await db.from('customer_debts').select('*').eq('customer_id', customerId).maybeSingle();
-    if (dr.data) {
-      var newBalance = Math.max(0, (dr.data.balance || 0) - amount);
-      await db.from('customer_debts').update({ balance: newBalance }).eq('customer_id', customerId);
+    // Qarzni kamaytirish (atomar — race condition'dan himoya)
+    var rpcRes = await db.rpc('change_customer_debt', {
+      p_customer_id: customerId,
+      p_amount: -amount
+    });
+    if (rpcRes.error) {
+      // Zaxira usul
+      console.warn('RPC ishlamadi:', rpcRes.error);
+      var dr = await db.from('customer_debts').select('*').eq('customer_id', customerId).maybeSingle();
+      if (dr.data) {
+        var newBalance = Math.max(0, (dr.data.balance || 0) - amount);
+        await db.from('customer_debts').update({ balance: newBalance }).eq('customer_id', customerId);
+      }
     }
 
     hideSheet('payment-sheet');
@@ -4978,7 +5168,7 @@ async function saveCustomer() {
 }
 
 async function deleteCustomer(id) {
-  var ok = await showConfirm("Mijozni o'chirish", "Bu mijoz ro'yxatdan o'chiriladi. Uning spiskalari saqlanib qoladi.", "O'chirish");
+  var ok = await showConfirm(t('confirm_delete_customer_title'), t('confirm_delete_customer_msg'), t('confirm_delete_btn'));
   if (!ok) return;
   await db.from('customers').update({is_active:false}).eq('id', id);
   showToast(t('customer_deleted'));
@@ -5005,21 +5195,25 @@ function renderProductsList(list, el) {
     var sellPrice = p.sell_price || p.price || 0;
     var costPrice = p.cost_price || 0;
     var margin = costPrice > 0 ? Math.round(((sellPrice - costPrice) / costPrice) * 100) : 0;
+    var safeName = htmlEscape(p.name);
+    var safeCode = htmlEscape(p.code);
+    var attrName = attrEscape(p.name);
+    var attrCode = attrEscape(p.code);
     return '<div class="list-item" onclick="loadProductDetail(\'' + p.id + '\')">' +
       '<div class="list-item-avatar amber">' +
         '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>' +
       '</div>' +
       '<div class="list-item-info">' +
-        '<div class="list-item-title">' + p.name + '</div>' +
+        '<div class="list-item-title">' + safeName + '</div>' +
         '<div style="display:flex;align-items:center;gap:5px;margin-top:3px">' +
-          '<span style="font-family:JetBrains Mono,monospace;background:var(--bg-tertiary);padding:1px 6px;border-radius:4px;font-size:.68rem">' + p.code + '</span>' +
+          '<span style="font-family:JetBrains Mono,monospace;background:var(--bg-tertiary);padding:1px 6px;border-radius:4px;font-size:.68rem">' + safeCode + '</span>' +
           (margin > 0 ? '<span style="font-size:.68rem;font-weight:700;background:var(--success-light);color:var(--success);padding:1px 6px;border-radius:4px">+' + margin + '%</span>' : '') +
         '</div>' +
       '</div>' +
       '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">' +
         '<div class="list-item-amount">' + fmt(sellPrice) + " so\'m</div>" +
         '<div style="display:flex;gap:4px">' +
-          '<button class="btn-icon" style="width:30px;height:30px" onclick="event.stopPropagation();openProductSheet(\'' + p.id + '\',\'' + p.name.replace(/\'/g,"\\\'") + '\',\'' + p.code + '\',' + costPrice + ',' + sellPrice + ')">' +
+          '<button class="btn-icon" style="width:30px;height:30px" onclick="event.stopPropagation();openProductSheet(\'' + p.id + '\',\'' + attrName + '\',\'' + attrCode + '\',' + costPrice + ',' + sellPrice + ')">' +
             '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>' +
           '</button>' +
           '<button class="btn-icon btn-icon-danger" style="width:30px;height:30px" onclick="event.stopPropagation();deleteProduct(\'' + p.id + '\')">' +
@@ -5101,7 +5295,7 @@ async function saveProduct() {
 }
 
 async function deleteProduct(id) {
-  var ok = await showConfirm("Mahsulotni o'chirish", "Bu mahsulot ro'yxatdan o'chiriladi.", "O'chirish");
+  var ok = await showConfirm(t('confirm_delete_product_title'), t('confirm_delete_product_msg'), t('confirm_delete_btn'));
   if (!ok) return;
   await db.from('products').update({is_active:false}).eq('id', id);
   showToast(t('product_deleted'));
@@ -5133,7 +5327,7 @@ async function loadProductDetail(productId) {
     var marginPct = costPrice > 0 ? Math.round(((sellPrice-costPrice)/costPrice)*100) : 0;
     renderProductDetail(p, soldItems, totalQty, totalRevenue, totalCost, totalProfit, marginPct);
   } catch(e) {
-    el.innerHTML = '<div class="empty-state"><div class="empty-text">Xato: ' + e.message + '</div></div>';
+    el.innerHTML = '<div class="empty-state"><div class="empty-text">' + t("err_generic") + ': ' + e.message + '</div></div>';
   }
 }
 
@@ -5506,6 +5700,32 @@ var LANGS = {
     debt_remaining: 'Qoldi',
     debt_paid: "To'langan",
     debt_history_title: "To'lov tarixi",
+    debt_total_usd: "Jami qarz ($)",
+    debt_total_sum: "Jami qarz (so'm)",
+    debt_current: "Hozirgi qarz",
+    debt_records: 'yozuv',
+    debt_closed_label: 'Yopiq',
+    err_copy_fail: "Nusxalab bo'lmadi",
+    err_quantity_empty: 'Miqdor kiriting',
+    err_generic: 'Xato',
+    err_debt_not_found: 'Qarz topilmadi!',
+    confirm_delete_spiska_title: "Spiskani o'chirish",
+    confirm_delete_spiska_msg: "Bu spiska va uning barcha mahsulotlari butunlay o'chiriladi. Bu amalni bekor qilib bo'lmaydi!",
+    confirm_delete_customer_title: "Mijozni o'chirish",
+    confirm_delete_customer_msg: "Bu mijoz ro'yxatdan o'chiriladi. Uning spiskalari saqlanib qoladi.",
+    confirm_delete_product_title: "Mahsulotni o'chirish",
+    confirm_delete_product_msg: "Bu mahsulot ro'yxatdan o'chiriladi.",
+    confirm_delete_debt_title: "Qarzni o'chirish",
+    confirm_delete_debt_msg: "Bu qarz va uning barcha to'lov tarixi o'chiriladi. Bu amalni bekor qilib bo'lmaydi!",
+    confirm_close_spiska_title: 'Spiskani yopish',
+    confirm_close_spiska_msg: "Yopilgan spiska o'zgartirib bo'lmaydi. Davom etasizmi?",
+    confirm_close_yes: 'Ha, yopish',
+    confirm_delete_btn: "O'chirish",
+    err_telegram_failed: '⚠️ Telegram xabar yuborilmadi (internet?)',
+    err_telegram_partial: '⚠️ {0}/{1} Telegram xabar yetmadi',
+    admin_deactivated: "Admin o'chirildi",
+    admin_activated: 'Admin faollashtirildi ✅',
+    err_amount_exceeds_debt: "qolgan qarzdan ({0}) ko'p bo'lishi mumkin emas!",
     debt_no_history: "To'lovlar yo'q",
     debt_empty: "Qarzlar yo'q", debt_empty_sub: "Yangi qarz qo'shing",
     debt_delete_confirm: "Qarzni o'chirasizmi? Barcha to'lovlar ham o'chadi!",
@@ -5847,6 +6067,32 @@ var LANGS = {
     debt_remaining: 'Осталось',
     debt_paid: 'Оплачено',
     debt_history_title: 'История платежей',
+    debt_total_usd: 'Всего долг ($)',
+    debt_total_sum: 'Всего долг (сум)',
+    debt_current: 'Текущий долг',
+    debt_records: 'записей',
+    debt_closed_label: 'Закрыт',
+    err_copy_fail: 'Не удалось скопировать',
+    err_quantity_empty: 'Введите количество',
+    err_generic: 'Ошибка',
+    err_debt_not_found: 'Долг не найден!',
+    confirm_delete_spiska_title: 'Удалить список',
+    confirm_delete_spiska_msg: 'Этот список и все его товары будут полностью удалены. Действие нельзя отменить!',
+    confirm_delete_customer_title: 'Удалить клиента',
+    confirm_delete_customer_msg: 'Клиент будет удалён из списка. Его записи сохранятся.',
+    confirm_delete_product_title: 'Удалить товар',
+    confirm_delete_product_msg: 'Товар будет удалён из каталога.',
+    confirm_delete_debt_title: 'Удалить долг',
+    confirm_delete_debt_msg: 'Этот долг и вся история платежей будут удалены. Действие нельзя отменить!',
+    confirm_close_spiska_title: 'Закрыть список',
+    confirm_close_spiska_msg: 'Закрытый список нельзя изменить. Продолжить?',
+    confirm_close_yes: 'Да, закрыть',
+    confirm_delete_btn: 'Удалить',
+    err_telegram_failed: '⚠️ Telegram сообщение не отправлено (интернет?)',
+    err_telegram_partial: '⚠️ {0}/{1} Telegram сообщений не дошли',
+    admin_deactivated: 'Администратор отключён',
+    admin_activated: 'Администратор активирован ✅',
+    err_amount_exceeds_debt: 'не может превышать остаток долга ({0})!',
     debt_no_history: 'Нет платежей',
     debt_empty: 'Нет долгов', debt_empty_sub: 'Добавьте новый долг',
     debt_delete_confirm: 'Удалить долг? Все платежи тоже удалятся!',
@@ -5955,6 +6201,12 @@ async function changeLang(lang) {
   localStorage.setItem('nina_lang', lang);
   if (currentAdmin) await db.from('admins').update({language: lang}).eq('id', currentAdmin.id);
   applyLang();
+  // Joriy sahifani qayta render qilish — dynamic kontent uchun
+  try {
+    if (currentPage) {
+      navigate(currentPage, lastNavData);
+    }
+  } catch(e) { console.warn('Re-render xato:', e); }
 }
 
 function applyLang() {
@@ -6599,13 +6851,13 @@ window.addEventListener('resize', function() {
 
 // ===================== SHEET HELPERS =====================
 function showSheet(id) {
-  soundSheetOpen();
+  soundSheetOpen(); hapticLight();
   var sheet = document.getElementById(id);
   sheet.classList.add('show');
   sheet.onclick = function(e) { if (e.target === sheet) hideSheet(id); };
 }
 function hideSheet(id) {
-  soundSheetClose();
+  soundSheetClose(); hapticSelect();
   var sheet = document.getElementById(id);
   sheet.classList.remove('show');
 }
@@ -6847,7 +7099,7 @@ async function loadExpenses() {
 
   } catch(err) {
     console.error('loadExpenses xato:', err);
-    if (el) el.innerHTML = '<div class="empty-state"><div class="empty-text">Xato: ' + (err.message || err) + '</div></div>';
+    if (el) el.innerHTML = '<div class="empty-state"><div class="empty-text">' + t('err_generic') + ': ' + (err.message || err) + '</div></div>';
   }
 }
 
@@ -7223,7 +7475,7 @@ async function deleteExpense(id) {
     t('exp_delete_confirm_btn')
   );
   if (!ok) return;
-  soundDelete();
+  soundDelete(); hapticWarning();
   try {
     var res = await db.from('expenses').delete().eq('id', id);
     if (res.error) throw res.error;
@@ -7266,33 +7518,34 @@ function odCalcBalance(debt, txns) {
   var lastRate = 0;
 
   (txns || []).forEach(function(tx) {
-    // amount_sum — so'mdagi qiymat. Agar null bo'lsa to'g'ri hisoblash
-    var val;
-    if (tx.amount_sum != null && tx.amount_sum > 0) {
-      val = tx.amount_sum;
-    } else if (tx.currency === 'usd' && tx.amount && tx.rate) {
-      val = Math.round(tx.amount * tx.rate);
+    // So'mdagi qiymatni aniqlash: amount_sum > amount*rate > amount
+    var val = 0;
+    if (tx.amount_sum != null && Number(tx.amount_sum) > 0) {
+      val = Number(tx.amount_sum);
+    } else if (tx.currency === 'usd' && Number(tx.amount) > 0 && Number(tx.rate) > 0) {
+      val = Math.round(Number(tx.amount) * Number(tx.rate));
     } else {
-      val = tx.amount || 0;
+      val = Number(tx.amount) || 0;
     }
 
-    if (tx.currency === 'usd' && tx.rate) lastRate = tx.rate;
+    if (tx.currency === 'usd' && Number(tx.rate) > 0) lastRate = Number(tx.rate);
 
     if (tx.type === 'debt') {
       debtSum += val;
-      if (tx.currency === 'usd') debtUsd += (tx.amount || 0);
+      if (tx.currency === 'usd') debtUsd += Number(tx.amount) || 0;
     } else {
+      // payment va return ikkalasi ham qarz kamaytiradi
       paySum += val;
-      if (tx.currency === 'usd') payUsd += (tx.amount || 0);
+      if (tx.currency === 'usd') payUsd += Number(tx.amount) || 0;
     }
   });
 
-  var remain = Math.max(0, debtSum - paySum);
+  var remain    = Math.max(0, debtSum - paySum);
   var remainUsd = Math.max(0, debtUsd - payUsd);
 
   // Ko'rsatish formati
   var remainStr;
-  if (debt.currency === 'usd' && remainUsd > 0) {
+  if (debt && debt.currency === 'usd' && remainUsd > 0) {
     remainStr = '$' + remainUsd.toFixed(2) + ' ≈ ' + fmt(remain) + " so'm";
   } else if (remain > 0) {
     remainStr = fmt(remain) + " so'm";
@@ -7301,15 +7554,15 @@ function odCalcBalance(debt, txns) {
   }
 
   return {
-    remain: remain,
+    remain:    remain,
     remainUsd: remainUsd,
     remainStr: remainStr,
-    isClosed: remain <= 0,
-    lastRate: lastRate,
-    debtSum: debtSum,
-    paySum: paySum,
-    debtUsd: debtUsd,
-    payUsd: payUsd
+    isClosed:  remain <= 0,
+    lastRate:  lastRate,
+    debtSum:   debtSum,
+    paySum:    paySum,
+    debtUsd:   debtUsd,
+    payUsd:    payUsd
   };
 }
 
@@ -7328,18 +7581,30 @@ async function loadOurDebts() {
   if (!el) return;
   showLoading(el);
   try {
-    // Barcha qarzlar + ularning tranzaksiyalarini birga olish
-    var q = db.from('our_debts')
-      .select('*, debt_transactions(type, amount, currency, amount_sum)')
+    // Barcha qarzlar va barcha tranzaksiyalarni alohida olamiz
+    var debtsRes = await db.from('our_debts')
+      .select('*')
       .order('created_at', { ascending: false });
 
-    var allQ = db.from('our_debts')
-      .select('*, debt_transactions(type, amount, currency, amount_sum)');
+    var txnsRes = await db.from('debt_transactions')
+      .select('debt_id, type, amount, currency, amount_sum');
 
-    var [res, allRes] = await Promise.all([q, allQ]);
+    if (debtsRes.error) throw debtsRes.error;
 
-    var allList  = allRes.data || [];
-    var filtered = res.data || [];
+    // Tranzaksiyalarni debt_id bo'yicha guruhlash
+    var txnsByDebt = {};
+    (txnsRes.data || []).forEach(function(tx){
+      if (!txnsByDebt[tx.debt_id]) txnsByDebt[tx.debt_id] = [];
+      txnsByDebt[tx.debt_id].push(tx);
+    });
+
+    // Har bir qarzga uning tranzaksiyalarini biriktirish
+    var allList = (debtsRes.data || []).map(function(d){
+      d.debt_transactions = txnsByDebt[d.id] || [];
+      return d;
+    });
+
+    var filtered = allList.slice();
 
     // filter
     if (currentOdFilter !== 'all') {
@@ -7349,7 +7614,15 @@ async function loadOurDebts() {
     // ─ Statistika ──────────────────────────────────
     var totalRemain = 0, totalRemainUsd = 0, openCount = 0, closedCount = 0;
     allList.forEach(function(d) {
-      var bal = odCalcBalance(d, d.debt_transactions || []);
+      var txns = d.debt_transactions || [];
+      var bal = odCalcBalance(d, txns);
+      // Fallback: tranzaksiya yo'q yoki jami 0 bo'lsa our_debts dan
+      if (bal.debtSum === 0 && (Number(d.amount_sum) > 0 || Number(d.amount) > 0)) {
+        var ds = Number(d.amount_sum) || Number(d.amount) || 0;
+        bal = { remain: ds, remainUsd: d.currency === 'usd' ? Number(d.amount)||0 : 0,
+                remainStr: d.currency === 'usd' ? '$'+Number(d.amount).toFixed(2)+' ≈ '+fmt(ds)+" so'm" : fmt(ds)+" so'm",
+                isClosed: d.status !== 'open', debtSum: ds, paySum: 0 };
+      }
       if (d.status === 'open') {
         openCount++;
         totalRemain += bal.remain;
@@ -7375,6 +7648,16 @@ async function loadOurDebts() {
     el.innerHTML = filtered.map(function(debt) {
       var txns   = debt.debt_transactions || [];
       var bal    = odCalcBalance(debt, txns);
+      // Fallback: tranzaksiya yo'q yoki jami 0 bo'lsa
+      if (bal.debtSum === 0 && (Number(debt.amount_sum) > 0 || Number(debt.amount) > 0)) {
+        var ds = Number(debt.amount_sum) || Number(debt.amount) || 0;
+        bal.remain    = ds;
+        bal.remainUsd = debt.currency === 'usd' ? Number(debt.amount) || 0 : 0;
+        bal.remainStr = debt.currency === 'usd'
+          ? '$' + Number(debt.amount).toFixed(2) + ' ≈ ' + fmt(ds) + " so'm"
+          : fmt(ds) + " so'm";
+        bal.debtSum   = ds;
+      }
       var isOpen = debt.status === 'open';
       var accentCol = isOpen ? '#F97316' : 'var(--success)';
       var accentBg  = isOpen ? '#FFF7ED' : 'var(--success-light)';
@@ -7385,13 +7668,18 @@ async function loadOurDebts() {
       var txCount = txns.length;
       var payCount = txns.filter(function(t){ return t.type === 'payment' || t.type === 'return'; }).length;
 
+      // Qoldiq bo'lsa qizil, bo'lmasa kulrang
+      var hasDebt = bal.remain > 0;
+      var amountCol = hasDebt ? '#F97316' : 'var(--text-muted)';
+      var amountText = hasDebt ? bal.remainStr : (fmt(0) + " so'm");
+
       return '<div class="list-item" onclick="odOpenDetail(\'' + debt.id + '\')" style="padding:14px 16px;align-items:stretch;gap:14px">' +
         // Avatar
         '<div style="width:44px;height:44px;border-radius:13px;background:' + bgColor + '18;color:' + bgColor + ';display:flex;align-items:center;justify-content:center;font-size:1.05rem;font-weight:800;flex-shrink:0;border:1.5px solid ' + bgColor + '28">' + ini + '</div>' +
 
         // Asosiy ma'lumot
         '<div class="list-item-info" style="gap:5px">' +
-          '<div class="list-item-title" style="font-size:.92rem">' + (debt.creditor_name || '—') + '</div>' +
+          '<div class="list-item-title" style="font-size:.92rem">' + htmlEscape(debt.creditor_name || '—') + '</div>' +
           '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">' +
             // Sana
             '<span style="display:inline-flex;align-items:center;gap:3px;font-size:.7rem;color:var(--text-muted)">' +
@@ -7402,34 +7690,26 @@ async function loadOurDebts() {
             (debt.phone
               ? '<span style="display:inline-flex;align-items:center;gap:3px;font-size:.7rem;color:var(--text-muted)">' +
                   '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.89 12 19.79 19.79 0 0 1 1.92 3.32C1.88 2.18 2.73 1 3.92 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>' +
-                  debt.phone +
+                  htmlEscape(debt.phone) +
                 '</span>'
               : '') +
-            // To'lovlar soni
-            (payCount > 0
-              ? '<span style="display:inline-flex;align-items:center;gap:3px;font-size:.7rem;color:var(--success)">' +
-                  '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>' +
-                  payCount + ' to\'lov' +
-                '</span>'
+            // Tranzaksiyalar soni
+            (txCount > 0
+              ? '<span style="font-size:.7rem;color:var(--text-muted)">· ' + txCount + ' ' + t('debt_records') + '</span>'
               : '') +
           '</div>' +
         '</div>' +
 
-        // O'ng tomon — summa + badge
-        '<div class="list-item-right" style="gap:6px;justify-content:center">' +
-          '<div style="font-weight:800;font-family:JetBrains Mono,monospace;font-size:.85rem;color:' + accentCol + ';text-align:right;line-height:1.2">' + bal.remainStr + '</div>' +
-          '<span style="display:inline-flex;align-items:center;gap:3px;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:' + accentCol + ';background:' + accentBg + ';padding:3px 8px;border-radius:20px">' +
-            (isOpen
-              ? '<svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg> Ochiq'
-              : '<svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Yopiq') +
-          '</span>' +
+        // O'ng tomon — faqat summa (badge yo'q)
+        '<div class="list-item-right" style="justify-content:center">' +
+          '<div style="font-weight:800;font-family:JetBrains Mono,monospace;font-size:.9rem;color:' + amountCol + ';text-align:right;line-height:1.2">' + amountText + '</div>' +
         '</div>' +
       '</div>';
     }).join('');
 
   } catch(e) {
     var el2 = document.getElementById('our-debts-list');
-    if (el2) el2.innerHTML = '<div class="empty-state"><div class="empty-text">Xato: ' + e.message + '</div></div>';
+    if (el2) el2.innerHTML = '<div class="empty-state"><div class="empty-text">' + t("err_generic") + ': ' + e.message + '</div></div>';
   }
 }
 
@@ -7446,17 +7726,35 @@ async function loadOurDebtDetail(debtId) {
   el.innerHTML = '<div class="loading-spinner"><div class="spinner"></div></div>';
   try {
     var dr = await db.from('our_debts')
-      .select('*, admins(full_name)')
+      .select('id, creditor_name, phone, note, amount, currency, amount_sum, rate, status, created_at, admin_id')
       .eq('id', debtId).single();
     var tr = await db.from('debt_transactions')
-      .select('*, admins(full_name)')
+      .select('id, debt_id, type, amount, currency, amount_sum, rate, note, created_at, admin_id')
       .eq('debt_id', debtId)
       .order('created_at', { ascending: false });
 
     if (dr.error) throw dr.error;
+    if (tr.error) {
+      console.error('Tranzaksiyalar olinmadi:', tr.error);
+    }
+
+    // Admin nomlarini alohida olish
+    var allAdmins = await db.from('admins').select('id, full_name');
+    var adminMap = {};
+    (allAdmins.data || []).forEach(function(a){ adminMap[a.id] = a.full_name; });
+
+    // Admin nomlarini biriktirish
+    if (dr.data && dr.data.admin_id) {
+      dr.data.admins = { full_name: adminMap[dr.data.admin_id] || '—' };
+    }
+    (tr.data || []).forEach(function(tx){
+      tx.admins = { full_name: adminMap[tx.admin_id] || '—' };
+    });
+
     renderOurDebtDetail(dr.data, tr.data || []);
   } catch(e) {
-    el.innerHTML = '<div class="empty-state"><div class="empty-text">Xato: ' + e.message + '</div></div>';
+    console.error('loadOurDebtDetail xato:', e);
+    el.innerHTML = '<div class="empty-state"><div class="empty-text">' + t("err_generic") + ': ' + e.message + '</div></div>';
   }
 }
 
@@ -7464,126 +7762,137 @@ function renderOurDebtDetail(debt, txns) {
   var el = document.getElementById('our-debt-detail-content');
   if (!el) return;
 
+  txns = txns || [];
   var bal    = odCalcBalance(debt, txns);
   var isOpen = debt.status === 'open';
 
-  // Jami qarz va to'lovlar — faqat amount_sum (so'm) orqali
+  // Jami qarz va to'lovlar — FAQAT debt_transactions dan
   var totalDebtSum = 0, totalPaySum = 0;
   var totalDebtUsdOrig = 0, totalPayUsdOrig = 0;
-  var debtRate = 0;
+
   txns.forEach(function(tx) {
-    var val;
-    if (tx.amount_sum != null && tx.amount_sum > 0) {
-      val = tx.amount_sum;
-    } else if (tx.currency === 'usd' && tx.amount && tx.rate) {
-      val = Math.round(tx.amount * tx.rate);
+    var val = 0;
+    if (tx.amount_sum != null && Number(tx.amount_sum) > 0) {
+      val = Number(tx.amount_sum);
+    } else if (tx.currency === 'usd' && Number(tx.amount) > 0 && Number(tx.rate) > 0) {
+      val = Math.round(Number(tx.amount) * Number(tx.rate));
     } else {
-      val = tx.amount || 0;
+      val = Number(tx.amount) || 0;
     }
-    if (tx.currency === 'usd' && tx.rate) debtRate = tx.rate;
     if (tx.type === 'debt') {
       totalDebtSum += val;
-      if (tx.currency === 'usd') totalDebtUsdOrig += (tx.amount || 0);
+      if (tx.currency === 'usd') totalDebtUsdOrig += Number(tx.amount) || 0;
     } else {
       totalPaySum += val;
-      if (tx.currency === 'usd') totalPayUsdOrig += (tx.amount || 0);
+      if (tx.currency === 'usd') totalPayUsdOrig += Number(tx.amount) || 0;
     }
   });
 
-  // origStr va paidStr — ko'rsatish uchun
+  // Ko'rsatish satrlari
   var origStr, paidStr;
   if (debt.currency === 'usd' && totalDebtUsdOrig > 0) {
     origStr = '$' + totalDebtUsdOrig.toFixed(2) + ' ≈ ' + fmt(totalDebtSum) + " so'm";
     var paidUsdDisplay = totalPayUsdOrig > 0 ? '$' + totalPayUsdOrig.toFixed(2) + ' ≈ ' : '';
     paidStr = paidUsdDisplay + fmt(totalPaySum) + " so'm";
   } else {
-    origStr = fmt(totalDebtSum) + " so'm";
-    paidStr = fmt(totalPaySum)  + " so'm";
+    origStr = totalDebtSum > 0 ? fmt(totalDebtSum) + " so'm" : "0 so'm";
+    paidStr = fmt(totalPaySum) + " so'm";
   }
+
+  // Progress foizi
+  var pct = totalDebtSum > 0 ? Math.min(100, Math.round((totalPaySum / totalDebtSum) * 100)) : 0;
 
   var adminName = (debt.admins && debt.admins.full_name) || '—';
   var bgColor   = randomColor(debt.creditor_name || '');
   var ini       = (debt.creditor_name || '?').charAt(0).toUpperCase();
 
   // ─ Tarix HTML ─────────────────────────────────────
+  // Faqat haqiqiy tranzaksiyalar — eng yangi birinchi
+  var displayTxns = txns.slice().sort(function(a,b){
+    return new Date(b.created_at) - new Date(a.created_at);
+  });
+
   var histHtml = '';
-  if (txns.length) {
-    histHtml = txns.map(function(tx) {
+  if (displayTxns.length) {
+    histHtml = displayTxns.map(function(tx) {
       var isDebt   = tx.type === 'debt';
       var isReturn = tx.type === 'return';
+      var isPay    = tx.type === 'payment';
       var txAdmin  = (tx.admins && tx.admins.full_name) || '—';
+
+      // Summa ko'rsatish
+      var txAmountSum = 0;
+      if (tx.amount_sum != null && Number(tx.amount_sum) > 0) {
+        txAmountSum = Number(tx.amount_sum);
+      } else if (tx.currency === 'usd' && Number(tx.amount) > 0 && Number(tx.rate) > 0) {
+        txAmountSum = Math.round(Number(tx.amount) * Number(tx.rate));
+      } else {
+        txAmountSum = Number(tx.amount) || 0;
+      }
+
       var sign = isDebt ? '+' : '−';
       var amt;
-      if (tx.currency === 'usd') {
-        amt = sign + '$' + (tx.amount || 0).toFixed(2) +
-          (tx.amount_sum ? ' ≈ ' + fmt(tx.amount_sum) + " so'm" : '');
+      if (tx.currency === 'usd' && Number(tx.amount) > 0) {
+        amt = sign + '$' + Number(tx.amount).toFixed(2) +
+          (txAmountSum > 0 ? ' ≈ ' + fmt(txAmountSum) + " so'm" : '');
       } else {
-        amt = sign + fmt(tx.amount_sum || tx.amount || 0) + " so'm";
+        amt = sign + fmt(txAmountSum) + " so'm";
       }
 
-      var col, bgCol, iconSvg, labelText, labelBg;
+      var col, bgCol, iconSvg, labelText;
       if (isDebt) {
-        col      = 'var(--danger)';
-        bgCol    = 'var(--danger-light)';
-        labelBg  = 'rgba(239,68,68,.1)';
+        col       = 'var(--danger)';
+        bgCol     = 'var(--danger-light)';
         labelText = t('debt_add_btn');
-        iconSvg  = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+        iconSvg   = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
       } else if (isReturn) {
-        col      = '#F97316';
-        bgCol    = '#FFF7ED';
-        labelBg  = 'rgba(249,115,22,.1)';
+        col       = '#F97316';
+        bgCol     = '#FFF7ED';
         labelText = t('debt_return_btn');
-        iconSvg  = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>';
+        iconSvg   = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>';
       } else {
-        col      = 'var(--success)';
-        bgCol    = 'var(--success-light)';
-        labelBg  = 'rgba(16,185,129,.1)';
+        col       = 'var(--success)';
+        bgCol     = 'var(--success-light)';
         labelText = t('debt_pay_btn');
-        iconSvg  = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>';
+        iconSvg   = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>';
       }
 
-      return '<div style="display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--border)">' +
-        // Ikona
-        '<div style="width:34px;height:34px;border-radius:10px;background:' + bgCol + ';color:' + col + ';display:flex;align-items:center;justify-content:center;flex-shrink:0">' +
-          iconSvg +
-        '</div>' +
-        // Matn
-        '<div style="flex:1;min-width:0">' +
-          '<div style="font-size:.85rem;font-weight:700;color:' + col + ';font-family:JetBrains Mono,monospace">' + amt + '</div>' +
-          '<div style="display:flex;align-items:center;gap:5px;margin-top:3px;flex-wrap:wrap">' +
-            '<span style="font-size:.68rem;color:var(--text-muted);display:inline-flex;align-items:center;gap:3px">' +
-              '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
-              fmtDate(tx.created_at) +
-            '</span>' +
-            (tx.note
-              ? '<span style="font-size:.68rem;color:var(--text-muted);display:inline-flex;align-items:center;gap:3px">' +
-                  '· ' + tx.note +
-                '</span>'
-              : '') +
-            '<span style="font-size:.68rem;color:var(--text-muted);display:inline-flex;align-items:center;gap:3px">' +
-              '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
-              txAdmin +
-            '</span>' +
+      return (
+        '<div style="display:flex;align-items:center;gap:10px;padding:13px 0;border-bottom:0.5px solid rgba(60,60,67,.1)">' +
+          '<div style="width:36px;height:36px;border-radius:11px;background:' + bgCol + ';color:' + col + ';display:flex;align-items:center;justify-content:center;flex-shrink:0">' +
+            iconSvg +
           '</div>' +
-        '</div>' +
-        // Label badge
-        '<span style="font-size:.65rem;font-weight:700;color:' + col + ';background:' + labelBg + ';padding:3px 8px;border-radius:20px;white-space:nowrap;border:1px solid ' + bgCol + '">' + labelText + '</span>' +
-      '</div>';
+          '<div style="flex:1;min-width:0">' +
+            '<div style="font-size:.88rem;font-weight:700;color:' + col + ';font-family:JetBrains Mono,monospace;letter-spacing:-.02em">' + amt + '</div>' +
+            '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:3px">' +
+              '<span style="font-size:.7rem;color:var(--text-muted);display:inline-flex;align-items:center;gap:3px">' +
+                '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
+                fmtDate(tx.created_at) +
+              '</span>' +
+              (tx.note
+                ? '<span style="font-size:.7rem;color:var(--text-muted)">· ' + tx.note + '</span>'
+                : '') +
+              '<span style="font-size:.7rem;color:var(--text-muted);display:inline-flex;align-items:center;gap:3px">' +
+                '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
+                txAdmin +
+              '</span>' +
+            '</div>' +
+          '</div>' +
+          '<span style="font-size:.62rem;font-weight:700;color:' + col + ';background:' + bgCol + ';padding:3px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0">' +
+            labelText +
+          '</span>' +
+        '</div>'
+      );
     }).join('');
   } else {
     histHtml =
-      '<div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:28px 20px">' +
-        '<div style="width:44px;height:44px;border-radius:12px;background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;color:var(--text-muted)">' +
-          '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
+      '<div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:32px 20px">' +
+        '<div style="width:48px;height:48px;border-radius:14px;background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;color:var(--text-muted)">' +
+          '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
         '</div>' +
-        '<div style="font-size:.82rem;color:var(--text-muted)">' + t('debt_no_history') + '</div>' +
+        '<div style="font-size:.84rem;color:var(--text-muted);font-weight:500">' + t('debt_no_history') + '</div>' +
       '</div>';
   }
-
-  // ─ Progress bar — amount_sum (so'm) bazasida ────────────────────────────
-  var origNum = totalDebtSum;   // jami qarz (so'm)
-  var paidNum = totalPaySum;    // to'langan (so'm)
-  var pct = origNum > 0 ? Math.min(100, Math.round((paidNum / origNum) * 100)) : 0;
 
   el.innerHTML =
     // Orqaga tugma
@@ -7596,125 +7905,117 @@ function renderOurDebtDetail(debt, txns) {
     '<div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;padding:16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm)">' +
       '<div style="width:56px;height:56px;border-radius:16px;background:' + bgColor + '18;color:' + bgColor + ';display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:800;flex-shrink:0;border:2px solid ' + bgColor + '30">' + ini + '</div>' +
       '<div style="flex:1;min-width:0">' +
-        '<div style="font-size:1.2rem;font-weight:800;letter-spacing:-.02em;line-height:1.2">' + (debt.creditor_name || '—') + '</div>' +
+        '<div style="font-size:1.2rem;font-weight:800;letter-spacing:-.02em;line-height:1.2">' + htmlEscape(debt.creditor_name || '—') + '</div>' +
         (debt.phone
           ? '<div style="display:inline-flex;align-items:center;gap:5px;font-size:.8rem;color:var(--text-muted);margin-top:4px">' +
               '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.89 12 19.79 19.79 0 0 1 1.92 3.32C1.88 2.18 2.73 1 3.92 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>' +
-              debt.phone +
+              htmlEscape(debt.phone) +
+            '</div>'
+          : '') +
+        (debt.note
+          ? '<div style="display:inline-flex;align-items:center;gap:5px;font-size:.78rem;color:var(--text-muted);margin-top:4px">' +
+              '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' +
+              htmlEscape(debt.note) +
             '</div>'
           : '') +
       '</div>' +
       '<div>' +
-        '<span style="display:inline-flex;align-items:center;gap:4px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:5px 10px;border-radius:20px;' +
-          (isOpen ? 'background:#FFF7ED;color:#F97316' : 'background:var(--success-light);color:var(--success)') + '">' +
-          (isOpen
-            ? '<svg width="7" height="7" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg> Ochiq'
-            : '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> Yopilgan') +
-        '</span>' +
-        '<div style="display:inline-flex;align-items:center;gap:4px;font-size:.7rem;color:var(--text-muted);margin-top:6px;white-space:nowrap">' +
+        '<div style="display:inline-flex;align-items:center;gap:4px;font-size:.7rem;color:var(--text-muted);white-space:nowrap">' +
           '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
           fmtDate(debt.created_at) +
         '</div>' +
       '</div>' +
     '</div>' +
 
-    // ── Info karta ──
-    '<div class="card" style="margin-bottom:12px">' +
-      // Izoh (agar bor bo'lsa)
-      (debt.note
-        ? '<div class="card-row">' +
-            '<span class="card-row-label">' +
-              '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>' +
-              ' Izoh' +
-            '</span>' +
-            '<span style="font-size:.85rem;color:var(--text-secondary)">' + debt.note + '</span>' +
-          '</div>'
-        : '') +
-      // Jami qarz
-      '<div class="card-row">' +
-        '<span class="card-row-label">' +
-          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>' +
-          ' Jami qarz' +
-        '</span>' +
-        '<span style="font-weight:700;color:var(--danger);font-family:JetBrains Mono,monospace;font-size:.9rem">' + origStr + '</span>' +
-      '</div>' +
-      // To'langan
-      '<div class="card-row">' +
-        '<span class="card-row-label">' +
-          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>' +
-          ' ' + t("debt_paid") +
-        '</span>' +
-        '<span style="font-weight:700;color:var(--success);font-family:JetBrains Mono,monospace;font-size:.9rem">' + paidStr + '</span>' +
-      '</div>' +
-
-      // Progress bar
-      '<div style="padding:14px 0 8px">' +
-        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
-          '<span style="font-size:.72rem;font-weight:600;color:var(--text-muted)">To\'lov holati</span>' +
-          '<span style="font-size:.75rem;font-weight:800;color:' + (pct >= 100 ? 'var(--success)' : pct > 50 ? 'var(--warning)' : 'var(--danger)') + '">' + pct + '%</span>' +
+    // ── 4 ta statistika kartasi ──
+    '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px">' +
+      // 1. Jami qarz — dollar
+      '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px;box-shadow:var(--shadow-sm)">' +
+        '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">' +
+          '<div style="width:24px;height:24px;border-radius:7px;background:var(--danger-light);color:var(--danger);display:flex;align-items:center;justify-content:center">' +
+            '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' +
+          '</div>' +
+          '<span style="font-size:.65rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em">' + t('debt_total_usd') + '</span>' +
         '</div>' +
-        '<div style="height:8px;border-radius:4px;background:var(--bg-tertiary);overflow:hidden">' +
-          '<div style="height:100%;border-radius:4px;width:' + pct + '%;background:' +
-            (pct >= 100 ? 'var(--success)' : pct > 50 ? 'var(--warning)' : 'var(--danger)') +
-            ';transition:width .6s cubic-bezier(.22,1,.36,1)"></div>' +
+        '<div style="font-size:1.1rem;font-weight:800;color:var(--danger);font-family:JetBrains Mono,monospace;letter-spacing:-.02em">' +
+          (totalDebtUsdOrig > 0 ? '$' + totalDebtUsdOrig.toFixed(2) : '—') +
         '</div>' +
       '</div>' +
-
-      // Qolgan qarz — highlight
-      '<div style="margin-top:4px;padding:12px 14px;border-radius:var(--radius-md);background:' + (isOpen ? '#FFF7ED' : 'var(--success-light)') + ';border:1px solid ' + (isOpen ? 'rgba(249,115,22,.2)' : 'rgba(16,185,129,.2)') + ';display:flex;align-items:center;justify-content:space-between">' +
-        '<div style="display:flex;align-items:center;gap:6px">' +
-          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="' + (isOpen ? '#F97316' : 'var(--success)') + '" stroke-width="2.5" stroke-linecap="round">' +
-            (isOpen
-              ? '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'
-              : '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>') +
-          '</svg>' +
-          '<span style="font-size:.78rem;font-weight:700;color:' + (isOpen ? '#F97316' : 'var(--success)') + '">' + t("debt_remaining") + '</span>' +
+      // 2. Jami qarz — so'm
+      '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px;box-shadow:var(--shadow-sm)">' +
+        '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">' +
+          '<div style="width:24px;height:24px;border-radius:7px;background:var(--danger-light);color:var(--danger);display:flex;align-items:center;justify-content:center">' +
+            '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>' +
+          '</div>' +
+          '<span style="font-size:.65rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em">' + t('debt_total_sum') + '</span>' +
         '</div>' +
-        '<span style="font-size:1.15rem;font-weight:800;color:' + (isOpen ? '#F97316' : 'var(--success)') + ';font-family:JetBrains Mono,monospace">' + bal.remainStr + '</span>' +
+        '<div style="font-size:1.1rem;font-weight:800;color:var(--danger);font-family:JetBrains Mono,monospace;letter-spacing:-.02em">' +
+          fmt(totalDebtSum) +
+        '</div>' +
+      '</div>' +
+      // 3. To'langan
+      '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px;box-shadow:var(--shadow-sm)">' +
+        '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">' +
+          '<div style="width:24px;height:24px;border-radius:7px;background:var(--success-light);color:var(--success);display:flex;align-items:center;justify-content:center">' +
+            '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+          '</div>' +
+          '<span style="font-size:.65rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em">' + t('debt_paid') + '</span>' +
+        '</div>' +
+        '<div style="font-size:1.1rem;font-weight:800;color:var(--success);font-family:JetBrains Mono,monospace;letter-spacing:-.02em">' +
+          (totalPayUsdOrig > 0 ? '$' + totalPayUsdOrig.toFixed(2) + ' / ' : '') +
+          fmt(totalPaySum) +
+        '</div>' +
+      '</div>' +
+      // 4. Hozirgi qarz (qoldiq)
+      '<div style="background:' + (bal.remain > 0 ? '#FFF7ED' : 'var(--success-light)') + ';border:1px solid ' + (bal.remain > 0 ? 'rgba(249,115,22,.25)' : 'rgba(16,185,129,.2)') + ';border-radius:var(--radius-md);padding:12px;box-shadow:var(--shadow-sm)">' +
+        '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">' +
+          '<div style="width:24px;height:24px;border-radius:7px;background:' + (bal.remain > 0 ? '#fff' : '#fff') + ';color:' + (bal.remain > 0 ? '#F97316' : 'var(--success)') + ';display:flex;align-items:center;justify-content:center">' +
+            (bal.remain > 0
+              ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+              : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>') +
+          '</div>' +
+          '<span style="font-size:.65rem;font-weight:700;color:' + (bal.remain > 0 ? '#F97316' : 'var(--success)') + ';text-transform:uppercase;letter-spacing:.04em">' + t('debt_current') + '</span>' +
+        '</div>' +
+        '<div style="font-size:1.1rem;font-weight:800;color:' + (bal.remain > 0 ? '#F97316' : 'var(--success)') + ';font-family:JetBrains Mono,monospace;letter-spacing:-.02em">' +
+          (bal.remain > 0
+            ? ((bal.remainUsd > 0 ? '$' + bal.remainUsd.toFixed(2) + ' / ' : '') + fmt(bal.remain))
+            : '✓ ' + t('debt_closed_label')) +
+        '</div>' +
       '</div>' +
     '</div>' +
 
-    // ── Action tugmalar ──
-    (isOpen
-      ? '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">' +
-          // 1-qator: To'lash + Qaytarish
-          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">' +
-            '<button class="btn btn-full" onclick="odOpenAddTxnSheet(\'payment\',\'' + debt.id + '\')" style="height:52px;background:var(--success);color:#fff;border:none;flex-direction:column;gap:3px;border-radius:var(--radius-md)">' +
-              '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>' +
-              '<span style="font-size:.72rem;font-weight:700">' + t("debt_pay_btn") + '</span>' +
-            '</button>' +
-            '<button class="btn btn-full" onclick="odOpenAddTxnSheet(\'return\',\'' + debt.id + '\')" style="height:52px;background:#FFF7ED;color:#F97316;border:1.5px solid rgba(249,115,22,.25);flex-direction:column;gap:3px;border-radius:var(--radius-md)">' +
-              '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>' +
-              '<span style="font-size:.72rem;font-weight:700">' + t("debt_return_btn") + '</span>' +
-            '</button>' +
-          '</div>' +
-          // 2-qator: Qarz qo'sh + O'chir
-          '<div style="display:flex;gap:8px">' +
-            '<button class="btn btn-ghost btn-full" onclick="odOpenAddTxnSheet(\'debt\',\'' + debt.id + '\')" style="height:40px;flex:1;font-size:.82rem;gap:6px">' +
-              '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
-              t("debt_add_btn") +
-            '</button>' +
-            '<button class="btn" onclick="deleteOurDebt(\'' + debt.id + '\')" style="height:40px;width:40px;padding:0;background:var(--danger-light);color:var(--danger);border:1.5px solid rgba(239,68,68,.2);flex-shrink:0;border-radius:var(--radius-sm)">' +
-              '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>' +
-            '</button>' +
-          '</div>' +
-        '</div>'
-      : '<div style="display:flex;gap:8px;margin-bottom:20px">' +
-          '<div class="info-banner" style="flex:1;display:flex;align-items:center;gap:8px">' +
-            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>' +
-            t("debt_closed_toast") +
-          '</div>' +
-          '<button class="btn" onclick="deleteOurDebt(\'' + debt.id + '\')" style="height:46px;width:46px;padding:0;background:var(--danger-light);color:var(--danger);border:1.5px solid rgba(239,68,68,.2);flex-shrink:0;border-radius:var(--radius-sm)">' +
-            '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>' +
-          '</button>' +
-        '</div>'
-    ) +
+    // ── Izoh karta ichida emas, header ostida bor ──
+
+    // ── Action tugmalar (har doim 3 ta tugma) ──
+    '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">' +
+      // 1-qator: To'lash + Qaytarish
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">' +
+        '<button class="btn btn-full" onclick="odOpenAddTxnSheet(\'payment\',\'' + debt.id + '\')" style="height:52px;background:var(--success);color:#fff;border:none;flex-direction:column;gap:3px;border-radius:var(--radius-md)">' +
+          '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+          '<span style="font-size:.72rem;font-weight:700">' + t("debt_pay_btn") + '</span>' +
+        '</button>' +
+        '<button class="btn btn-full" onclick="odOpenAddTxnSheet(\'return\',\'' + debt.id + '\')" style="height:52px;background:#FFF7ED;color:#F97316;border:1.5px solid rgba(249,115,22,.25);flex-direction:column;gap:3px;border-radius:var(--radius-md)">' +
+          '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>' +
+          '<span style="font-size:.72rem;font-weight:700">' + t("debt_return_btn") + '</span>' +
+        '</button>' +
+      '</div>' +
+      // 2-qator: Qarz qo'sh + O'chir
+      '<div style="display:flex;gap:8px">' +
+        '<button class="btn btn-ghost btn-full" onclick="odOpenAddTxnSheet(\'debt\',\'' + debt.id + '\')" style="height:40px;flex:1;font-size:.82rem;gap:6px">' +
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
+          t("debt_add_btn") +
+        '</button>' +
+        '<button class="btn" onclick="deleteOurDebt(\'' + debt.id + '\')" style="height:40px;width:40px;padding:0;background:var(--danger-light);color:var(--danger);border:1.5px solid rgba(239,68,68,.2);flex-shrink:0;border-radius:var(--radius-sm)">' +
+          '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>' +
+        '</button>' +
+      '</div>' +
+    '</div>' +
 
     // ── Tarix sarlavha ──
     '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">' +
       '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--text-muted)"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
       '<span class="section-label" style="margin:0">' + t("debt_history_title") + '</span>' +
-      '<span style="font-size:.68rem;font-weight:700;background:var(--bg-tertiary);color:var(--text-muted);padding:2px 8px;border-radius:20px">' + txns.length + '</span>' +
+      '<span style="font-size:.68rem;font-weight:700;background:var(--bg-tertiary);color:var(--text-muted);padding:2px 8px;border-radius:20px">' + displayTxns.length + '</span>' +
     '</div>' +
     '<div class="card">' + histHtml + '</div>';
 }
@@ -7947,7 +8248,7 @@ async function saveOurDebtPayment() {
 
   // ── Validatsiya ──────────────────────────────────
   if (!debtId) {
-    showToast('Qarz topilmadi!', 'error'); return;
+    showToast(t('err_debt_not_found'), 'error'); return;
   }
   if (!amtRaw || isNaN(amount) || amount <= 0) {
     showToast(t('payment_amount_err'), 'error'); return;
@@ -7977,11 +8278,11 @@ async function saveOurDebtPayment() {
       // Miqdor qolgan qarzdan oshmasligi kerak (amount_sum — so'm bazasida taqqoslash)
       // bal.remain = so'mdagi qoldiq
       var payAmountSum = currency === 'usd'
-        ? Math.round(amount * rate)   // USD to'lov → so'mga aylantiramiz
-        : amount;                     // So'm to'lov → to'g'ridan
+        ? Math.round(Number(amount) * Number(rate))
+        : Number(amount);
       var errLabel = txnType === 'return' ? t('debt_return_btn') : t('debt_pay_btn');
       if (payAmountSum > bal.remain + 1) {
-        showToast(errLabel + ": qolgan qarzdan (" + bal.remainStr + ") ko'p bo'lishi mumkin emas!", 'error');
+        showToast(errLabel + ': ' + t('err_amount_exceeds_debt').replace('{0}', bal.remainStr), 'error');
         btnEnd(btn); _odPaySaving = false; return;
       }
     }
@@ -8002,6 +8303,7 @@ async function saveOurDebtPayment() {
 
     // 4. To'lov yoki qaytarish — yangi balansni tekshirib status yangilash
     var isClosed = false;
+    var wasReopened = false;
     if (txnType === 'payment' || txnType === 'return') {
       var tr3 = await db.from('debt_transactions')
         .select('type, amount, currency, amount_sum').eq('debt_id', debtId);
@@ -8009,6 +8311,12 @@ async function saveOurDebtPayment() {
       isClosed = newBal.isClosed;
       if (isClosed) {
         await db.from('our_debts').update({ status: 'closed' }).eq('id', debtId);
+      }
+    } else if (txnType === 'debt') {
+      // Yangi qarz qo'shildi — agar yopiq bo'lsa, qaytadan ochamiz
+      if (debt.status === 'closed') {
+        await db.from('our_debts').update({ status: 'open' }).eq('id', debtId);
+        wasReopened = true;
       }
     }
 
@@ -8040,6 +8348,7 @@ async function saveOurDebtPayment() {
     if (isClosed) showToast('\uD83C\uDF89 ' + t('debt_closed_toast'));
     else if (txnType === 'return') showToast('\uD83D\uDD01 ' + t('debt_return_saved'));
     else if (txnType === 'payment') showToast('\u2705 ' + t('debt_pay_saved'));
+    else if (wasReopened) showToast('\u2795 ' + t('debt_saved'));
     else showToast(t('debt_saved'));
 
     // Detail + list reactive yangilansin
@@ -8056,9 +8365,9 @@ async function saveOurDebtPayment() {
 
 // ── O'CHIRISH ─────────────────────────────────────
 async function deleteOurDebt(debtId) {
-  var ok = await showConfirm("Qarzni o'chirish", "Bu qarz va uning barcha to'lov tarixi o'chiriladi. Bu amalni bekor qilib bo'lmaydi!", "O'chirish");
+  var ok = await showConfirm(t('confirm_delete_debt_title'), t('confirm_delete_debt_msg'), t('confirm_delete_btn'));
   if (!ok) return;
-  soundDelete();
+  soundDelete(); hapticWarning();
   try {
     await db.from('debt_transactions').delete().eq('debt_id', debtId);
     var res = await db.from('our_debts').delete().eq('id', debtId);
@@ -8092,7 +8401,122 @@ document.getElementById('custom-confirm-overlay').addEventListener('click', func
   if (e.target === this) ccResolve(false);
 });
 
-// ===================== APPLE SOUND SYSTEM =====================
+// ===================== HAPTIC FEEDBACK =====================
+var _tgHaptic = null;
+(function(){
+  try {
+    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.HapticFeedback) {
+      _tgHaptic = window.Telegram.WebApp.HapticFeedback;
+    }
+  } catch(e) {}
+})();
+
+function hapticLight()   { try { if (_tgHaptic) _tgHaptic.impactOccurred('light'); } catch(e) {} }
+function hapticMedium()  { try { if (_tgHaptic) _tgHaptic.impactOccurred('medium'); } catch(e) {} }
+function hapticRigid()   { try { if (_tgHaptic) _tgHaptic.impactOccurred('rigid'); } catch(e) {} }
+function hapticSuccess() { try { if (_tgHaptic) _tgHaptic.notificationOccurred('success'); } catch(e) {} }
+function hapticWarning() { try { if (_tgHaptic) _tgHaptic.notificationOccurred('warning'); } catch(e) {} }
+function hapticError()   { try { if (_tgHaptic) _tgHaptic.notificationOccurred('error'); } catch(e) {} }
+function hapticSelect()  { try { if (_tgHaptic) _tgHaptic.selectionChanged(); } catch(e) {} }
+
+// ===================== PULL TO REFRESH =====================
+(function(){
+  var _ptrStartY = 0;
+  var _ptrDeltaY = 0;
+  var _ptrActive = false;
+  var _ptrLoading = false;
+  var _ptrThreshold = 72;
+  var _ptrEl = null;
+  var _ptrHapticFired = false;
+
+  // Hozirgi aktiv sahifani yangilash funksiyasi
+  function _ptrReload() {
+    var activePage = document.querySelector('.page.active');
+    if (!activePage) return;
+    var id = activePage.id;
+    if (id === 'page-dashboard') loadDashboard();
+    else if (id === 'page-spiska') loadSpiskaList();
+    else if (id === 'page-customers') loadCustomers();
+    else if (id === 'page-products') loadProducts();
+    else if (id === 'page-history') loadHistory();
+    else if (id === 'page-stats') statsLoadCurrent();
+    else if (id === 'page-expenses') loadExpenses();
+    else if (id === 'page-our-debts') loadOurDebts();
+  }
+
+  function _ptrInit() {
+    _ptrEl = document.getElementById('ptr-indicator');
+    if (!_ptrEl) return;
+    var arrow = _ptrEl.querySelector('.ptr-arrow');
+
+    document.addEventListener('touchstart', function(e) {
+      if (_ptrLoading) return;
+      // Faqat sahifa yuqorida bo'lganda ishlaydi
+      var scrollEl = document.scrollingElement || document.documentElement;
+      if (scrollEl.scrollTop > 4) return;
+      _ptrStartY = e.touches[0].clientY;
+      _ptrActive = true;
+      _ptrHapticFired = false;
+    }, { passive: true });
+
+    document.addEventListener('touchmove', function(e) {
+      if (!_ptrActive || _ptrLoading) return;
+      var scrollEl = document.scrollingElement || document.documentElement;
+      if (scrollEl.scrollTop > 4) { _ptrActive = false; return; }
+
+      _ptrDeltaY = e.touches[0].clientY - _ptrStartY;
+      if (_ptrDeltaY <= 0) { _ptrEl.classList.remove('ptr-visible'); return; }
+
+      _ptrEl.classList.add('ptr-visible');
+      // Arrow rotation: 0 → -180deg as we pull
+      var progress = Math.min(_ptrDeltaY / _ptrThreshold, 1);
+      if (arrow) arrow.style.transform = 'rotate(' + (-progress * 180) + 'deg)';
+
+      // Haptic: threshold ga yetganda bir marta
+      if (progress >= 1 && !_ptrHapticFired) {
+        hapticMedium();
+        _ptrHapticFired = true;
+      }
+    }, { passive: true });
+
+    document.addEventListener('touchend', function() {
+      if (!_ptrActive || _ptrLoading) { _ptrActive = false; return; }
+      _ptrActive = false;
+
+      if (_ptrDeltaY >= _ptrThreshold) {
+        // Loading holatiga o'tish
+        _ptrLoading = true;
+        _ptrEl.classList.add('ptr-loading');
+        hapticSuccess();
+        soundSheetOpen();
+
+        _ptrReload();
+
+        // 1.6s dan keyin yopish
+        setTimeout(function() {
+          _ptrLoading = false;
+          _ptrEl.classList.remove('ptr-visible', 'ptr-loading');
+          if (arrow) arrow.style.transform = 'rotate(0deg)';
+          _ptrDeltaY = 0;
+        }, 1600);
+      } else {
+        // Yetmadi — orqaga
+        _ptrEl.classList.remove('ptr-visible');
+        if (arrow) arrow.style.transform = 'rotate(0deg)';
+        _ptrDeltaY = 0;
+      }
+    });
+  }
+
+  // DOM tayyor bo'lgach init
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _ptrInit);
+  } else {
+    setTimeout(_ptrInit, 100);
+  }
+})();
+
+
 var _audioCtx = null;
 var _soundEnabled = true;
 
