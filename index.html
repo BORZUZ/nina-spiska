@@ -1418,10 +1418,17 @@ body{
               <h2 class="section-title" id="pg-dash-title">Bosh sahifa</h2>
               <div style="font-size:.78rem;color:var(--text-muted);margin-top:2px" id="today-date"></div>
             </div>
-            <button class="btn btn-primary btn-sm" onclick="openNewSpiskaSheet()" id="pg-dash-newbtn">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              Yangi spiska
-            </button>
+            <div style="display:flex;align-items:center;gap:8px">
+              <!-- Bildirishnoma qo'ng'irog'i — faqat asosiy admin ko'radi -->
+              <button id="bell-btn" onclick="openNotifSheet()" style="display:none;position:relative;width:40px;height:40px;border-radius:12px;background:var(--bg-card);border:1px solid var(--border);color:var(--text-secondary);cursor:pointer;align-items:center;justify-content:center;transition:all .15s" onmouseover="this.style.background=\'var(--bg-tertiary)\';this.style.color=\'var(--text-primary)\'" onmouseout="this.style.background=\'var(--bg-card)\';this.style.color=\'var(--text-secondary)\'">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                <span id="bell-badge" style="display:none;position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--danger);color:#fff;font-size:.65rem;font-weight:800;display:none;align-items:center;justify-content:center;border:2px solid var(--bg);font-family:JetBrains Mono,monospace">0</span>
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="openNewSpiskaSheet()" id="pg-dash-newbtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Yangi spiska
+              </button>
+            </div>
           </div>
 
           <div class="stats-grid">
@@ -1818,7 +1825,7 @@ body{
                 </div>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted)"><path d="m9 18 6-6-6-6"/></svg>
               </div>
-              <div class="settings-item" onclick="navigate('our-debts')" style="cursor:pointer;border:none">
+              <div class="settings-item" onclick="navigate('our-debts')" style="cursor:pointer">
                 <div class="settings-item-left">
                   <div class="settings-item-icon" style="background:#FFF7ED;color:#F97316">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
@@ -1826,6 +1833,19 @@ body{
                   <div>
                     <div class="settings-item-label" id="s-debt-nav-label">Bizning qarzlarimiz</div>
                     <div class="settings-item-sublabel" id="s-debt-nav-sub">Yetkazib beruvchi, do'st, bank...</div>
+                  </div>
+                </div>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted)"><path d="m9 18 6-6-6-6"/></svg>
+              </div>
+              <!-- AUDIT — faqat asosiy admin uchun (JS bilan ko'rsatiladi) -->
+              <div class="settings-item" id="settings-audit-item" onclick="navigate('audit')" style="cursor:pointer;border:none;display:none">
+                <div class="settings-item-left">
+                  <div class="settings-item-icon" style="background:var(--accent-light);color:var(--accent)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  </div>
+                  <div>
+                    <div class="settings-item-label" id="s-audit-nav-label">Audit tarix</div>
+                    <div class="settings-item-sublabel" id="s-audit-nav-sub">Kim, qachon, nima qildi</div>
                   </div>
                 </div>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted)"><path d="m9 18 6-6-6-6"/></svg>
@@ -2126,6 +2146,56 @@ body{
       <div id="page-our-debt-detail" class="page">
         <div class="page-content">
           <div id="our-debt-detail-content"></div>
+        </div>
+      </div>
+
+      <!-- AUDIT SAHIFASI — faqat asosiy admin uchun -->
+      <div id="page-audit" class="page">
+        <div class="page-content">
+          <!-- Header -->
+          <div class="section-header">
+            <button class="back-btn" onclick="navigate('settings')" style="margin:0">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              <span id="audit-back-label">Orqaga</span>
+            </button>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span id="audit-page-title" style="font-size:1.1rem;font-weight:700;color:var(--text-primary)">Audit tarix</span>
+            </div>
+          </div>
+
+          <!-- Filtrlar -->
+          <div class="filter-tabs" style="margin-bottom:12px;overflow-x:auto;flex-wrap:nowrap">
+            <button class="filter-tab active" onclick="filterAudit(this,'all')" data-audit-filter="all" id="ft-audit-all">Barchasi</button>
+            <button class="filter-tab" onclick="filterAudit(this,'product')" data-audit-filter="product">Mahsulot</button>
+            <button class="filter-tab" onclick="filterAudit(this,'customer')" data-audit-filter="customer">Mijoz</button>
+            <button class="filter-tab" onclick="filterAudit(this,'debt')" data-audit-filter="debt">Qarz</button>
+            <button class="filter-tab" onclick="filterAudit(this,'our_debt')" data-audit-filter="our_debt">Bizning qarz</button>
+            <button class="filter-tab" onclick="filterAudit(this,'spiska')" data-audit-filter="spiska">Spiska</button>
+            <button class="filter-tab" onclick="filterAudit(this,'admin')" data-audit-filter="admin">Admin</button>
+          </div>
+
+          <!-- Statistika -->
+          <div class="stats-grid" style="margin-bottom:14px;grid-template-columns:repeat(2,1fr)">
+            <div class="stat-card">
+              <div class="stat-card-icon" style="background:var(--accent-light);color:var(--accent)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div class="stat-label" id="audit-stat-today-label">Bugungi harakatlar</div>
+              <div class="stat-value" id="audit-stat-today" style="font-size:1.4rem;color:var(--accent)">—</div>
+              <div class="stat-trend" id="audit-stat-today-sub">ta yozuv</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-icon" style="background:var(--warning-light);color:var(--warning)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              </div>
+              <div class="stat-label" id="audit-stat-week-label">Bu hafta</div>
+              <div class="stat-value" id="audit-stat-week" style="font-size:1.4rem;color:var(--warning)">—</div>
+              <div class="stat-trend" id="audit-stat-week-sub">ta yozuv</div>
+            </div>
+          </div>
+
+          <!-- Ro'yxat -->
+          <div id="audit-list" style="display:flex;flex-direction:column;gap:8px"></div>
         </div>
       </div>
 
@@ -2526,6 +2596,20 @@ body{
   </div>
 </div>
 
+<!-- BILDIRISHNOMA SHEET -->
+<div class="sheet-overlay" id="notif-sheet">
+  <div class="sheet" style="max-height:80vh">
+    <div class="sheet-handle"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <h3 class="sheet-title" id="notif-sheet-title" style="margin:0">Bildirishnomalar</h3>
+      <button onclick="markAllNotifsRead()" id="notif-mark-all-btn" style="background:transparent;border:none;color:var(--accent);font-size:.78rem;font-weight:600;cursor:pointer;padding:4px 8px;border-radius:6px">Hammasini o'qildi</button>
+    </div>
+    <div id="notif-list" style="max-height:60vh;overflow-y:auto;padding:0 2px;display:flex;flex-direction:column;gap:6px;margin:-4px -2px">
+      <!-- ro'yxat shu yerga keladi -->
+    </div>
+  </div>
+</div>
+
 <!-- CUSTOMER SHEET -->
 <div class="sheet-overlay" id="customer-sheet">
   <div class="sheet">
@@ -2894,6 +2978,7 @@ function navigate(page, data) {
   else if (page === 'expenses') loadExpenses();
   else if (page === 'our-debts') loadOurDebts();
   else if (page === 'our-debt-detail' && data) loadOurDebtDetail(data);
+  else if (page === 'audit') loadAudit();
   else if (page === 'stats') { currentStatsSub='overview'; switchStatsSub('overview'); }
   else if (page === 'spiska-detail' && data) loadSpiskaDetail(data);
   else if (page === 'customer-detail' && data) loadCustomerDetail(data);
@@ -2906,6 +2991,8 @@ function navigate(page, data) {
 
 // ===================== DASHBOARD =====================
 async function loadDashboard() {
+  // Bell badge yangilash (asosiy admin uchun)
+  refreshBellBadge();
   // Set today's date
   var today = new Date();
   var dateEl = document.getElementById('today-date');
@@ -3115,6 +3202,93 @@ function attrEscape(s) {
     .replace(/>/g,'&gt;');
 }
 
+// ===================== AUDIT LOG =====================
+// Har bir muhim harakatni audit_log jadvaliga yozadi va Telegram'ga xabar yuboradi
+// Parametrlar:
+//   module: 'product', 'customer', 'debt', 'spiska', 'admin', 'our_debt'
+//   action: 'create', 'update', 'delete', 'price_change', 'payment', 'return'
+//   entityName: ko'rinadigan nom (mahsulot/mijoz nomi)
+//   options: { entityId, oldValue, newValue, meta, telegram (default true) }
+async function logAudit(module, action, entityName, options) {
+  options = options || {};
+  try {
+    var adminId   = (currentAdmin && currentAdmin.id) || null;
+    var adminName = (currentAdmin && currentAdmin.full_name) || '—';
+
+    // 1. Bazaga yozish
+    await db.from('audit_log').insert({
+      admin_id:    adminId,
+      admin_name:  adminName,
+      module:      module,
+      action:      action,
+      entity_id:   options.entityId || null,
+      entity_name: entityName || null,
+      old_value:   options.oldValue !== undefined ? options.oldValue : null,
+      new_value:   options.newValue !== undefined ? options.newValue : null,
+      meta:        options.meta || null
+    });
+
+    // 2. Telegram xabar — faqat asosiy adminga (TG_CHAT_IDS dagi birinchi ID)
+    if (options.telegram !== false && TG_CHAT_IDS && TG_CHAT_IDS.length > 0) {
+      var msg = buildAuditTelegramMsg(module, action, entityName, adminName, options);
+      // Faqat birinchi chat ID ga (asosiy admin) yuboriladi
+      try {
+        await fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: TG_CHAT_IDS[0],
+            text: msg,
+            parse_mode: 'HTML'
+          })
+        });
+      } catch(e) { console.warn('Audit Telegram xabar yuborilmadi:', e); }
+    }
+
+    // 3. Bell badge yangilash (asosiy admin sahifasida turgan bo'lsa)
+    if (typeof refreshBellBadge === 'function') {
+      refreshBellBadge();
+    }
+  } catch(e) {
+    console.warn('Audit log xato:', e);
+    // Xato bo'lsa ham asosiy ish davom etsin (audit shunchaki yordamchi)
+  }
+}
+
+// Telegram audit xabarini tuzish (tizim tilida)
+function buildAuditTelegramMsg(module, action, entityName, adminName, options) {
+  var icons = {
+    create: '➕', update: '✏️', delete: '🗑',
+    price_change: '💰', payment: '✅', return: '🔁'
+  };
+  var icon  = icons[action] || '📝';
+  var modKey = 'audit_mod_' + module;
+  var actKey = 'audit_act_' + action;
+  var mod   = (t(modKey) === modKey) ? module : t(modKey);
+  var act   = (t(actKey) === actKey) ? action : t(actKey);
+
+  var lines = [];
+  lines.push('🔔 <b>' + t('audit_title') + '</b>');
+  lines.push('');
+  lines.push(icon + ' <b>' + mod + ' ' + act + '</b>');
+  if (entityName) lines.push('📦 ' + tgEscape(entityName));
+  if (options.oldValue !== undefined && options.newValue !== undefined) {
+    lines.push('📊 ' + tgEscape(String(options.oldValue)) + ' → ' + tgEscape(String(options.newValue)));
+  } else if (options.newValue !== undefined) {
+    lines.push('📊 ' + tgEscape(String(options.newValue)));
+  } else if (options.oldValue !== undefined) {
+    lines.push('📊 ' + tgEscape(String(options.oldValue)));
+  }
+  if (options.meta && options.meta.note) {
+    lines.push('💬 ' + tgEscape(options.meta.note));
+  }
+  lines.push('');
+  lines.push('👤 ' + tgEscape(adminName));
+  var locale = (getLang() === 'ru') ? 'ru-RU' : 'uz-UZ';
+  lines.push('🕐 ' + new Date().toLocaleString(locale, { dateStyle: 'short', timeStyle: 'short' }));
+  return lines.join('\n');
+}
+
 // ===================== NEW SPISKA =====================
 async function openNewSpiskaSheet() {
   var res = await db.from('customers').select('*').eq('is_active',true).order('full_name');
@@ -3209,8 +3383,8 @@ function renderSpiskaDetail(s) {
     itemsHtml = '<div class="spiska-items-table">' +
       items.map(function(item, i) {
         var removeBtn = isOpen
-          ? '<button class="btn-icon btn-icon-danger" onclick="removeItem(\'' + item.id + '\')" style="width:30px;height:30px">' +
-            '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+          ? '<button onclick="removeItem(\'' + item.id + '\')" style="width:24px;height:24px;border:none;background:transparent;color:var(--text-muted);opacity:.4;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:all .15s" onmouseover="this.style.opacity=1;this.style.background=\'var(--danger-light)\';this.style.color=\'var(--danger)\'" onmouseout="this.style.opacity=.4;this.style.background=\'transparent\';this.style.color=\'var(--text-muted)\'" title="O\'chirish">' +
+            '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
             '</button>'
           : '';
         return '<div class="spiska-item-row">' +
@@ -3260,32 +3434,37 @@ function renderSpiskaDetail(s) {
       '</div>';
   }
 
-  // O'chirish tugmasi (har doim ko'rinadi)
-  var deleteBtn =
-    '<button class="btn btn-full" onclick="confirmDeleteSpiska(\'' + s.id + '\')" style="height:46px;background:var(--danger-light);color:var(--danger);border:1.5px solid rgba(239,68,68,.25);margin-top:4px">' +
-      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>' +
-      ' ' + t('spiska_delete_btn') +
-    '</button>';
-
-  // Tugmalar
+  // Tugmalar — VARIANT 3 (Pro):
+  // Yuqorida 2 ta asosiy tugma yon-yon: Mahsulot (ko'k) + Yakunlash (yashil)
+  // Pastda 2 ta yordamchi matn link: Qarz qo'shish (sariq) va O'chirish (sust)
   var actionHtml = isOpen
-    ? '<div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">' +
-        // Mahsulot qo'shish
-        '<button class="btn btn-ghost btn-full" onclick="openAddItemSheet()" style="height:46px">' +
-          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
-          ' ' + t('spiska_add_item') +
-        '</button>' +
-        // Qarz qo'shish tugmasi
-        '<button class="btn btn-full" onclick="openSpiskaDebtSheet()" style="height:46px;background:var(--warning-light);color:var(--warning);border:1.5px solid rgba(245,158,11,.3)">' +
-          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' +
-          (extraDebt > 0 ? ' ' + t('spiska_edit_debt', fmt(extraDebt)) : ' ' + t('spiska_add_debt')) +
-        '</button>' +
-        // Yakunlash (faqat mahsulot bo'lsa)
-        '<button class="btn btn-success btn-full" onclick="confirmCloseSpiska(\'' + s.id + '\',this)"' + (items.length ? '' : ' disabled') + ' style="height:46px">' +
-          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
-          ' ' + t('spiska_close_btn') +
-        '</button>' +
-        deleteBtn +
+    ? '<div style="display:flex;flex-direction:column;margin-top:12px">' +
+        // ASOSIY 2 ta tugma — yon-yon
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">' +
+          // 1) Mahsulot qo'shish — ko'k, asosiy
+          '<button class="btn btn-full" onclick="openAddItemSheet()" style="height:50px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-md);font-size:.88rem;font-weight:700;box-shadow:0 1px 2px rgba(59,130,246,.15);gap:6px">' +
+            '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
+            ' ' + t('spiska_add_item') +
+          '</button>' +
+          // 2) Yakunlash — yashil, asosiy maqsad
+          '<button class="btn btn-success btn-full" onclick="confirmCloseSpiska(\'' + s.id + '\',this)"' + (items.length ? '' : ' disabled') + ' style="height:50px;font-size:.88rem;font-weight:700;border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(16,185,129,.15);gap:6px">' +
+            '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+            ' ' + t('spiska_close_btn') +
+          '</button>' +
+        '</div>' +
+        // YORDAMCHI 2 ta — pastda matn shaklida, sust
+        '<div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:10px;margin-top:4px">' +
+          // Qarz qo'shish — sariq matn
+          '<button onclick="openSpiskaDebtSheet()" style="display:flex;align-items:center;gap:6px;background:transparent;border:none;color:var(--warning);cursor:pointer;font-family:inherit;font-size:.78rem;font-weight:600;padding:6px 8px;border-radius:var(--radius-sm)" onmouseover="this.style.background=\'var(--warning-light)\'" onmouseout="this.style.background=\'transparent\'">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' +
+            (extraDebt > 0 ? ' ' + t('spiska_edit_debt', fmt(extraDebt)) : ' ' + t('spiska_add_debt')) +
+          '</button>' +
+          // O'chirish — eng sust, kurinar-kurinmas
+          '<button onclick="confirmDeleteSpiska(\'' + s.id + '\')" style="display:flex;align-items:center;gap:6px;background:transparent;border:none;color:var(--text-muted);cursor:pointer;font-family:inherit;font-size:.78rem;font-weight:500;padding:6px 8px;border-radius:var(--radius-sm);opacity:.65" onmouseover="this.style.opacity=1;this.style.color=\'var(--danger)\'" onmouseout="this.style.opacity=.65;this.style.color=\'var(--text-muted)\'">' +
+            '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>' +
+            ' ' + t('spiska_delete_btn') +
+          '</button>' +
+        '</div>' +
       '</div>'
     : '<div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">' +
         '<div class="info-banner">' +
@@ -3306,7 +3485,13 @@ function renderSpiskaDetail(s) {
               '</button>' +
             '</div>'
           : '') +
-        deleteBtn +
+        // O'chirish — sust matn shaklida (yopilgan holatda ham)
+        '<div style="display:flex;justify-content:flex-end;border-top:1px solid var(--border);padding-top:10px;margin-top:8px">' +
+          '<button onclick="confirmDeleteSpiska(\'' + s.id + '\')" style="display:flex;align-items:center;gap:6px;background:transparent;border:none;color:var(--text-muted);cursor:pointer;font-family:inherit;font-size:.78rem;font-weight:500;padding:6px 8px;border-radius:var(--radius-sm);opacity:.65" onmouseover="this.style.opacity=1;this.style.color=\'var(--danger)\'" onmouseout="this.style.opacity=.65;this.style.color=\'var(--text-muted)\'">' +
+            '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>' +
+            ' ' + t('spiska_delete_btn') +
+          '</button>' +
+        '</div>' +
       '</div>';
 
   var customerName = (s.customers && s.customers.full_name) || '—';
@@ -3690,6 +3875,13 @@ async function confirmCloseSpiska(sid, btnEl) {
         '\n💰 <b>' + t('tg_grand_total') + ': ' + fmt(grandTotal) + ' ' + t('som') + '</b>\n' +
         '\n<i>Nina Spiska tizimi</i>';
       sendTelegramMessage(tgMsg);
+
+      // AUDIT: spiska yopildi
+      logAudit('spiska', 'update', custName, {
+        entityId: sid,
+        newValue: fmt(grandTotal) + " so'm",
+        meta: { closed: true, items: items.length }
+      });
     }
 
     loadSpiskaDetail(sid);
@@ -3711,9 +3903,10 @@ async function deleteSpiska(sid) {
   showToast(t('spiska_deleting'), 'success');
   try {
     // 1. Spiska ma'lumotlarini olish (o'chirishdan OLDIN)
-    var sr = await db.from('spiska').select('*, spiska_items(total_price)').eq('id', sid).single();
+    var sr = await db.from('spiska').select('*, spiska_items(total_price), customers(full_name)').eq('id', sid).single();
     if (sr.error) throw sr.error;
     var spiska = sr.data;
+    var customerName = (spiska.customers && spiska.customers.full_name) || '—';
 
     // 2. Faqat YOPILGAN spiska bo'lsa — mijoz qarzidan ayiramiz
     //    (ochiq spiska hali qarzga qo'shilmagan, shuning uchun ayirmaslik kerak)
@@ -3751,6 +3944,15 @@ async function deleteSpiska(sid) {
     if (spiskaRes.error) throw spiskaRes.error;
 
     showToast(t('spiska_deleted'), 'success');
+
+    // AUDIT
+    var spiskaItemsTotal = (spiska.spiska_items || []).reduce(function(s, i){ return s + (i.total_price || 0); }, 0);
+    logAudit('spiska', 'delete', customerName, {
+      entityId: sid,
+      oldValue: fmt(spiskaItemsTotal) + " so'm",
+      meta: { status: spiska.status }
+    });
+
     currentSpiskaId = null;
     currentSpiskaData = null;
     navigate('spiska');
@@ -3763,6 +3965,9 @@ async function deleteSpiska(sid) {
 
 
 async function removeItem(itemId) {
+  // 2 bosqichli tasdiq — tasodifan bosilishidan himoya
+  var ok = await showConfirm(t('confirm_remove_item_title'), t('confirm_remove_item_msg'), t('confirm_delete_btn'));
+  if (!ok) return;
   try {
     soundDelete(); hapticWarning();
     await db.from('spiska_items').delete().eq('id', itemId);
@@ -4166,6 +4371,11 @@ async function saveAdmin() {
         '<i>Nina Spiska tizimi</i>'
       );
       showToast(t('settings_add_admin') + ' ✅');
+
+      // AUDIT
+      logAudit('admin', 'create', fullName, {
+        meta: { telegram_id: telegramId, username: username || null }
+      });
     }
 
     hideSheet('admin-sheet');
@@ -4216,8 +4426,19 @@ async function toggleAdminStatus(adminId, isActive) {
   var msg   = isActive ? "Bu admin tizimga kira olmay qoladi." : "Bu admin tizimga qayta kira oladi.";
   var ok = await showConfirm(title, msg, isActive ? "O'chirish" : 'Faollashtirish', isActive);
   if (!ok) return;
+  // Eski ma'lumotni olamiz
+  var oldRes = await db.from('admins').select('full_name').eq('id', adminId).single();
+  var adminName = (oldRes.data && oldRes.data.full_name) || '—';
+
   await db.from('admins').update({ is_active: !isActive }).eq('id', adminId);
   showToast(isActive ? t('admin_deactivated') : t('admin_activated'));
+
+  // AUDIT
+  logAudit('admin', isActive ? 'delete' : 'update', adminName, {
+    entityId: adminId,
+    meta: { active: !isActive }
+  });
+
   openAdminListSheet();
 }
 
@@ -4444,6 +4665,13 @@ async function savePayment() {
 
     // Sahifani yangilash
     loadCustomerDetail(customerId);
+
+    // AUDIT
+    logAudit('debt', 'payment', custName, {
+      entityId: customerId,
+      newValue: fmt(amount) + " so'm",
+      meta: { note: note || null }
+    });
   } catch(e) {
     showToast(e.message, 'error');
   } finally { btnEnd(btn); }
@@ -5157,9 +5385,16 @@ async function saveCustomer() {
     if (id) {
       await db.from('customers').update({full_name:full_name, phone:phone||null, note:note||null}).eq('id', id);
       showToast(t('customer_saved'));
+      // AUDIT
+      logAudit('customer', 'update', full_name, { entityId: id });
     } else {
-      await db.from('customers').insert({full_name:full_name, phone:phone||null, note:note||null, created_by:currentAdmin.id});
+      var insRes = await db.from('customers').insert({full_name:full_name, phone:phone||null, note:note||null, created_by:currentAdmin.id}).select().single();
       showToast(t('customer_saved'));
+      // AUDIT
+      logAudit('customer', 'create', full_name, {
+        entityId: insRes.data && insRes.data.id,
+        meta: { phone: phone || null }
+      });
     }
     hideSheet('customer-sheet');
     loadCustomers();
@@ -5170,8 +5405,13 @@ async function saveCustomer() {
 async function deleteCustomer(id) {
   var ok = await showConfirm(t('confirm_delete_customer_title'), t('confirm_delete_customer_msg'), t('confirm_delete_btn'));
   if (!ok) return;
+  // Eski ma'lumotni olamiz
+  var oldRes = await db.from('customers').select('full_name').eq('id', id).single();
+  var oldData = oldRes.data || {};
   await db.from('customers').update({is_active:false}).eq('id', id);
   showToast(t('customer_deleted'));
+  // AUDIT
+  logAudit('customer', 'delete', oldData.full_name || '—', { entityId: id });
   loadCustomers();
 }
 
@@ -5281,12 +5521,38 @@ async function saveProduct() {
   if (!btn) return;
   try {
     if (id) {
+      // Eski qiymatni olamiz (audit uchun)
+      var oldRes = await db.from('products').select('name, sell_price, cost_price').eq('id', id).single();
+      var oldData = oldRes.data || {};
       await db.from('products').update(saveData).eq('id', id);
       showToast(t('product_saved') + ' ✅');
+
+      // AUDIT: narx o'zgargan bo'lsa alohida log
+      if (oldData.sell_price !== sellPrice) {
+        logAudit('product', 'price_change', name, {
+          entityId: id,
+          oldValue: fmt(oldData.sell_price || 0) + " so'm",
+          newValue: fmt(sellPrice) + " so'm",
+          meta: { type: 'sell_price' }
+        });
+      } else if (oldData.cost_price !== costPrice || oldData.name !== name) {
+        // Boshqa narsalar o'zgargan bo'lsa
+        logAudit('product', 'update', name, {
+          entityId: id,
+          meta: { changes: 'name/cost' }
+        });
+      }
     } else {
       saveData.created_by = currentAdmin.id;
-      await db.from('products').insert(saveData);
+      var insertRes = await db.from('products').insert(saveData).select().single();
       showToast(t('product_saved') + ' ✅');
+
+      // AUDIT: yangi mahsulot
+      logAudit('product', 'create', name, {
+        entityId: insertRes.data && insertRes.data.id,
+        newValue: fmt(sellPrice) + " so'm",
+        meta: { code: code }
+      });
     }
     hideSheet('product-sheet');
     loadProducts();
@@ -5297,8 +5563,18 @@ async function saveProduct() {
 async function deleteProduct(id) {
   var ok = await showConfirm(t('confirm_delete_product_title'), t('confirm_delete_product_msg'), t('confirm_delete_btn'));
   if (!ok) return;
+  // Eski ma'lumotni olamiz (audit uchun)
+  var oldRes = await db.from('products').select('name, sell_price').eq('id', id).single();
+  var oldData = oldRes.data || {};
   await db.from('products').update({is_active:false}).eq('id', id);
   showToast(t('product_deleted'));
+
+  // AUDIT
+  logAudit('product', 'delete', oldData.name || '—', {
+    entityId: id,
+    oldValue: fmt(oldData.sell_price || 0) + " so'm"
+  });
+
   loadProducts();
 }
 
@@ -5440,6 +5716,18 @@ function loadSettings() {
   document.querySelectorAll('input[name="lang"]').forEach(function(r) {
     r.checked = r.value === lang;
   });
+  // Audit tugmasi — faqat asosiy admin (TG_CHAT_IDS[0] bilan mos kelsa)
+  var auditItem = document.getElementById('settings-audit-item');
+  if (auditItem && currentAdmin) {
+    var isMain = TG_CHAT_IDS && TG_CHAT_IDS.length > 0 &&
+                 String(currentAdmin.telegram_id) === String(TG_CHAT_IDS[0]);
+    auditItem.style.display = isMain ? 'flex' : 'none';
+    // Audit tugmasi tarjimasi
+    var aLbl = document.getElementById('s-audit-nav-label');
+    var aSub = document.getElementById('s-audit-nav-sub');
+    if (aLbl) aLbl.textContent = t('audit_menu_btn');
+    if (aSub) aSub.textContent = t('audit_menu_sub');
+  }
   // Ovoz toggle holatini ko'rsatish
   var sToggle = document.getElementById('sound-toggle');
   if (sToggle) sToggle.checked = _soundEnabled;
@@ -5726,6 +6014,38 @@ var LANGS = {
     admin_deactivated: "Admin o'chirildi",
     admin_activated: 'Admin faollashtirildi ✅',
     err_amount_exceeds_debt: "qolgan qarzdan ({0}) ko'p bo'lishi mumkin emas!",
+    confirm_remove_item_title: "Mahsulotni o'chirish",
+    confirm_remove_item_msg: "Bu mahsulot spiskadan o'chiriladi. Davom etasizmi?",
+    audit_title: 'Audit',
+    audit_mod_product: 'Mahsulot',
+    audit_mod_customer: 'Mijoz',
+    audit_mod_debt: 'Mijoz qarz',
+    audit_mod_spiska: 'Spiska',
+    audit_mod_admin: 'Admin',
+    audit_mod_our_debt: 'Bizning qarz',
+    audit_act_create: "qo'shildi",
+    audit_act_update: "o'zgartirildi",
+    audit_act_delete: "o'chirildi",
+    audit_act_price_change: "narxi o'zgardi",
+    audit_act_payment: "to'lov qilindi",
+    audit_act_return: 'qaytarish qilindi',
+    audit_page_title: 'Audit tarix',
+    audit_filter_all: 'Barchasi',
+    audit_stat_today: 'Bugungi harakatlar',
+    audit_stat_week: 'Bu hafta',
+    audit_records: 'ta yozuv',
+    audit_empty: 'Hali audit yozuvi yo\'q',
+    audit_menu_btn: 'Audit tarix',
+    audit_menu_sub: 'Kim, qachon, nima qildi',
+    back: 'Orqaga',
+    notif_title: 'Bildirishnomalar',
+    notif_mark_all: "Hammasini o'qildi",
+    notif_all_read: "Hammasi o'qildi deb belgilandi",
+    notif_empty: 'Bildirishnoma yo\'q',
+    notif_time_now: 'hozir',
+    notif_time_min: 'min oldin',
+    notif_time_hour: 'soat oldin',
+    notif_time_day: 'kun oldin',
     debt_no_history: "To'lovlar yo'q",
     debt_empty: "Qarzlar yo'q", debt_empty_sub: "Yangi qarz qo'shing",
     debt_delete_confirm: "Qarzni o'chirasizmi? Barcha to'lovlar ham o'chadi!",
@@ -6093,6 +6413,38 @@ var LANGS = {
     admin_deactivated: 'Администратор отключён',
     admin_activated: 'Администратор активирован ✅',
     err_amount_exceeds_debt: 'не может превышать остаток долга ({0})!',
+    confirm_remove_item_title: 'Удалить товар',
+    confirm_remove_item_msg: 'Этот товар будет удалён из списка. Продолжить?',
+    audit_title: 'Аудит',
+    audit_mod_product: 'Товар',
+    audit_mod_customer: 'Клиент',
+    audit_mod_debt: 'Долг клиента',
+    audit_mod_spiska: 'Список',
+    audit_mod_admin: 'Администратор',
+    audit_mod_our_debt: 'Наш долг',
+    audit_act_create: 'добавлен',
+    audit_act_update: 'изменён',
+    audit_act_delete: 'удалён',
+    audit_act_price_change: 'цена изменена',
+    audit_act_payment: 'оплата принята',
+    audit_act_return: 'возврат',
+    audit_page_title: 'Журнал аудита',
+    audit_filter_all: 'Все',
+    audit_stat_today: 'Сегодня',
+    audit_stat_week: 'Неделя',
+    audit_records: 'записей',
+    audit_empty: 'Пока нет записей аудита',
+    audit_menu_btn: 'Журнал аудита',
+    audit_menu_sub: 'Кто, когда, что сделал',
+    back: 'Назад',
+    notif_title: 'Уведомления',
+    notif_mark_all: 'Прочитать все',
+    notif_all_read: 'Все отмечены прочитанными',
+    notif_empty: 'Нет уведомлений',
+    notif_time_now: 'сейчас',
+    notif_time_min: 'мин назад',
+    notif_time_hour: 'ч назад',
+    notif_time_day: 'дн назад',
     debt_no_history: 'Нет платежей',
     debt_empty: 'Нет долгов', debt_empty_sub: 'Добавьте новый долг',
     debt_delete_confirm: 'Удалить долг? Все платежи тоже удалятся!',
@@ -7719,6 +8071,304 @@ function odOpenDetail(debtId) {
   navigate('our-debt-detail', debtId);
 }
 
+// ===================== AUDIT SAHIFA =====================
+var auditAllData = [];
+var auditCurrentFilter = 'all';
+
+async function loadAudit() {
+  // Sarlavhalarni tarjima qilish
+  var titleEl = document.getElementById('audit-page-title');
+  if (titleEl) titleEl.textContent = t('audit_page_title');
+  var backEl = document.getElementById('audit-back-label');
+  if (backEl) backEl.textContent = t('back');
+  // Filtrlar tarjima
+  document.querySelectorAll('[data-audit-filter]').forEach(function(b) {
+    var f = b.getAttribute('data-audit-filter');
+    if (f === 'all') b.textContent = t('audit_filter_all');
+    else b.textContent = t('audit_mod_' + f) || f;
+  });
+  // Stat label
+  var st1 = document.getElementById('audit-stat-today-label');
+  var st1s = document.getElementById('audit-stat-today-sub');
+  var st2 = document.getElementById('audit-stat-week-label');
+  var st2s = document.getElementById('audit-stat-week-sub');
+  if (st1) st1.textContent  = t('audit_stat_today');
+  if (st1s) st1s.textContent = t('audit_records');
+  if (st2) st2.textContent  = t('audit_stat_week');
+  if (st2s) st2s.textContent = t('audit_records');
+
+  var el = document.getElementById('audit-list');
+  if (!el) return;
+  el.innerHTML = '<div class="loading-spinner"><div class="spinner"></div></div>';
+  try {
+    var res = await db.from('audit_log')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(500);
+    if (res.error) throw res.error;
+    auditAllData = res.data || [];
+
+    // Statistika
+    var now = new Date();
+    var todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    var weekStart  = new Date(now.getTime() - 7*24*60*60*1000);
+    var todayCount = 0, weekCount = 0;
+    auditAllData.forEach(function(a) {
+      var d = new Date(a.created_at);
+      if (d >= todayStart) todayCount++;
+      if (d >= weekStart)  weekCount++;
+    });
+    var st1v = document.getElementById('audit-stat-today');
+    var st2v = document.getElementById('audit-stat-week');
+    if (st1v) st1v.textContent = todayCount;
+    if (st2v) st2v.textContent = weekCount;
+
+    renderAuditList();
+  } catch(e) {
+    console.error('Audit yuklash xatosi:', e);
+    el.innerHTML = '<div class="empty-state"><div class="empty-text">' + t('err_generic') + ': ' + e.message + '</div></div>';
+  }
+}
+
+function filterAudit(btn, filter) {
+  document.querySelectorAll('[data-audit-filter]').forEach(function(b) { b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  auditCurrentFilter = filter;
+  renderAuditList();
+}
+
+function renderAuditList() {
+  var el = document.getElementById('audit-list');
+  if (!el) return;
+  var list = auditCurrentFilter === 'all'
+    ? auditAllData
+    : auditAllData.filter(function(a) { return a.module === auditCurrentFilter; });
+
+  if (!list.length) {
+    el.innerHTML = '<div class="empty-state" style="padding:40px 20px">' +
+      '<div style="width:48px;height:48px;margin:0 auto 12px;border-radius:14px;background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;color:var(--text-muted)">' +
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
+      '</div>' +
+      '<div class="empty-text">' + t('audit_empty') + '</div>' +
+    '</div>';
+    return;
+  }
+
+  // Action ranglari va ikonlar
+  var actionStyles = {
+    create:       { bg: 'var(--success-light)', color: 'var(--success)', icon: '+' },
+    update:       { bg: 'var(--accent-light)',  color: 'var(--accent)',  icon: '✎' },
+    delete:       { bg: 'var(--danger-light)',  color: 'var(--danger)',  icon: '×' },
+    price_change: { bg: '#FFF7ED',              color: '#F97316',        icon: '$' },
+    payment:      { bg: 'var(--success-light)', color: 'var(--success)', icon: '✓' },
+    return:       { bg: '#FFF7ED',              color: '#F97316',        icon: '↺' },
+    debt:         { bg: 'var(--warning-light)', color: 'var(--warning)', icon: '+' }
+  };
+
+  el.innerHTML = list.map(function(a) {
+    var st = actionStyles[a.action] || { bg: 'var(--bg-tertiary)', color: 'var(--text-muted)', icon: '•' };
+    var modKey = 'audit_mod_' + a.module;
+    var actKey = 'audit_act_' + a.action;
+    var modName = (t(modKey) === modKey) ? a.module : t(modKey);
+    var actName = (t(actKey) === actKey) ? a.action : t(actKey);
+    var dateStr = fmtDate(a.created_at);
+    var timeStr = new Date(a.created_at).toLocaleTimeString((getLang()==='ru'?'ru-RU':'uz-UZ'), { hour:'2-digit', minute:'2-digit' });
+
+    var changeStr = '';
+    if (a.old_value != null && a.new_value != null) {
+      changeStr = '<span style="color:var(--text-muted)">' + htmlEscape(String(a.old_value)) + '</span>' +
+                  ' <span style="color:var(--text-muted);margin:0 4px">→</span> ' +
+                  '<span style="font-weight:700;color:' + st.color + '">' + htmlEscape(String(a.new_value)) + '</span>';
+    } else if (a.new_value != null) {
+      changeStr = '<span style="font-weight:700;color:' + st.color + '">' + htmlEscape(String(a.new_value)) + '</span>';
+    } else if (a.old_value != null) {
+      changeStr = '<span style="color:var(--text-muted)">' + htmlEscape(String(a.old_value)) + '</span>';
+    }
+
+    return '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 12px;display:flex;gap:10px;align-items:flex-start">' +
+      // Ikon
+      '<div style="width:32px;height:32px;border-radius:9px;background:' + st.bg + ';color:' + st.color + ';display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;flex-shrink:0">' + st.icon + '</div>' +
+      // Tafsilotlar
+      '<div style="flex:1;min-width:0">' +
+        '<div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap">' +
+          '<span style="font-size:.8rem;font-weight:700;color:var(--text-primary)">' + htmlEscape(modName) + ' ' + htmlEscape(actName) + '</span>' +
+          (a.entity_name ? '<span style="font-size:.78rem;color:var(--text-secondary)">· ' + htmlEscape(a.entity_name) + '</span>' : '') +
+        '</div>' +
+        (changeStr ? '<div style="font-size:.78rem;margin-top:3px;font-family:JetBrains Mono,monospace">' + changeStr + '</div>' : '') +
+        '<div style="display:flex;align-items:center;gap:8px;margin-top:5px;font-size:.7rem;color:var(--text-muted)">' +
+          '<span style="display:inline-flex;align-items:center;gap:3px">' +
+            '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
+            htmlEscape(a.admin_name || '—') +
+          '</span>' +
+          '<span>·</span>' +
+          '<span>' + dateStr + ' ' + timeStr + '</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+window.filterAudit = filterAudit;
+
+// ===================== BILDIRISHNOMA =====================
+// Notif faqat asosiy admin uchun
+function isMainAdmin() {
+  return currentAdmin && TG_CHAT_IDS && TG_CHAT_IDS.length > 0 &&
+         String(currentAdmin.telegram_id) === String(TG_CHAT_IDS[0]);
+}
+
+// Belgini ko'rsatish va o'qilmagan sonni yangilash
+async function refreshBellBadge() {
+  var bell = document.getElementById('bell-btn');
+  if (!bell) return;
+  if (!isMainAdmin()) {
+    bell.style.display = 'none';
+    return;
+  }
+  bell.style.display = 'flex';
+
+  try {
+    // O'qilmagan sonni olamiz
+    var res = await db.from('audit_log')
+      .select('id', { count: 'exact', head: true })
+      .eq('is_read', false);
+    var count = res.count || 0;
+    var badge = document.getElementById('bell-badge');
+    if (badge) {
+      if (count > 0) {
+        badge.textContent = count > 99 ? '99+' : String(count);
+        badge.style.display = 'flex';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+  } catch(e) { console.warn('Bell badge xato:', e); }
+}
+
+// Bildirishnoma sheet'ini ochish
+async function openNotifSheet() {
+  if (!isMainAdmin()) return;
+  // Sarlavhalarni tarjima qilish
+  var ttl = document.getElementById('notif-sheet-title');
+  var btn = document.getElementById('notif-mark-all-btn');
+  if (ttl) ttl.textContent = t('notif_title');
+  if (btn) btn.textContent = t('notif_mark_all');
+
+  showSheet('notif-sheet');
+  await renderNotifList();
+}
+
+// Ro'yxatni chizish
+async function renderNotifList() {
+  var el = document.getElementById('notif-list');
+  if (!el) return;
+  el.innerHTML = '<div style="padding:30px;text-align:center"><div class="spinner"></div></div>';
+  try {
+    var res = await db.from('audit_log')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(50);
+    if (res.error) throw res.error;
+    var list = res.data || [];
+
+    if (!list.length) {
+      el.innerHTML = '<div style="padding:40px 20px;text-align:center;color:var(--text-muted)">' +
+        '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:8px;opacity:.5"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>' +
+        '<div style="font-size:.85rem">' + t('notif_empty') + '</div>' +
+      '</div>';
+      return;
+    }
+
+    var actionStyles = {
+      create:       { bg: 'var(--success-light)', color: 'var(--success)', icon: '+' },
+      update:       { bg: 'var(--accent-light)',  color: 'var(--accent)',  icon: '✎' },
+      delete:       { bg: 'var(--danger-light)',  color: 'var(--danger)',  icon: '×' },
+      price_change: { bg: '#FFF7ED',              color: '#F97316',        icon: '$' },
+      payment:      { bg: 'var(--success-light)', color: 'var(--success)', icon: '✓' },
+      return:       { bg: '#FFF7ED',              color: '#F97316',        icon: '↺' },
+      debt:         { bg: 'var(--warning-light)', color: 'var(--warning)', icon: '+' }
+    };
+
+    el.innerHTML = list.map(function(a) {
+      var st = actionStyles[a.action] || { bg: 'var(--bg-tertiary)', color: 'var(--text-muted)', icon: '•' };
+      var modKey = 'audit_mod_' + a.module;
+      var actKey = 'audit_act_' + a.action;
+      var modName = (t(modKey) === modKey) ? a.module : t(modKey);
+      var actName = (t(actKey) === actKey) ? a.action : t(actKey);
+      var timeStr = fmtRelativeTime(a.created_at);
+      var unread = !a.is_read;
+
+      // O'qilmagan — yorqinroq, o'qilgan — kulrang
+      var bgColor = unread ? 'var(--bg-card)' : 'var(--bg-tertiary)';
+      var opacity = unread ? '1' : '.65';
+      var unreadDot = unread
+        ? '<div style="position:absolute;top:14px;right:12px;width:8px;height:8px;border-radius:50%;background:var(--accent)"></div>'
+        : '';
+
+      return '<div onclick="markNotifRead(\'' + a.id + '\',this)" style="position:relative;background:' + bgColor + ';border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 28px 10px 10px;display:flex;gap:10px;align-items:flex-start;cursor:pointer;opacity:' + opacity + ';transition:opacity .15s">' +
+        unreadDot +
+        '<div style="width:30px;height:30px;border-radius:8px;background:' + st.bg + ';color:' + st.color + ';display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:800;flex-shrink:0">' + st.icon + '</div>' +
+        '<div style="flex:1;min-width:0">' +
+          '<div style="font-size:.78rem;font-weight:700;color:var(--text-primary);line-height:1.3">' +
+            htmlEscape(modName) + ' ' + htmlEscape(actName) +
+            (a.entity_name ? ' <span style="color:var(--text-secondary);font-weight:500">· ' + htmlEscape(a.entity_name) + '</span>' : '') +
+          '</div>' +
+          (a.new_value != null
+            ? '<div style="font-size:.72rem;color:' + st.color + ';margin-top:2px;font-family:JetBrains Mono,monospace;font-weight:600">' + htmlEscape(String(a.new_value)) + '</div>'
+            : '') +
+          '<div style="font-size:.68rem;color:var(--text-muted);margin-top:3px">' +
+            htmlEscape(a.admin_name || '—') + ' · ' + timeStr +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  } catch(e) {
+    el.innerHTML = '<div style="padding:20px;color:var(--danger);font-size:.85rem">' + t('err_generic') + ': ' + e.message + '</div>';
+  }
+}
+
+// Vaqtni "5 min oldin" ko'rinishida formatlash
+function fmtRelativeTime(iso) {
+  var now = new Date();
+  var then = new Date(iso);
+  var diffSec = Math.floor((now - then) / 1000);
+  if (diffSec < 60)    return t('notif_time_now');
+  if (diffSec < 3600)  return Math.floor(diffSec/60) + ' ' + t('notif_time_min');
+  if (diffSec < 86400) return Math.floor(diffSec/3600) + ' ' + t('notif_time_hour');
+  if (diffSec < 604800) return Math.floor(diffSec/86400) + ' ' + t('notif_time_day');
+  // 1 haftadan keyin oddiy sana
+  return fmtDate(iso);
+}
+
+// Bittasini o'qildi belgilash
+async function markNotifRead(notifId, el) {
+  try {
+    await db.from('audit_log').update({ is_read: true }).eq('id', notifId);
+    if (el) {
+      el.style.opacity = '.65';
+      el.style.background = 'var(--bg-tertiary)';
+      // Yashil nuqtani olib tashlash
+      var dot = el.querySelector('div[style*="background:var(--accent)"]');
+      if (dot && dot.style.position === 'absolute') dot.remove();
+    }
+    refreshBellBadge();
+  } catch(e) { console.warn('Notif read xato:', e); }
+}
+
+// Hammasini o'qildi belgilash
+async function markAllNotifsRead() {
+  try {
+    await db.from('audit_log').update({ is_read: true }).eq('is_read', false);
+    showToast(t('notif_all_read'));
+    await renderNotifList();
+    refreshBellBadge();
+  } catch(e) { showToast(e.message, 'error'); }
+}
+
+window.openNotifSheet = openNotifSheet;
+window.markNotifRead = markNotifRead;
+window.markAllNotifsRead = markAllNotifsRead;
+
 async function loadOurDebtDetail(debtId) {
   currentOdDebtId = debtId;
   var el = document.getElementById('our-debt-detail-content');
@@ -8121,6 +8771,14 @@ async function saveOurDebt() {
 
     hideSheet('our-debt-sheet');
     showToast(t('debt_saved'));
+
+    // AUDIT
+    logAudit('our_debt', 'create', creditor, {
+      entityId: newDebtId,
+      newValue: amtStr,
+      meta: { phone: phone || null, note: note || null }
+    });
+
     loadOurDebts();
   } catch(e) {
     showToast(e.message, 'error');
@@ -8351,6 +9009,13 @@ async function saveOurDebtPayment() {
     else if (wasReopened) showToast('\u2795 ' + t('debt_saved'));
     else showToast(t('debt_saved'));
 
+    // AUDIT
+    logAudit('our_debt', txnType, debt.creditor_name || '—', {
+      entityId: debtId,
+      newValue: amtStr,
+      meta: { note: note || null, closed: isClosed }
+    });
+
     // Detail + list reactive yangilansin
     loadOurDebtDetail(debtId);
     loadOurDebts();
@@ -8369,10 +9034,21 @@ async function deleteOurDebt(debtId) {
   if (!ok) return;
   soundDelete(); hapticWarning();
   try {
+    // Eski ma'lumotni audit uchun olamiz
+    var oldRes = await db.from('our_debts').select('creditor_name, amount, currency').eq('id', debtId).single();
+    var oldData = oldRes.data || {};
+
     await db.from('debt_transactions').delete().eq('debt_id', debtId);
     var res = await db.from('our_debts').delete().eq('id', debtId);
     if (res.error) throw res.error;
     showToast(t('debt_deleted'));
+
+    // AUDIT
+    logAudit('our_debt', 'delete', oldData.creditor_name || '—', {
+      entityId: debtId,
+      oldValue: (oldData.currency === 'usd' ? '$' : '') + (oldData.amount || 0)
+    });
+
     navigate('our-debts');
   } catch(e) {
     showToast(e.message, 'error');
