@@ -2596,6 +2596,62 @@ body{
   </div>
 </div>
 
+<!-- TO'LOV CHEKI SHEET -->
+<div class="sheet-overlay" id="receipt-sheet">
+  <div class="sheet" style="max-height:85vh;padding:16px">
+    <div class="sheet-handle"></div>
+    <h3 class="sheet-title" id="receipt-sheet-title" style="margin-bottom:12px">To'lov cheki</h3>
+
+    <!-- CHEK KARTA — rasm sifatida olishingiz uchun -->
+    <div id="receipt-card" style="background:#fff;border-radius:14px;border:1px solid #e5e7eb;overflow:hidden;max-width:340px;margin:0 auto 14px;color:#111;font-family:'-apple-system',BlinkMacSystemFont,'Segoe UI',sans-serif">
+      <!-- Yashil banner: status + summa -->
+      <div style="background:#EAF3DE;padding:18px 20px 14px;text-align:center;border-bottom:1px solid #d1d5db">
+        <div style="display:inline-flex;align-items:center;justify-content:center;gap:6px;margin-bottom:4px">
+          <div style="width:24px;height:24px;border-radius:7px;background:#3B6D11;color:#fff;display:inline-flex;align-items:center;justify-content:center">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span id="receipt-status-label" style="font-size:11px;font-weight:600;color:#3B6D11;text-transform:uppercase;letter-spacing:.06em">To'lov qabul qilindi</span>
+        </div>
+        <div id="receipt-amount" style="font-size:24px;font-weight:700;color:#173404;font-family:'JetBrains Mono','SF Mono',monospace;margin-top:6px;letter-spacing:-.02em">+ 0 so'm</div>
+      </div>
+
+      <!-- Asosiy ma'lumotlar -->
+      <div style="padding:16px 20px">
+        <div id="receipt-row-name" style="display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px dashed #e5e7eb">
+          <span style="color:#6b7280" id="receipt-lbl-name">Mijoz</span>
+          <span id="receipt-name" style="font-weight:600;color:#111">—</span>
+        </div>
+        <div id="receipt-row-phone" style="display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px dashed #e5e7eb">
+          <span style="color:#6b7280" id="receipt-lbl-phone">Telefon</span>
+          <span id="receipt-phone" style="font-family:'JetBrains Mono','SF Mono',monospace;color:#111">—</span>
+        </div>
+        <div id="receipt-row-date" style="display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px dashed #e5e7eb">
+          <span style="color:#6b7280" id="receipt-lbl-date">Sana</span>
+          <span id="receipt-date" style="font-family:'JetBrains Mono','SF Mono',monospace;color:#111">—</span>
+        </div>
+        <div id="receipt-row-note" style="display:flex;justify-content:space-between;font-size:13px;padding:7px 0">
+          <span style="color:#6b7280" id="receipt-lbl-note">Izoh</span>
+          <span id="receipt-note" style="color:#111">—</span>
+        </div>
+      </div>
+
+      <!-- Footer olib tashlandi -->
+    </div>
+
+    <!-- Tugmalar -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:340px;margin:0 auto">
+      <button id="receipt-img-btn" onclick="copyReceiptAsImage()" class="btn btn-primary" style="height:44px;font-size:.85rem;font-weight:600;gap:6px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+        <span id="receipt-img-btn-label">Rasm nusxa</span>
+      </button>
+      <button id="receipt-text-btn" onclick="copyReceiptAsText()" class="btn btn-ghost" style="height:44px;font-size:.85rem;font-weight:600;gap:6px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span id="receipt-text-btn-label">Matn nusxa</span>
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- BILDIRISHNOMA SHEET -->
 <div class="sheet-overlay" id="notif-sheet">
   <div class="sheet" style="max-height:80vh">
@@ -4523,12 +4579,22 @@ function renderCustomerDetail(c, spiskalar, debt, payments) {
   // To'lovlar tarixi
   var paymentsHtml = payments.length
     ? payments.map(function(p) {
-        return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">' +
+        var pAmount = Number(p.amount) || 0;
+        var pDate   = p.created_at;
+        var pNote   = p.note || '';
+        var pId     = p.id;
+        // Cheka uzatish uchun ma'lumotlar (attribute escape qilingan)
+        var attrName = attrEscape(c.full_name);
+        var attrPhone = attrEscape(c.phone || '');
+        var attrNote = attrEscape(pNote);
+        return '<div onclick="openReceiptSheet(\'' + pId + '\',' + pAmount + ',\'' + pDate + '\',\'' + attrName + '\',\'' + attrPhone + '\',\'' + attrNote + '\')" style="display:flex;justify-content:space-between;align-items:center;padding:10px 8px;border-bottom:1px solid var(--border);cursor:pointer;border-radius:8px;transition:background .15s" onmouseover="this.style.background=\'var(--bg-tertiary)\'" onmouseout="this.style.background=\'transparent\'">' +
           '<div>' +
-            '<div style="font-size:.85rem;font-weight:600;color:var(--success)">+ ' + fmt(p.amount) + " so'm</div>" +
-            '<div style="font-size:.72rem;color:var(--text-muted)">' + fmtDate(p.created_at) + (p.note ? ' · ' + p.note : '') + '</div>' +
+            '<div style="font-size:.85rem;font-weight:600;color:var(--success)">+ ' + fmt(pAmount) + " so'm</div>" +
+            '<div style="font-size:.72rem;color:var(--text-muted)">' + fmtDate(pDate) + (pNote ? ' · ' + htmlEscape(pNote) : '') + '</div>' +
           '</div>' +
-          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--success)"><polyline points="20 6 9 17 4 12"/></svg>' +
+          '<div style="display:flex;align-items:center;gap:8px">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted);opacity:.6"><polyline points="9 18 15 12 9 6"/></svg>' +
+          '</div>' +
         '</div>';
       }).join('')
     : '<div style="text-align:center;padding:12px;color:var(--text-muted);font-size:.82rem">' + t('cust_detail_no_payments') + '</div>';
@@ -6046,6 +6112,17 @@ var LANGS = {
     notif_time_min: 'min oldin',
     notif_time_hour: 'soat oldin',
     notif_time_day: 'kun oldin',
+    receipt_title: "To'lov cheki",
+    receipt_status: "To'lov qabul qilindi",
+    receipt_lbl_name: 'Mijoz',
+    receipt_lbl_phone: 'Telefon',
+    receipt_lbl_date: 'Sana',
+    receipt_lbl_note: 'Izoh',
+    receipt_img_copy: 'Rasm nusxa',
+    receipt_text_copy: 'Matn nusxa',
+    receipt_img_copied: '🖼 Rasm nusxalandi',
+    receipt_img_downloaded: '🖼 Rasm yuklab olindi',
+    receipt_text_copied: '📋 Matn nusxalandi',
     debt_no_history: "To'lovlar yo'q",
     debt_empty: "Qarzlar yo'q", debt_empty_sub: "Yangi qarz qo'shing",
     debt_delete_confirm: "Qarzni o'chirasizmi? Barcha to'lovlar ham o'chadi!",
@@ -6445,6 +6522,17 @@ var LANGS = {
     notif_time_min: 'мин назад',
     notif_time_hour: 'ч назад',
     notif_time_day: 'дн назад',
+    receipt_title: 'Чек об оплате',
+    receipt_status: 'Оплата принята',
+    receipt_lbl_name: 'Клиент',
+    receipt_lbl_phone: 'Телефон',
+    receipt_lbl_date: 'Дата',
+    receipt_lbl_note: 'Примечание',
+    receipt_img_copy: 'Скопировать изображение',
+    receipt_text_copy: 'Скопировать текст',
+    receipt_img_copied: '🖼 Изображение скопировано',
+    receipt_img_downloaded: '🖼 Изображение загружено',
+    receipt_text_copied: '📋 Текст скопирован',
     debt_no_history: 'Нет платежей',
     debt_empty: 'Нет долгов', debt_empty_sub: 'Добавьте новый долг',
     debt_delete_confirm: 'Удалить долг? Все платежи тоже удалятся!',
@@ -8368,6 +8456,195 @@ async function markAllNotifsRead() {
 window.openNotifSheet = openNotifSheet;
 window.markNotifRead = markNotifRead;
 window.markAllNotifsRead = markAllNotifsRead;
+
+// ===================== TO'LOV CHEKI =====================
+// Joriy chek ma'lumotlari (matn nusxa olish uchun)
+var currentReceiptData = null;
+
+function openReceiptSheet(paymentId, amount, dateStr, customerName, customerPhone, note) {
+  // Sheet ichidagi ma'lumotlarni to'ldirish
+  var titleEl = document.getElementById('receipt-sheet-title');
+  if (titleEl) titleEl.textContent = t('receipt_title');
+
+  // Status label
+  var statusEl = document.getElementById('receipt-status-label');
+  if (statusEl) statusEl.textContent = t('receipt_status');
+
+  // Label tarjimalari
+  var lblName  = document.getElementById('receipt-lbl-name');
+  var lblPhone = document.getElementById('receipt-lbl-phone');
+  var lblDate  = document.getElementById('receipt-lbl-date');
+  var lblNote  = document.getElementById('receipt-lbl-note');
+  if (lblName)  lblName.textContent  = t('receipt_lbl_name');
+  if (lblPhone) lblPhone.textContent = t('receipt_lbl_phone');
+  if (lblDate)  lblDate.textContent  = t('receipt_lbl_date');
+  if (lblNote)  lblNote.textContent  = t('receipt_lbl_note');
+
+  // Tugma label
+  var imgLbl  = document.getElementById('receipt-img-btn-label');
+  var textLbl = document.getElementById('receipt-text-btn-label');
+  if (imgLbl)  imgLbl.textContent  = t('receipt_img_copy');
+  if (textLbl) textLbl.textContent = t('receipt_text_copy');
+
+  // Asosiy ma'lumotlar
+  var amountEl = document.getElementById('receipt-amount');
+  var nameEl   = document.getElementById('receipt-name');
+  var phoneEl  = document.getElementById('receipt-phone');
+  var dateEl   = document.getElementById('receipt-date');
+  var noteEl   = document.getElementById('receipt-note');
+  var rowNote  = document.getElementById('receipt-row-note');
+  var rowPhone = document.getElementById('receipt-row-phone');
+
+  if (amountEl) amountEl.textContent = '+ ' + fmt(amount) + " so'm";
+  if (nameEl)   nameEl.textContent   = customerName || '—';
+  if (phoneEl)  phoneEl.textContent  = customerPhone || '—';
+
+  // Sana — kun va vaqt birga
+  var d = new Date(dateStr);
+  var locale = (getLang() === 'ru') ? 'ru-RU' : 'uz-UZ';
+  var pad = function(n) { return n < 10 ? '0' + n : n; };
+  var fmtDateTime = pad(d.getDate()) + '/' + pad(d.getMonth()+1) + '/' + d.getFullYear() +
+                    ', ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  if (dateEl) dateEl.textContent = fmtDateTime;
+
+  // Izoh: agar bo'sh bo'lsa, qatorni yashiraman
+  if (note && note.trim()) {
+    if (noteEl)  noteEl.textContent = note;
+    if (rowNote) rowNote.style.display = 'flex';
+  } else {
+    if (rowNote) rowNote.style.display = 'none';
+  }
+
+  // Telefon bo'sh bo'lsa yashirish
+  if (!customerPhone || customerPhone.trim() === '' || customerPhone === '—') {
+    if (rowPhone) rowPhone.style.display = 'none';
+  } else {
+    if (rowPhone) rowPhone.style.display = 'flex';
+  }
+
+  // Joriy chek ma'lumotlarini saqlash (matn nusxa uchun)
+  currentReceiptData = {
+    id: paymentId,
+    amount: amount,
+    date: fmtDateTime,
+    name: customerName,
+    phone: customerPhone,
+    note: note
+  };
+
+  showSheet('receipt-sheet');
+}
+
+// Chekni rasm sifatida nusxa olish (clipboard'ga PNG)
+async function copyReceiptAsImage() {
+  var card = document.getElementById('receipt-card');
+  if (!card) return;
+
+  var btn = document.getElementById('receipt-img-btn');
+  var origText = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.style.opacity = '.6';
+  }
+
+  try {
+    // html2canvas kutubxonasini dynamicly yuklash (bir marta)
+    if (typeof html2canvas === 'undefined') {
+      await new Promise(function(resolve, reject) {
+        var script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    }
+
+    // Karta rasmga aylantirish (yuqori sifat uchun scale 2)
+    var canvas = await html2canvas(card, {
+      backgroundColor: '#ffffff',
+      scale: 2,
+      logging: false,
+      useCORS: true
+    });
+
+    // Canvas → Blob → PNG yuklab olish
+    canvas.toBlob(function(blob) {
+      if (!blob) {
+        showToast(t('err_generic'), 'error');
+        if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.innerHTML = origText; }
+        return;
+      }
+      try {
+        // PNG fayl sifatida yuklab olish
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        // Fayl nomi: chek-mijozIsmi-sana.png
+        var safeName = (currentReceiptData && currentReceiptData.name)
+          ? currentReceiptData.name.replace(/[^a-zA-Z0-9а-яА-Я\u0400-\u04FF]/g, '_').substring(0, 20)
+          : 'mijoz';
+        a.download = 'chek-' + safeName + '-' + Date.now() + '.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+        showToast(t('receipt_img_downloaded'));
+      } catch(e) {
+        console.error('Yuklab olishda xato:', e);
+        showToast(t('err_generic') + ': ' + e.message, 'error');
+      }
+      if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.innerHTML = origText; }
+    }, 'image/png');
+  } catch(e) {
+    console.error('Rasm yaratishda xato:', e);
+    showToast(t('err_generic') + ': ' + e.message, 'error');
+    if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.innerHTML = origText; }
+  }
+}
+
+// Chekni matn shaklida nusxa olish
+async function copyReceiptAsText() {
+  if (!currentReceiptData) return;
+  var d = currentReceiptData;
+  var lines = [];
+  lines.push('✅ ' + t('receipt_status'));
+  lines.push('');
+  lines.push('💰 + ' + fmt(d.amount) + " so'm");
+  lines.push('');
+  lines.push(t('receipt_lbl_name') + ': ' + (d.name || '—'));
+  if (d.phone && d.phone.trim() && d.phone !== '—') {
+    lines.push(t('receipt_lbl_phone') + ': ' + d.phone);
+  }
+  lines.push(t('receipt_lbl_date') + ': ' + d.date);
+  if (d.note && d.note.trim()) {
+    lines.push(t('receipt_lbl_note') + ': ' + d.note);
+  }
+
+  var text = lines.join('\n');
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+      showToast(t('receipt_text_copied'));
+    } else {
+      // Fallback
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast(t('receipt_text_copied'));
+    }
+  } catch(e) {
+    showToast(t('err_copy_fail'), 'error');
+  }
+}
+
+window.openReceiptSheet = openReceiptSheet;
+window.copyReceiptAsImage = copyReceiptAsImage;
+window.copyReceiptAsText = copyReceiptAsText;
 
 async function loadOurDebtDetail(debtId) {
   currentOdDebtId = debtId;
