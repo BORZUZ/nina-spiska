@@ -670,6 +670,75 @@ body{
 .product-select-item-code{font-size:.72rem;color:var(--text-muted);margin-top:1px}
 .product-select-item-price{font-size:.85rem;font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace;flex-shrink:0}
 
+/* ===================== CATEGORY PILLS ===================== */
+.cat-pills-wrap{
+  display:flex;gap:6px;padding:8px 0 4px;
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.cat-pills-wrap::-webkit-scrollbar{display:none}
+.cat-pill{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:6px 12px;border-radius:20px;
+  font-size:.76rem;font-weight:600;
+  cursor:pointer;border:1.5px solid var(--border);
+  background:var(--bg-primary);color:var(--text-secondary);
+  transition:all .18s;white-space:nowrap;flex-shrink:0;
+}
+.cat-pill:active{transform:scale(.96)}
+.cat-pill.active{
+  background:var(--accent-light);color:var(--accent);
+  border-color:rgba(var(--accent-rgb),.3);font-weight:700;
+}
+.cat-pill-count{
+  font-size:.65rem;font-weight:700;
+  background:var(--bg-tertiary);color:var(--text-muted);
+  padding:1px 5px;border-radius:8px;
+}
+.cat-pill.active .cat-pill-count{
+  background:rgba(var(--accent-rgb),.15);color:var(--accent);
+}
+
+/* ===================== ACCORDION ===================== */
+.acc-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 0;cursor:pointer;
+  border-bottom:1px solid var(--border);
+  transition:background .18s;
+}
+.acc-header:active{opacity:.8}
+.acc-header-left{display:flex;align-items:center;gap:8px}
+.acc-header-emoji{font-size:1.15rem}
+.acc-header-title{font-size:.88rem;font-weight:700;color:var(--text-primary)}
+.acc-header-count{
+  font-size:.68rem;font-weight:700;
+  background:var(--bg-tertiary);color:var(--text-muted);
+  padding:2px 8px;border-radius:10px;
+}
+.acc-header-chevron{
+  transition:transform .2s;color:var(--text-muted);flex-shrink:0;
+}
+.acc-header.open .acc-header-chevron{transform:rotate(180deg)}
+.acc-body{
+  max-height:0;overflow:hidden;
+  transition:max-height .25s ease;
+}
+.acc-body.open{max-height:2000px}
+
+/* ===================== CATEGORY MANAGE ===================== */
+.cat-manage-item{
+  display:flex;align-items:center;padding:12px 0;
+  gap:10px;border-bottom:1px solid var(--border);
+}
+.cat-manage-item:last-child{border-bottom:none}
+.cat-manage-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.cat-manage-emoji{font-size:1.3rem}
+.cat-manage-info{flex:1;min-width:0}
+.cat-manage-name{font-size:.88rem;font-weight:700;color:var(--text-primary)}
+.cat-manage-count{font-size:.72rem;color:var(--text-muted)}
+.cat-manage-actions{display:flex;gap:2px;flex-shrink:0}
+.cat-manage-actions .btn-icon{width:32px;height:32px}
+
 /* ===================== EMPTY STATE ===================== */
 .empty-state{
   display:flex;flex-direction:column;align-items:center;
@@ -1777,6 +1846,7 @@ body{
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input type="search" class="search-input" id="product-search" placeholder="Mahsulot yoki kod..." oninput="searchProducts(this.value)">
           </div>
+          <div id="product-cat-pills" class="cat-pills-wrap"></div>
           <div id="products-list" class="list-container"></div>
         </div>
       </div>
@@ -1880,6 +1950,25 @@ body{
                   </div>
                 </div>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted)"><path d="m9 18 6-6-6-6"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3.5. KATEGORIYALAR BOSHQARUVI -->
+          <div class="settings-section">
+            <div class="settings-section-title">MAHSULOT KATEGORIYALARI</div>
+            <div class="card">
+              <div class="settings-item">
+                <div class="settings-item-left">
+                  <div class="settings-item-icon" style="background:#FEF3C7;color:#D97706">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                  </div>
+                  <div>
+                    <div class="settings-item-label" id="s-cat-label">Kategoriyalar</div>
+                    <div class="settings-item-sublabel" id="s-cat-sub">Qurilish, Elektr, Santexnika...</div>
+                  </div>
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="openCategoryManageSheet()">Boshqarish</button>
               </div>
             </div>
           </div>
@@ -2578,6 +2667,7 @@ body{
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input class="search-input" id="item-product-search" placeholder="Nom yoki kod..." oninput="filterProductsInSheet(this.value)">
       </div>
+      <div id="item-cat-pills" class="cat-pills-wrap" style="margin-bottom:6px"></div>
       <div class="product-select-list" id="product-select-list"></div>
       <input type="hidden" id="selected-product-id">
       <div id="selected-product-preview" class="selected-product-preview hidden">
@@ -2689,11 +2779,66 @@ body{
 </div>
 
 <!-- PRODUCT SHEET -->
+<!-- KATEGORIYA BOSHQARUV SHEET -->
+<div class="sheet-overlay" id="category-manage-sheet">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <h3 class="sheet-title" style="margin:0">Kategoriyalar</h3>
+      <button class="btn btn-primary btn-sm" onclick="openCategoryEditSheet()" style="font-size:.78rem;padding:6px 14px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Qo'shish
+      </button>
+    </div>
+    <div id="category-manage-list"></div>
+  </div>
+</div>
+
+<!-- KATEGORIYA QO'SHISH/TAHRIRLASH SHEET -->
+<div class="sheet-overlay" id="category-edit-sheet">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <h3 class="sheet-title" id="category-edit-title">Yangi Kategoriya</h3>
+    <input type="hidden" id="category-edit-id">
+    <div class="form-group">
+      <label class="form-label">EMOJI</label>
+      <input type="text" class="form-input" id="category-emoji-input" placeholder="🏗️" style="font-size:1.3rem;text-align:center;width:70px" maxlength="4">
+      <div class="form-hint">Bitta emoji tanlang</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">NOMI *</label>
+      <input type="text" class="form-input" id="category-name-input" placeholder="Kategoriya nomi">
+    </div>
+    <div class="form-group">
+      <label class="form-label">TARTIB RAQAMI</label>
+      <input type="number" class="form-input" id="category-sort-input" placeholder="1" value="1" min="0">
+    </div>
+
+    <div id="category-products-section" style="display:none;margin-bottom:16px">
+      <label class="form-label">MAHSULOTLARNI BIRIKTIRISH</label>
+      <div class="form-hint" style="margin-bottom:8px">Ushbu kategoriyaga tegishli mahsulotlarni belgilang</div>
+      <div id="category-products-checklist" style="max-height:220px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius-md)"></div>
+    </div>
+
+    <button class="btn btn-primary btn-full" id="category-save-btn" onclick="saveCategory()" style="height:48px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      Saqlash
+    </button>
+  </div>
+</div>
+
 <div class="sheet-overlay" id="product-sheet">
   <div class="sheet">
     <div class="sheet-handle"></div>
     <h3 class="sheet-title" id="product-sheet-title">Yangi Mahsulot</h3>
     <input type="hidden" id="product-edit-id">
+
+    <div class="form-group">
+      <label class="form-label">KATEGORIYA</label>
+      <select class="form-input" id="product-category-select" style="height:44px;cursor:pointer">
+        <option value="">— Kategoriyasiz —</option>
+      </select>
+    </div>
 
     <div class="form-group">
       <label class="form-label">NOMI *</label>
@@ -2761,6 +2906,9 @@ let currentSpiskaSearch = '';
 let currentSpiskaId = null;
 let currentSpiskaData = null;
 let allProducts = [];
+let allCategories = [];
+let currentProductCatFilter = 'all';
+let currentItemCatFilter = 'all';
 
 // ===================== THEME =====================
 function getTheme() { return localStorage.getItem('nina_theme') || 'light'; }
@@ -2803,6 +2951,46 @@ document.documentElement.setAttribute('data-theme', getTheme());
 // ===================== UTILS =====================
 function fmt(n) {
   return Math.round(n || 0).toLocaleString('uz-UZ').replace(/,/g, ' ');
+}
+
+// Raqam inputlarini avto-formatlash (5000000 → 5 000 000)
+function fmtInputNumber(input) {
+  var raw = input.value.replace(/[^0-9.,]/g, '').replace(',', '.');
+  if (!raw) { input.dataset.rawValue = ''; return; }
+  input.dataset.rawValue = raw;
+  var parts = raw.split('.');
+  var intPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  input.value = parts.length > 1 ? intPart + '.' + parts[1] : intPart;
+}
+function getRawNumber(input) {
+  var raw = (input.dataset && input.dataset.rawValue) || input.value.replace(/\s/g, '').replace(',', '.');
+  return parseFloat(raw) || 0;
+}
+// Sahifa yuklanganda barcha number inputlarga avto-format qo'shish
+function initNumberFormatting() {
+  document.addEventListener('input', function(e) {
+    var el = e.target;
+    if (el.tagName === 'INPUT' && el.type === 'number' && el.closest('.sheet, .form-group')) {
+      el.type = 'text';
+      el.inputMode = 'decimal';
+      fmtInputNumber(el);
+    }
+  });
+  // Sheet ochilganda number → text ga o'zgartirish
+  var origShowSheet = window._origShowSheet || showSheet;
+  window._origShowSheet = origShowSheet;
+  window.showSheet = function(id) {
+    origShowSheet(id);
+    setTimeout(function() {
+      var sheet = document.getElementById(id);
+      if (!sheet) return;
+      sheet.querySelectorAll('input[type="number"]').forEach(function(inp) {
+        inp.type = 'text';
+        inp.inputMode = 'decimal';
+        if (inp.value && inp.value !== '0') fmtInputNumber(inp);
+      });
+    }, 50);
+  };
 }
 function fmtDate(s) {
   if (!s) return '—';
@@ -2955,6 +3143,7 @@ function showMainApp() {
   document.getElementById('main-app').classList.remove('hidden');
   updateAdminUI();
   applyLang();
+  initNumberFormatting();
 
   // Til sozlamasini yangilash (settings radio)
   var langRadios = document.querySelectorAll('input[name="lang"]');
@@ -3072,6 +3261,7 @@ async function loadDashboard() {
       db.from('customers').select('id', {count:'exact',head:true}).eq('is_active',true),
       db.from('products').select('id', {count:'exact',head:true}).eq('is_active',true),
       db.from('spiska_items').select('quantity'),
+      db.from('spiska').select('*, customers(full_name)').order('created_at',{ascending:false}).limit(5),
     ]);
 
     var totalItemsDona = (r[4].data || []).reduce(function(sum, i){ return sum + (i.quantity||0); }, 0);
@@ -3082,8 +3272,7 @@ async function loadDashboard() {
     });
     animateCount('stat-total-items', Math.round(totalItemsDona));
 
-    var recent = await db.from('spiska').select('*, customers(full_name)').order('created_at',{ascending:false}).limit(5);
-    renderRecentSpiska(recent.data || []);
+    renderRecentSpiska(r[5].data || []);
   } catch(e) { console.error(e); }
 }
 
@@ -3196,7 +3385,7 @@ var TG_CHAT_IDS = ['6595579022', '-1003736488239'];
 
 
 
-async function sendTelegramMessage(text) {
+function sendTelegramMessage(text) {
   // Asosiy ro'yxat + joriy admin ID si (agar ro'yxatda yo'q bo'lsa qo'shamiz)
   var ids = TG_CHAT_IDS.slice();
   if (currentAdmin && currentAdmin.telegram_id) {
@@ -3205,34 +3394,26 @@ async function sendTelegramMessage(text) {
       ids.push(adminId);
     }
   }
-  var failedCount = 0;
   var totalCount = ids.length;
-  for (var i = 0; i < ids.length; i++) {
-    try {
-      var resp = await fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: ids[i],
-          text: text,
-          parse_mode: 'HTML'
-        })
-      });
-      if (!resp.ok) {
-        failedCount++;
-        console.warn('Telegram javob xatosi:', resp.status, ids[i]);
-      }
-    } catch(e) {
-      failedCount++;
-      console.warn('Telegram xabar yuborilmadi:', e);
+  if (!totalCount) return;
+  // Barcha xabarlarni PARALLEL yuboramiz — UI kutmaydi
+  Promise.allSettled(ids.map(function(chatId) {
+    return fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: chatId, text: text, parse_mode: 'HTML' })
+    }).then(function(resp) {
+      if (!resp.ok) console.warn('Telegram javob xatosi:', resp.status, chatId);
+      return resp.ok;
+    });
+  })).then(function(results) {
+    var failedCount = results.filter(function(r) { return r.status === 'rejected' || !r.value; }).length;
+    if (failedCount === totalCount) {
+      showToast(t('err_telegram_failed'), 'error');
+    } else if (failedCount > 0) {
+      showToast(t('err_telegram_partial').replace('{0}', failedCount).replace('{1}', totalCount), 'error');
     }
-  }
-  // Agar barcha xabarlar yuborilmagan bo'lsa — admin'ga bildirish
-  if (failedCount === totalCount && totalCount > 0) {
-    showToast(t('err_telegram_failed'), 'error');
-  } else if (failedCount > 0) {
-    showToast(t('err_telegram_partial').replace('{0}', failedCount).replace('{1}', totalCount), 'error');
-  }
+  }).catch(function() {});
 }
 
 function tgEscape(str) {
@@ -3265,50 +3446,45 @@ function attrEscape(s) {
 //   action: 'create', 'update', 'delete', 'price_change', 'payment', 'return'
 //   entityName: ko'rinadigan nom (mahsulot/mijoz nomi)
 //   options: { entityId, oldValue, newValue, meta, telegram (default true) }
-async function logAudit(module, action, entityName, options) {
+function logAudit(module, action, entityName, options) {
   options = options || {};
-  try {
-    var adminId   = (currentAdmin && currentAdmin.id) || null;
-    var adminName = (currentAdmin && currentAdmin.full_name) || '—';
+  var adminId   = (currentAdmin && currentAdmin.id) || null;
+  var adminName = (currentAdmin && currentAdmin.full_name) || '—';
 
-    // 1. Bazaga yozish
-    await db.from('audit_log').insert({
-      admin_id:    adminId,
-      admin_name:  adminName,
-      module:      module,
-      action:      action,
-      entity_id:   options.entityId || null,
-      entity_name: entityName || null,
-      old_value:   options.oldValue !== undefined ? options.oldValue : null,
-      new_value:   options.newValue !== undefined ? options.newValue : null,
-      meta:        options.meta || null
-    });
+  // Hammasi fonda — UI kutmaydi
+  (async function() {
+    try {
+      // 1. Bazaga yozish
+      await db.from('audit_log').insert({
+        admin_id:    adminId,
+        admin_name:  adminName,
+        module:      module,
+        action:      action,
+        entity_id:   options.entityId || null,
+        entity_name: entityName || null,
+        old_value:   options.oldValue !== undefined ? options.oldValue : null,
+        new_value:   options.newValue !== undefined ? options.newValue : null,
+        meta:        options.meta || null
+      });
+    } catch(e) { console.warn('Audit log xato:', e); }
 
-    // 2. Telegram xabar — faqat asosiy adminga (TG_CHAT_IDS dagi birinchi ID)
+    // 2. Telegram xabar — faqat asosiy adminga
     if (options.telegram !== false && TG_CHAT_IDS && TG_CHAT_IDS.length > 0) {
       var msg = buildAuditTelegramMsg(module, action, entityName, adminName, options);
-      // Faqat birinchi chat ID ga (asosiy admin) yuboriladi
       try {
-        await fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
+        fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: TG_CHAT_IDS[0],
-            text: msg,
-            parse_mode: 'HTML'
-          })
-        });
-      } catch(e) { console.warn('Audit Telegram xabar yuborilmadi:', e); }
+          body: JSON.stringify({ chat_id: TG_CHAT_IDS[0], text: msg, parse_mode: 'HTML' })
+        }).catch(function() {});
+      } catch(e) {}
     }
 
-    // 3. Bell badge yangilash (asosiy admin sahifasida turgan bo'lsa)
+    // 3. Bell badge yangilash
     if (typeof refreshBellBadge === 'function') {
       refreshBellBadge();
     }
-  } catch(e) {
-    console.warn('Audit log xato:', e);
-    // Xato bo'lsa ham asosiy ish davom etsin (audit shunchaki yordamchi)
-  }
+  })();
 }
 
 // Telegram audit xabarini tuzish (tizim tilida)
@@ -3409,16 +3585,37 @@ async function loadSpiskaDetail(spiskaId) {
   el.innerHTML = '<div class="loading-spinner"><div class="spinner"></div></div>';
 
   try {
-    var sr = await db.from('spiska').select('*, customers(*), admins(full_name)').eq('id', spiskaId).single();
-    var ir = await db.from('spiska_items').select('*').eq('spiska_id', spiskaId).order('created_at');
-    var s = sr.data;
-    s.items = ir.data || [];
+    var results = await Promise.all([
+      db.from('spiska').select('*, customers(*), admins(full_name)').eq('id', spiskaId).single(),
+      db.from('spiska_items').select('*').eq('spiska_id', spiskaId).order('created_at'),
+    ]);
+    var s = results[0].data;
+    s.items = results[1].data || [];
     // extra_debt maydonini olish (agar jadvalda bo'lsa)
     s.extra_debt = s.extra_debt || 0;
     renderSpiskaDetail(s);
   } catch(e) {
     el.innerHTML = '<div class="empty-state"><div class="empty-text">' + t("err_generic") + '</div></div>';
   }
+}
+
+function renderSpiskaItemRow(item, idx, isOpen) {
+  var removeBtn = isOpen
+    ? '<button onclick="removeItem(\'' + item.id + '\')" style="width:24px;height:24px;border:none;background:transparent;color:var(--text-muted);opacity:.4;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:all .15s" onmouseover="this.style.opacity=1;this.style.background=\'var(--danger-light)\';this.style.color=\'var(--danger)\'" onmouseout="this.style.opacity=.4;this.style.background=\'transparent\';this.style.color=\'var(--text-muted)\'" title="O\'chirish">' +
+        '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+      '</button>'
+    : '';
+  return '<div class="spiska-item-row">' +
+    '<div class="spiska-item-num">' + idx + '</div>' +
+    '<div style="flex:1;min-width:0">' +
+      '<div class="spiska-item-name">' + htmlEscape(item.product_name) + '</div>' +
+      '<div class="spiska-item-detail">' + item.quantity + ' × ' + fmt(item.unit_price) + " so'm</div>" +
+    '</div>' +
+    '<div style="display:flex;align-items:center;gap:6px;flex-shrink:0">' +
+      '<div style="font-weight:700;color:var(--accent);font-family:JetBrains Mono,monospace;font-size:.85rem">' + fmt(item.total_price) + '</div>' +
+      removeBtn +
+    '</div>' +
+  '</div>';
 }
 
 function renderSpiskaDetail(s) {
@@ -3433,28 +3630,55 @@ function renderSpiskaDetail(s) {
   // Umumiy jami = mahsulotlar + qo'shimcha qarz
   var grandTotal = productTotal + extraDebt;
 
-  // Mahsulotlar jadval
+  // Mahsulotlar jadval — kategoriya bo'yicha guruhlash
   var itemsHtml = '';
   if (items.length) {
-    itemsHtml = '<div class="spiska-items-table">' +
-      items.map(function(item, i) {
-        var removeBtn = isOpen
-          ? '<button onclick="removeItem(\'' + item.id + '\')" style="width:24px;height:24px;border:none;background:transparent;color:var(--text-muted);opacity:.4;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:all .15s" onmouseover="this.style.opacity=1;this.style.background=\'var(--danger-light)\';this.style.color=\'var(--danger)\'" onmouseout="this.style.opacity=.4;this.style.background=\'transparent\';this.style.color=\'var(--text-muted)\'" title="O\'chirish">' +
-            '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
-            '</button>'
-          : '';
-        return '<div class="spiska-item-row">' +
-          '<div class="spiska-item-num">' + (i+1) + '</div>' +
-          '<div style="flex:1;min-width:0">' +
-            '<div class="spiska-item-name">' + htmlEscape(item.product_name) + '</div>' +
-            '<div class="spiska-item-detail">' + item.quantity + ' × ' + fmt(item.unit_price) + " so'm</div>" +
-          '</div>' +
-          '<div style="display:flex;align-items:center;gap:6px;flex-shrink:0">' +
-            '<div style="font-weight:700;color:var(--accent);font-family:JetBrains Mono,monospace;font-size:.85rem">' + fmt(item.total_price) + '</div>' +
-            removeBtn +
-          '</div>' +
-        '</div>';
-      }).join('') + '</div>';
+    // Kategoriya bo'yicha guruhlash
+    var hasCategories = allCategories.length > 0 && items.some(function(i){ return i.category_id; });
+    if (hasCategories) {
+      var groups = {};
+      var noCatItems = [];
+      var catOrder = [];
+      allCategories.forEach(function(c) { groups[c.id] = { cat: c, items: [] }; catOrder.push(c.id); });
+      items.forEach(function(item) {
+        if (item.category_id && groups[item.category_id]) groups[item.category_id].items.push(item);
+        else noCatItems.push(item);
+      });
+      var globalIdx = 0;
+      var catColors = ['var(--warning)','var(--accent)','var(--success)','var(--danger)','#7C3AED','#DB2777','#0891B2','#D97706'];
+      var colorIdx = 0;
+      itemsHtml = '<div class="spiska-items-table">';
+      catOrder.forEach(function(cid) {
+        var g = groups[cid];
+        if (!g.items.length) return;
+        var color = catColors[colorIdx % catColors.length];
+        colorIdx++;
+        itemsHtml += '<div style="border-left:2px solid ' + color + ';margin:4px 0 4px 4px;padding-left:8px;border-radius:0">';
+        itemsHtml += '<div style="font-size:.68rem;font-weight:600;color:var(--text-muted);padding:3px 0 1px;display:flex;align-items:center;gap:4px">' +
+          (g.cat.icon||'') + ' ' + htmlEscape(g.cat.name) + '</div>';
+        g.items.forEach(function(item) {
+          globalIdx++;
+          itemsHtml += renderSpiskaItemRow(item, globalIdx, isOpen);
+        });
+        itemsHtml += '</div>';
+      });
+      if (noCatItems.length) {
+        itemsHtml += '<div style="border-left:2px solid var(--text-muted);margin:4px 0 4px 4px;padding-left:8px;border-radius:0;opacity:.85">';
+        itemsHtml += '<div style="font-size:.68rem;font-weight:600;color:var(--text-muted);padding:3px 0 1px">' + t('cat_other') + '</div>';
+        noCatItems.forEach(function(item) {
+          globalIdx++;
+          itemsHtml += renderSpiskaItemRow(item, globalIdx, isOpen);
+        });
+        itemsHtml += '</div>';
+      }
+      itemsHtml += '</div>';
+    } else {
+      // Kategoriya yo'q — oddiy ro'yxat
+      itemsHtml = '<div class="spiska-items-table">' +
+        items.map(function(item, i) {
+          return renderSpiskaItemRow(item, i+1, isOpen);
+        }).join('') + '</div>';
+    }
   } else {
     itemsHtml = renderEmpty(
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>',
@@ -3573,7 +3797,9 @@ function renderSpiskaDetail(s) {
         (isOpen ? '<span class="badge badge-open">' + t('badge_open') + '</span>' : '<span class="badge badge-closed">' + t('badge_closed') + '</span>') +
       '</div>' +
     '</div>' +
-    '<div class="section-label">' + t('spiska_items_label') + ' (' + items.length + ')</div>' +
+    '<div class="section-label">' + t('spiska_items_label') + ' (' + items.length + ')' +
+      (items.length ? ' · <span style="color:var(--accent);font-weight:800">' + t('jami') + ' ' + Math.round(items.reduce(function(s,i){return s+(i.quantity||0);},0)) + ' dona</span>' : '') +
+    '</div>' +
     itemsHtml +
     calcHtml +
     actionHtml;
@@ -3839,7 +4065,7 @@ async function saveSpiskaDebt(forceZero) {
   var s = currentSpiskaData;
   if (!s) return;
 
-  var amount = forceZero === 0 ? 0 : parseFloat(document.getElementById('spiska-debt-amount').value) || 0;
+  var amount = forceZero === 0 ? 0 : getRawNumber(document.getElementById('spiska-debt-amount')) || 0;
   var note = document.getElementById('spiska-debt-note').value.trim();
 
   if (amount < 0) { showToast(t('payment_amount_err'), 'error'); return; }
@@ -3909,11 +4135,39 @@ async function confirmCloseSpiska(sid, btnEl) {
       var custPhone = (s.customers && s.customers.phone) || '—';
       var adminName = (currentAdmin && currentAdmin.full_name) || '—';
       var items = s.items || [];
-      var itemLines = items.map(function(item, i) {
-        return (i+1) + '. ' + tgEscape(item.product_name) +
-          ' — ' + item.quantity + ' × ' + fmt(item.unit_price) + " so'm" +
-          ' = ' + fmt(item.total_price) + " so'm";
-      }).join('\n');
+      // Kategoriya bo'yicha guruhlangan xabar
+      var itemLines = '';
+      var hasCategories = allCategories.length > 0 && items.some(function(i){ return i.category_id; });
+      if (hasCategories) {
+        var tgGroups = {};
+        var tgNoCat = [];
+        allCategories.forEach(function(c) { tgGroups[c.id] = { cat: c, items: [] }; });
+        items.forEach(function(item) {
+          if (item.category_id && tgGroups[item.category_id]) tgGroups[item.category_id].items.push(item);
+          else tgNoCat.push(item);
+        });
+        var gi = 0;
+        allCategories.forEach(function(c) {
+          var g = tgGroups[c.id];
+          if (!g.items.length) return;
+          itemLines += '\n' + (g.cat.icon||'📦') + ' <b>' + tgEscape(g.cat.name) + ':</b>\n';
+          g.items.forEach(function(item) {
+            gi++;
+            itemLines += gi + '. ' + tgEscape(item.product_name) + ' — ' + item.quantity + ' × ' + fmt(item.unit_price) + " so'm = " + fmt(item.total_price) + " so'm\n";
+          });
+        });
+        if (tgNoCat.length) {
+          itemLines += '\n📋 <b>Boshqa:</b>\n';
+          tgNoCat.forEach(function(item) {
+            gi++;
+            itemLines += gi + '. ' + tgEscape(item.product_name) + ' — ' + item.quantity + ' × ' + fmt(item.unit_price) + " so'm = " + fmt(item.total_price) + " so'm\n";
+          });
+        }
+      } else {
+        itemLines = items.map(function(item, i) {
+          return (i+1) + '. ' + tgEscape(item.product_name) + ' — ' + item.quantity + ' × ' + fmt(item.unit_price) + " so'm = " + fmt(item.total_price) + " so'm";
+        }).join('\n');
+      }
 
       var tgMsg =
         '✅ <b>' + t('tg_closed') + '</b>\n\n' +
@@ -3932,11 +4186,12 @@ async function confirmCloseSpiska(sid, btnEl) {
         '\n<i>Nina Spiska tizimi</i>';
       sendTelegramMessage(tgMsg);
 
-      // AUDIT: spiska yopildi
+      // AUDIT: spiska yopildi (telegram: false — sendTelegramMessage allaqachon yuboradi)
       logAudit('spiska', 'update', custName, {
         entityId: sid,
         newValue: fmt(grandTotal) + " so'm",
-        meta: { closed: true, items: items.length }
+        meta: { closed: true, items: items.length },
+        telegram: false
       });
     }
 
@@ -4036,8 +4291,13 @@ async function removeItem(itemId) {
 
 // ===================== ADD ITEM TO SPISKA =====================
 async function openAddItemSheet() {
-  var res = await db.from('products').select('*').eq('is_active',true).order('name');
-  allProducts = res.data || [];
+  var results = await Promise.all([
+    db.from('products').select('*').eq('is_active',true).order('name'),
+    loadCategories()
+  ]);
+  allProducts = results[0].data || [];
+  currentItemCatFilter = 'all';
+  renderProductCatPills(document.getElementById('item-cat-pills'), allProducts, 'item');
   renderProductSelectList(allProducts);
   document.getElementById('item-product-search').value = '';
   document.getElementById('selected-product-id').value = '';
@@ -4047,10 +4307,19 @@ async function openAddItemSheet() {
 }
 
 function filterProductsInSheet(q) {
-  var filtered = allProducts.filter(function(p) {
-    return p.name.toLowerCase().indexOf(q.toLowerCase()) >= 0 ||
-           p.code.toLowerCase().indexOf(q.toLowerCase()) >= 0;
-  });
+  var filtered = allProducts;
+  if (currentItemCatFilter !== 'all') {
+    filtered = filtered.filter(function(p) {
+      if (currentItemCatFilter === 'none') return !p.category_id;
+      return p.category_id === currentItemCatFilter;
+    });
+  }
+  if (q && q.trim()) {
+    var ql = q.toLowerCase();
+    filtered = filtered.filter(function(p) {
+      return p.name.toLowerCase().indexOf(ql) >= 0 || p.code.toLowerCase().indexOf(ql) >= 0;
+    });
+  }
   renderProductSelectList(filtered);
 }
 
@@ -4097,7 +4366,7 @@ function btnEnd(btn, html) {
 
 async function addItemToSpiska() {
   var productId = document.getElementById('selected-product-id').value;
-  var quantity = parseFloat(document.getElementById('item-quantity').value);
+  var quantity = getRawNumber(document.getElementById('item-quantity'));
   if (!productId) { showToast(t('add_item_select_err'), 'error'); return; }
   if (!quantity || quantity <= 0) { showToast(t('err_quantity_empty'), 'error'); return; }
 
@@ -4134,7 +4403,8 @@ async function addItemToSpiska() {
       await db.from('spiska_items').insert({
         spiska_id: currentSpiskaId, product_id: productId,
         product_name: product.name, product_code: product.code,
-        unit_price: unitPrice, quantity: quantity, total_price: unitPrice * quantity
+        unit_price: unitPrice, quantity: quantity, total_price: unitPrice * quantity,
+        category_id: product.category_id || null
       });
     }
 
@@ -4299,8 +4569,8 @@ function switchDebtTab(tab) {
 
 async function saveDebtChange() {
   var customerId = document.getElementById('debt-customer-id').value;
-  var currentBalance = parseFloat(document.getElementById('debt-current-balance').value) || 0;
-  var amount = parseFloat(document.getElementById('debt-amount-input').value) || 0;
+  var currentBalance = getRawNumber(document.getElementById('debt-current-balance')) || 0;
+  var amount = getRawNumber(document.getElementById('debt-amount-input')) || 0;
   var note = document.getElementById('debt-note-input').value.trim();
   var newBalance = 0;
   var actionText = '';
@@ -4430,7 +4700,8 @@ async function saveAdmin() {
 
       // AUDIT
       logAudit('admin', 'create', fullName, {
-        meta: { telegram_id: telegramId, username: username || null }
+        meta: { telegram_id: telegramId, username: username || null },
+        telegram: false
       });
     }
 
@@ -4508,20 +4779,16 @@ async function loadCustomerDetail(customerId) {
   el.innerHTML = '<div class="loading-spinner"><div class="spinner"></div></div>';
 
   try {
-    var cr = await db.from('customers').select('*').eq('id', customerId).single();
-    var c = cr.data;
-
-    // Spiskalar
-    var sr = await db.from('spiska').select('*').eq('customer_id', customerId).order('created_at', {ascending:false});
-    var spiskalar = sr.data || [];
-
-    // Qarz
-    var dr = await db.from('customer_debts').select('*').eq('customer_id', customerId).maybeSingle();
-    var debt = (dr.data && dr.data.balance) || 0;
-
-    // To'lovlar tarixi
-    var pr = await db.from('payments').select('*').eq('customer_id', customerId).order('created_at', {ascending:false}).limit(10);
-    var payments = pr.data || [];
+    var results = await Promise.all([
+      db.from('customers').select('*').eq('id', customerId).single(),
+      db.from('spiska').select('*').eq('customer_id', customerId).order('created_at', {ascending:false}),
+      db.from('customer_debts').select('*').eq('customer_id', customerId).maybeSingle(),
+      db.from('payments').select('*').eq('customer_id', customerId).order('created_at', {ascending:false}).limit(10),
+    ]);
+    var c = results[0].data;
+    var spiskalar = results[1].data || [];
+    var debt = (results[2].data && results[2].data.balance) || 0;
+    var payments = results[3].data || [];
 
     renderCustomerDetail(c, spiskalar, debt, payments);
   } catch(e) {
@@ -4682,7 +4949,7 @@ function openPaymentSheet(customerId, customerName, currentDebt) {
 
 async function savePayment() {
   var customerId = document.getElementById('payment-customer-id').value;
-  var amount = parseFloat(document.getElementById('payment-amount').value);
+  var amount = getRawNumber(document.getElementById('payment-amount'));
   var note = document.getElementById('payment-note').value.trim();
 
   if (!amount || amount <= 0) { showToast(t('payment_amount_err'), 'error'); return; }
@@ -4736,7 +5003,8 @@ async function savePayment() {
     logAudit('debt', 'payment', custName, {
       entityId: customerId,
       newValue: fmt(amount) + " so'm",
-      meta: { note: note || null }
+      meta: { note: note || null },
+      telegram: false
     });
   } catch(e) {
     showToast(e.message, 'error');
@@ -4812,8 +5080,21 @@ async function loadStats() {
     var q = db.from('spiska').select('*, customers(full_name)').eq('status','closed');
     if (range.from) q = q.gte('closed_at', range.from);
     if (range.to)   q = q.lte('closed_at', range.to);
-    var res = await q.order('closed_at', {ascending:false});
-    var list = res.data || [];
+
+    // Debt va expenses ni spiskalar bilan PARALLEL olamiz
+    var eq = db.from('expenses').select('amount,currency,amount_sum');
+    if (range.from) eq = eq.gte('created_at', range.from);
+    if (range.to)   eq = eq.lte('created_at', range.to);
+
+    var parallel1 = await Promise.all([
+      q.order('closed_at', {ascending:false}),
+      db.from('customer_debts').select('balance'),
+      eq,
+    ]);
+
+    var list = parallel1[0].data || [];
+    var totalDebt = (parallel1[1].data||[]).reduce(function(s,d){ return s+(d.balance||0); }, 0);
+    var expSum = (parallel1[2].data||[]).reduce(function(s,e){ return s+(e.amount_sum||(e.currency==='sum'?e.amount:0)||0); },0);
 
     var spiskaIds = list.map(function(s){ return s.id; });
     var allItems = [];
@@ -4824,9 +5105,6 @@ async function loadStats() {
     var totalRevenue = allItems.reduce(function(s,i){ return s+(i.total_price||0); }, 0);
     var totalOrders  = list.length;
     var uniqueC = {}; list.forEach(function(s){ if(s.customer_id) uniqueC[s.customer_id]=true; });
-
-    var debtRes = await db.from('customer_debts').select('balance');
-    var totalDebt = (debtRes.data||[]).reduce(function(s,d){ return s+(d.balance||0); }, 0);
 
     _set('ov-revenue', fmt(totalRevenue));
     _set('ov-orders', totalOrders);
@@ -4841,12 +5119,6 @@ async function loadStats() {
       var cm = {}; (pr.data||[]).forEach(function(p){ cm[p.id]=p.cost_price||0; });
       allItems.forEach(function(i){ totalCost += (cm[i.product_id]||0)*(i.quantity||0); });
     }
-    // Xarajatlar
-    var eq = db.from('expenses').select('amount,currency,amount_sum');
-    if (range.from) eq = eq.gte('created_at', range.from);
-    if (range.to)   eq = eq.lte('created_at', range.to);
-    var er = await eq;
-    var expSum = (er.data||[]).reduce(function(s,e){ return s+(e.amount_sum||(e.currency==='sum'?e.amount:0)||0); },0);
     var netProfit = totalRevenue - totalCost - expSum;
     var pct = totalRevenue > 0 ? Math.round((netProfit/totalRevenue)*100) : 0;
 
@@ -4856,9 +5128,11 @@ async function loadStats() {
     _set('ov-pr-exp',  fmt(expSum)+" so'm");
     _set('ov-pr-pct',  (pct>=0?'+':'')+pct+'%');
 
-    // Top mijozlar
+    // Top mijozlar — spiska map yaratib, find o'rniga ishlatamiz
+    var spiskaMap = {};
+    list.forEach(function(s) { spiskaMap[s.id] = s; });
     var cs = {}; allItems.forEach(function(i){
-      var sp = list.find(function(s){ return s.id===i.spiska_id; });
+      var sp = spiskaMap[i.spiska_id];
       if (!sp) return;
       var n = (sp.customers&&sp.customers.full_name)||'—';
       cs[n] = (cs[n]||0)+(i.total_price||0);
@@ -5482,14 +5756,62 @@ async function deleteCustomer(id) {
 }
 
 // ===================== PRODUCTS =====================
+async function loadCategories() {
+  var res = await db.from('categories').select('*').eq('is_active', true).order('sort_order');
+  allCategories = res.data || [];
+  return allCategories;
+}
+
 async function loadProducts() {
   var el = document.getElementById('products-list');
   showLoading(el);
-  var res = await db.from('products').select('*').eq('is_active',true).order('name');
-  renderProductsList(res.data || [], el);
+  var results = await Promise.all([
+    db.from('products').select('*').eq('is_active',true).order('name'),
+    loadCategories()
+  ]);
+  var products = results[0].data || [];
+  allProducts = products;
+  currentProductCatFilter = 'all';
+  renderProductCatPills(document.getElementById('product-cat-pills'), products, 'product');
+  renderProductsGrouped(products, el);
 }
 
-function renderProductsList(list, el) {
+function renderProductCatPills(container, products, mode) {
+  if (!container || !allCategories.length) { if (container) container.innerHTML = ''; return; }
+  var counts = {};
+  products.forEach(function(p) { var cid = p.category_id || 'none'; counts[cid] = (counts[cid] || 0) + 1; });
+  var currentFilter = mode === 'product' ? currentProductCatFilter : currentItemCatFilter;
+  var html = '<div class="cat-pill' + (currentFilter === 'all' ? ' active' : '') + '" onclick="filterByCat(\'all\',\'' + mode + '\')">' +
+    t('cat_all') + ' <span class="cat-pill-count">' + products.length + '</span></div>';
+  allCategories.forEach(function(c) {
+    if (!counts[c.id]) return;
+    html += '<div class="cat-pill' + (currentFilter === c.id ? ' active' : '') + '" onclick="filterByCat(\'' + c.id + '\',\'' + mode + '\')">' +
+      (c.icon || '📦') + ' ' + htmlEscape(c.name) + ' <span class="cat-pill-count">' + (counts[c.id] || 0) + '</span></div>';
+  });
+  if (counts['none']) {
+    html += '<div class="cat-pill' + (currentFilter === 'none' ? ' active' : '') + '" onclick="filterByCat(\'none\',\'' + mode + '\')">' +
+      t('cat_other') + ' <span class="cat-pill-count">' + counts['none'] + '</span></div>';
+  }
+  container.innerHTML = html;
+}
+
+function filterByCat(catId, mode) {
+  if (mode === 'product') {
+    currentProductCatFilter = catId;
+    var q = document.getElementById('product-search').value.trim();
+    if (q) { searchProducts(q); return; }
+    renderProductCatPills(document.getElementById('product-cat-pills'), allProducts, 'product');
+    var filtered = catId === 'all' ? allProducts : catId === 'none' ? allProducts.filter(function(p){ return !p.category_id; }) : allProducts.filter(function(p){ return p.category_id === catId; });
+    renderProductsGrouped(filtered, document.getElementById('products-list'));
+  } else {
+    currentItemCatFilter = catId;
+    renderProductCatPills(document.getElementById('item-cat-pills'), allProducts, 'item');
+    var q = document.getElementById('item-product-search').value.trim();
+    filterProductsInSheet(q);
+  }
+}
+
+function renderProductsGrouped(list, el) {
   if (!list.length) {
     el.innerHTML = renderEmpty(
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>',
@@ -5497,49 +5819,106 @@ function renderProductsList(list, el) {
     );
     return;
   }
-  el.innerHTML = list.map(function(p) {
-    var sellPrice = p.sell_price || p.price || 0;
-    var costPrice = p.cost_price || 0;
-    var margin = costPrice > 0 ? Math.round(((sellPrice - costPrice) / costPrice) * 100) : 0;
-    var safeName = htmlEscape(p.name);
-    var safeCode = htmlEscape(p.code);
-    var attrName = attrEscape(p.name);
-    var attrCode = attrEscape(p.code);
-    return '<div class="list-item" onclick="loadProductDetail(\'' + p.id + '\')">' +
-      '<div class="list-item-avatar amber">' +
-        '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>' +
-      '</div>' +
-      '<div class="list-item-info">' +
-        '<div class="list-item-title">' + safeName + '</div>' +
-        '<div style="display:flex;align-items:center;gap:5px;margin-top:3px">' +
-          '<span style="font-family:JetBrains Mono,monospace;background:var(--bg-tertiary);padding:1px 6px;border-radius:4px;font-size:.68rem">' + safeCode + '</span>' +
-          (margin > 0 ? '<span style="font-size:.68rem;font-weight:700;background:var(--success-light);color:var(--success);padding:1px 6px;border-radius:4px">+' + margin + '%</span>' : '') +
+  // Kategoriya bo'yicha guruhlash
+  if (allCategories.length && currentProductCatFilter === 'all') {
+    var groups = {};
+    var noCat = [];
+    allCategories.forEach(function(c) { groups[c.id] = { cat: c, items: [] }; });
+    list.forEach(function(p) {
+      if (p.category_id && groups[p.category_id]) groups[p.category_id].items.push(p);
+      else noCat.push(p);
+    });
+    var html = '';
+    allCategories.forEach(function(c) {
+      var g = groups[c.id];
+      if (!g.items.length) return;
+      html += '<div class="acc-header open" onclick="toggleProductAcc(this)">' +
+        '<div class="acc-header-left">' +
+          '<span class="acc-header-emoji">' + (c.icon || '📦') + '</span>' +
+          '<span class="acc-header-title">' + htmlEscape(c.name) + '</span>' +
+          '<span class="acc-header-count">' + g.items.length + '</span>' +
         '</div>' +
-      '</div>' +
-      '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">' +
-        '<div class="list-item-amount">' + fmt(sellPrice) + " so\'m</div>" +
-        '<div style="display:flex;gap:4px">' +
-          '<button class="btn-icon" style="width:30px;height:30px" onclick="event.stopPropagation();openProductSheet(\'' + p.id + '\',\'' + attrName + '\',\'' + attrCode + '\',' + costPrice + ',' + sellPrice + ')">' +
-            '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>' +
-          '</button>' +
-          '<button class="btn-icon btn-icon-danger" style="width:30px;height:30px" onclick="event.stopPropagation();deleteProduct(\'' + p.id + '\')">' +
-            '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>' +
-          '</button>' +
+        '<svg class="acc-header-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>' +
+      '</div>';
+      html += '<div class="acc-body open">';
+      g.items.forEach(function(p) { html += renderProductItem(p); });
+      html += '</div>';
+    });
+    if (noCat.length) {
+      html += '<div class="acc-header open" onclick="toggleProductAcc(this)">' +
+        '<div class="acc-header-left">' +
+          '<span class="acc-header-emoji">📋</span>' +
+          '<span class="acc-header-title">' + t('cat_other') + '</span>' +
+          '<span class="acc-header-count">' + noCat.length + '</span>' +
         '</div>' +
+        '<svg class="acc-header-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>' +
+      '</div>';
+      html += '<div class="acc-body open">';
+      noCat.forEach(function(p) { html += renderProductItem(p); });
+      html += '</div>';
+    }
+    el.innerHTML = html;
+  } else {
+    el.innerHTML = list.map(function(p) { return renderProductItem(p); }).join('');
+  }
+}
+
+function toggleProductAcc(el) {
+  var body = el.nextElementSibling;
+  el.classList.toggle('open');
+  body.classList.toggle('open');
+}
+
+function renderProductItem(p) {
+  var sellPrice = p.sell_price || p.price || 0;
+  var costPrice = p.cost_price || 0;
+  var margin = costPrice > 0 ? Math.round(((sellPrice - costPrice) / costPrice) * 100) : 0;
+  var safeName = htmlEscape(p.name);
+  var safeCode = htmlEscape(p.code);
+  var attrName = attrEscape(p.name);
+  var attrCode = attrEscape(p.code);
+  return '<div class="list-item" onclick="loadProductDetail(\'' + p.id + '\')">' +
+    '<div class="list-item-avatar amber">' +
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>' +
+    '</div>' +
+    '<div class="list-item-info">' +
+      '<div class="list-item-title">' + safeName + '</div>' +
+      '<div style="display:flex;align-items:center;gap:5px;margin-top:3px">' +
+        '<span style="font-family:JetBrains Mono,monospace;background:var(--bg-tertiary);padding:1px 6px;border-radius:4px;font-size:.68rem">' + safeCode + '</span>' +
+        (margin > 0 ? '<span style="font-size:.68rem;font-weight:700;background:var(--success-light);color:var(--success);padding:1px 6px;border-radius:4px">+' + margin + '%</span>' : '') +
       '</div>' +
-    '</div>';
-  }).join('');
+    '</div>' +
+    '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">' +
+      '<div class="list-item-amount">' + fmt(sellPrice) + " so\'m</div>" +
+      '<div style="display:flex;gap:4px">' +
+        '<button class="btn-icon" style="width:30px;height:30px" onclick="event.stopPropagation();openProductSheet(\'' + p.id + '\',\'' + attrName + '\',\'' + attrCode + '\',' + costPrice + ',' + sellPrice + ',\'' + (p.category_id||'') + '\')">' +
+          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>' +
+        '</button>' +
+        '<button class="btn-icon btn-icon-danger" style="width:30px;height:30px" onclick="event.stopPropagation();deleteProduct(\'' + p.id + '\')">' +
+          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>' +
+        '</button>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
 }
 
 var searchProducts = debounce(async function(q) {
+  if (!q.trim()) { loadProducts(); return; }
   var res = await db.from('products').select('*').eq('is_active',true)
     .or('name.ilike.%'+q+'%,code.ilike.%'+q+'%').order('name');
-  renderProductsList(res.data || [], document.getElementById('products-list'));
+  var list = res.data || [];
+  if (currentProductCatFilter !== 'all') {
+    list = list.filter(function(p) {
+      if (currentProductCatFilter === 'none') return !p.category_id;
+      return p.category_id === currentProductCatFilter;
+    });
+  }
+  renderProductsGrouped(list, document.getElementById('products-list'));
 }, 350);
 
 function calcProductMargin() {
-  var cost = parseFloat(document.getElementById('product-cost-input').value) || 0;
-  var sell = parseFloat(document.getElementById('product-sell-input').value) || 0;
+  var cost = getRawNumber(document.getElementById('product-cost-input')) || 0;
+  var sell = getRawNumber(document.getElementById('product-sell-input')) || 0;
   var preview = document.getElementById('product-margin-preview');
   var marginVal = document.getElementById('product-margin-value');
   var marginPct = document.getElementById('product-margin-pct');
@@ -5559,8 +5938,8 @@ function calcProductMargin() {
   }
 }
 
-function openProductSheet(id, name, code, costPrice, sellPrice) {
-  id=id||''; name=name||''; code=code||''; costPrice=costPrice||''; sellPrice=sellPrice||'';
+function openProductSheet(id, name, code, costPrice, sellPrice, categoryId) {
+  id=id||''; name=name||''; code=code||''; costPrice=costPrice||''; sellPrice=sellPrice||''; categoryId=categoryId||'';
   document.getElementById('product-edit-id').value = id;
   document.getElementById('product-name-input').value = name;
   document.getElementById('product-code-input').value = code;
@@ -5568,6 +5947,13 @@ function openProductSheet(id, name, code, costPrice, sellPrice) {
   document.getElementById('product-sell-input').value = sellPrice;
   document.getElementById('product-sheet-title').textContent = id ? t('product_sheet_edit') : t('product_sheet_title');
   document.getElementById('product-margin-preview').style.display = 'none';
+  // Kategoriya select
+  var sel = document.getElementById('product-category-select');
+  sel.innerHTML = '<option value="">— ' + t('cat_none') + ' —</option>';
+  allCategories.forEach(function(c) {
+    sel.innerHTML += '<option value="' + c.id + '"' + (categoryId === c.id ? ' selected' : '') + '>' + (c.icon||'📦') + ' ' + htmlEscape(c.name) + '</option>';
+  });
+  sel.value = categoryId;
   if (costPrice && sellPrice) setTimeout(calcProductMargin, 50);
   showSheet('product-sheet');
 }
@@ -5576,13 +5962,14 @@ async function saveProduct() {
   var id = document.getElementById('product-edit-id').value;
   var name = document.getElementById('product-name-input').value.trim();
   var code = document.getElementById('product-code-input').value.trim();
-  var costPrice = parseFloat(document.getElementById('product-cost-input').value);
-  var sellPrice = parseFloat(document.getElementById('product-sell-input').value);
+  var costPrice = getRawNumber(document.getElementById('product-cost-input'));
+  var sellPrice = getRawNumber(document.getElementById('product-sell-input'));
   if (!name) { showToast(t('product_name_err'), 'error'); return; }
   if (!code) { showToast(t('product_code_err'), 'error'); return; }
   if (isNaN(costPrice) || costPrice < 0) { showToast(t('product_cost_label').replace(' *',''), 'error'); return; }
   if (isNaN(sellPrice) || sellPrice <= 0) { showToast(t('product_sell_err'), 'error'); return; }
-  var saveData = { name:name, code:code, cost_price:costPrice, sell_price:sellPrice, price:sellPrice };
+  var categoryId = document.getElementById('product-category-select').value || null;
+  var saveData = { name:name, code:code, cost_price:costPrice, sell_price:sellPrice, price:sellPrice, category_id:categoryId };
   var btn = btnStart('product-save-btn', t('saving'));
   if (!btn) return;
   try {
@@ -5644,6 +6031,172 @@ async function deleteProduct(id) {
   loadProducts();
 }
 
+// ===================== KATEGORIYA BOSHQARUVI =====================
+async function openCategoryManageSheet() {
+  await loadCategories();
+  renderCategoryManageList();
+  showSheet('category-manage-sheet');
+}
+
+async function renderCategoryManageList() {
+  var el = document.getElementById('category-manage-list');
+  if (!allCategories.length) {
+    el.innerHTML = '<div style="padding:24px;text-align:center;color:var(--text-muted);font-size:.85rem">' + t('cat_empty') + '</div>';
+    return;
+  }
+  // Har bir kategoriya uchun mahsulot sonini olish
+  var pRes = await db.from('products').select('id,category_id').eq('is_active', true);
+  var products = pRes.data || [];
+  var counts = {};
+  products.forEach(function(p) { if (p.category_id) counts[p.category_id] = (counts[p.category_id]||0)+1; });
+
+  el.innerHTML = allCategories.map(function(c) {
+    var cnt = counts[c.id] || 0;
+    return '<div class="cat-manage-item">' +
+      '<div class="cat-manage-left">' +
+        '<span class="cat-manage-emoji">' + (c.icon||'📦') + '</span>' +
+        '<div class="cat-manage-info">' +
+          '<div class="cat-manage-name">' + htmlEscape(c.name) + '</div>' +
+          '<div class="cat-manage-count">' + cnt + ' ' + t('cat_products_count') + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="cat-manage-actions">' +
+        '<button class="btn-icon" onclick="openCategoryEditSheet(\'' + c.id + '\')" title="' + t('btn_edit') + '">' +
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>' +
+        '</button>' +
+        '<button class="btn-icon btn-icon-danger" onclick="deleteCategory(\'' + c.id + '\')" title="' + t('btn_delete') + '">' +
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>' +
+        '</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+async function openCategoryEditSheet(catId) {
+  catId = catId || '';
+  document.getElementById('category-edit-id').value = catId;
+  document.getElementById('category-edit-title').textContent = catId ? t('cat_edit_title') : t('cat_new_title');
+  document.getElementById('category-emoji-input').value = '';
+  document.getElementById('category-name-input').value = '';
+  document.getElementById('category-sort-input').value = allCategories.length + 1;
+
+  // Mahsulotlar checklist
+  var section = document.getElementById('category-products-section');
+  var checklist = document.getElementById('category-products-checklist');
+
+  // Tahrirlash bo'lsa — ma'lumotni olish
+  var catProducts = [];
+  if (catId) {
+    var cat = allCategories.find(function(c) { return c.id === catId; });
+    if (cat) {
+      document.getElementById('category-emoji-input').value = cat.icon || '';
+      document.getElementById('category-name-input').value = cat.name || '';
+      document.getElementById('category-sort-input').value = cat.sort_order || 1;
+    }
+    var cpRes = await db.from('products').select('id').eq('is_active',true).eq('category_id', catId);
+    catProducts = (cpRes.data || []).map(function(p) { return p.id; });
+  }
+
+  // Barcha mahsulotlarni olish
+  var pRes = await db.from('products').select('id,name,code,category_id').eq('is_active', true).order('name');
+  var allProds = pRes.data || [];
+  section.style.display = 'block';
+
+  checklist.innerHTML = allProds.map(function(p) {
+    var isChecked = catProducts.indexOf(p.id) >= 0;
+    var isOther = p.category_id && p.category_id !== catId;
+    var otherCat = isOther ? allCategories.find(function(c){ return c.id === p.category_id; }) : null;
+    return '<div class="product-select-item" style="cursor:pointer;' + (isOther ? 'opacity:.5' : '') + '" onclick="toggleCatProduct(this,\'' + p.id + '\')">' +
+      '<div style="display:flex;align-items:center;gap:8px;flex:1">' +
+        '<div style="width:20px;height:20px;border:1.5px solid ' + (isChecked ? 'var(--accent)' : 'var(--border)') + ';border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:' + (isChecked ? 'var(--accent-light)' : 'transparent') + ';transition:all .15s" data-check="' + (isChecked?1:0) + '">' +
+          (isChecked ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' : '') +
+        '</div>' +
+        '<div><div class="product-select-item-name">' + htmlEscape(p.name) + '</div>' +
+        '<div class="product-select-item-code">' + htmlEscape(p.code) +
+        (otherCat ? ' · ' + (otherCat.icon||'') + ' ' + htmlEscape(otherCat.name) : '') +
+        '</div></div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  showSheet('category-edit-sheet');
+}
+
+function toggleCatProduct(el, productId) {
+  var cb = el.querySelector('[data-check]');
+  var isChecked = cb.dataset.check === '1';
+  cb.dataset.check = isChecked ? '0' : '1';
+  cb.style.borderColor = isChecked ? 'var(--border)' : 'var(--accent)';
+  cb.style.background = isChecked ? 'transparent' : 'var(--accent-light)';
+  cb.innerHTML = isChecked ? '' : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
+  el.style.opacity = '1';
+}
+
+async function saveCategory() {
+  var id = document.getElementById('category-edit-id').value;
+  var icon = document.getElementById('category-emoji-input').value.trim();
+  var name = document.getElementById('category-name-input').value.trim();
+  var sortOrder = parseInt(document.getElementById('category-sort-input').value) || 1;
+  if (!name) { showToast(t('cat_name_err'), 'error'); return; }
+
+  var btn = btnStart('category-save-btn', t('saving'));
+  if (!btn) return;
+  try {
+    var catId = id;
+    if (id) {
+      await db.from('categories').update({ name:name, icon:icon, sort_order:sortOrder }).eq('id', id);
+    } else {
+      var res = await db.from('categories').insert({ name:name, icon:icon, sort_order:sortOrder, is_active:true }).select().single();
+      catId = res.data.id;
+    }
+
+    // Mahsulotlarni yangilash — belgilangan mahsulotlarni bu kategoriyaga biriktirish
+    var checkboxes = document.querySelectorAll('#category-products-checklist [data-check]');
+    var items = document.querySelectorAll('#category-products-checklist .product-select-item');
+    var checkedIds = [];
+    var uncheckedIds = [];
+    items.forEach(function(item, i) {
+      var pId = item.getAttribute('onclick').match(/'([^']+)'\)$/);
+      if (!pId) return;
+      pId = pId[1];
+      var cb = item.querySelector('[data-check]');
+      if (cb.dataset.check === '1') checkedIds.push(pId);
+      else uncheckedIds.push(pId);
+    });
+
+    // Belgilangan mahsulotlarga category_id qo'yish
+    if (checkedIds.length) {
+      await db.from('products').update({ category_id: catId }).in('id', checkedIds);
+    }
+    // Belgisi olib tashlangan mahsulotlardan category_id ni olib tashlash (faqat bu kategoriyaga tegishli bo'lganlar)
+    if (uncheckedIds.length) {
+      await db.from('products').update({ category_id: null }).in('id', uncheckedIds).eq('category_id', catId);
+    }
+
+    showToast(t('cat_saved'));
+    hideSheet('category-edit-sheet');
+    await loadCategories();
+    renderCategoryManageList();
+    loadProducts();
+  } catch(e) { showToast(e.message, 'error'); }
+  finally { btnEnd(btn); }
+}
+
+async function deleteCategory(catId) {
+  var ok = await showConfirm(t('cat_delete_title'), t('cat_delete_msg'), t('confirm_delete_btn'));
+  if (!ok) return;
+  try {
+    // Mahsulotlardan category_id ni olib tashlash
+    await db.from('products').update({ category_id: null }).eq('category_id', catId);
+    // Kategoriyani o'chirish (soft delete)
+    await db.from('categories').update({ is_active: false }).eq('id', catId);
+    showToast(t('cat_deleted'));
+    await loadCategories();
+    renderCategoryManageList();
+    loadProducts();
+  } catch(e) { showToast(e.message, 'error'); }
+}
+
 // ===================== MAHSULOT ANALIZI =====================
 async function loadProductDetail(productId) {
   document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
@@ -5652,13 +6205,15 @@ async function loadProductDetail(productId) {
   var el = document.getElementById('product-detail-content');
   el.innerHTML = '<div class="loading-spinner"><div class="spinner"></div></div>';
   try {
-    var pr = await db.from('products').select('*').eq('id', productId).single();
-    var p = pr.data;
-    var ir = await db.from('spiska_items')
-      .select('*, spiska(status, created_at, customers(full_name))')
-      .eq('product_id', productId)
-      .order('created_at', {ascending:false});
-    var items = ir.data || [];
+    var results = await Promise.all([
+      db.from('products').select('*').eq('id', productId).single(),
+      db.from('spiska_items')
+        .select('*, spiska(status, created_at, customers(full_name))')
+        .eq('product_id', productId)
+        .order('created_at', {ascending:false}),
+    ]);
+    var p = results[0].data;
+    var items = results[1].data || [];
     var soldItems = items.filter(function(i){ return i.spiska && i.spiska.status === 'closed'; });
     var totalQty = soldItems.reduce(function(s,i){ return s+(i.quantity||0); }, 0);
     var totalRevenue = soldItems.reduce(function(s,i){ return s+(i.total_price||0); }, 0);
@@ -5832,7 +6387,7 @@ var LANGS = {
     badge_open: 'Ochiq', badge_closed: 'Yopilgan',
     spiska_back: 'Orqaga', spiska_customer: 'Mijoz', spiska_phone: 'Telefon',
     spiska_date: 'Sana', spiska_status: 'Holat',
-    spiska_items_label: 'MAHSULOTLAR', spiska_products_sum: 'Mahsulotlar',
+    spiska_items_label: 'MAHSULOTLAR', spiska_products_sum: 'Mahsulotlar', jami: 'Jami',
     spiska_extra_debt: "Qo'shimcha qarz", spiska_grand_total: "JAMI TO'LASH",
     spiska_add_item: "Mahsulot qo'shish", spiska_add_debt: "Qarz qo'shish",
     spiska_edit_debt: "Qarz: {0} so'm (o'zgartirish)",
@@ -5900,6 +6455,13 @@ var LANGS = {
     product_code_err: 'Kod kiriting', product_sell_err: 'Sotish narxini kiriting',
     product_saved: 'Mahsulot saqlandi', product_deleted: "Mahsulot o'chirildi",
     product_delete_confirm: "Mahsulotni o'chirasizmi?",
+    cat_all: 'Barchasi', cat_other: 'Boshqa', cat_none: 'Kategoriyasiz',
+    cat_empty: "Kategoriya yo'q — qo'shish uchun «Qo'shish» tugmasini bosing",
+    cat_new_title: 'Yangi Kategoriya', cat_edit_title: 'Kategoriyani Tahrirlash',
+    cat_name_err: 'Kategoriya nomini kiriting', cat_saved: 'Kategoriya saqlandi',
+    cat_deleted: "Kategoriya o'chirildi", cat_products_count: 'mahsulot',
+    cat_delete_title: "Kategoriyani o'chirish", cat_delete_msg: "Kategoriya o'chiriladi. Mahsulotlar «Boshqa» guruhga o'tadi. Davom etasizmi?",
+    btn_edit: 'Tahrirlash', btn_delete: "O'chirish",
     history_title: 'Tarix', history_empty: "Tarix yo'q",
     stats_title: 'Statistika', stats_revenue: 'Daromad',
     stats_cost: 'Tan narx jami', stats_profit: 'Sof foyda',
@@ -6246,7 +6808,7 @@ var LANGS = {
     badge_open: 'Открыт', badge_closed: 'Закрыт',
     spiska_back: 'Назад', spiska_customer: 'Клиент', spiska_phone: 'Телефон',
     spiska_date: 'Дата', spiska_status: 'Статус',
-    spiska_items_label: 'ТОВАРЫ', spiska_products_sum: 'Товары',
+    spiska_items_label: 'ТОВАРЫ', spiska_products_sum: 'Товары', jami: 'Итого',
     spiska_extra_debt: 'Доп. долг', spiska_grand_total: 'ИТОГО К ОПЛАТЕ',
     spiska_add_item: 'Добавить товар', spiska_add_debt: 'Добавить долг',
     spiska_edit_debt: 'Долг: {0} сум (изменить)',
@@ -6312,6 +6874,13 @@ var LANGS = {
     product_code_err: 'Введите код', product_sell_err: 'Введите цену продажи',
     product_saved: 'Товар сохранён', product_deleted: 'Товар удалён',
     product_delete_confirm: 'Удалить товар?',
+    cat_all: 'Все', cat_other: 'Другое', cat_none: 'Без категории',
+    cat_empty: 'Нет категорий — нажмите «Добавить»',
+    cat_new_title: 'Новая категория', cat_edit_title: 'Редактировать категорию',
+    cat_name_err: 'Введите название категории', cat_saved: 'Категория сохранена',
+    cat_deleted: 'Категория удалена', cat_products_count: 'товаров',
+    cat_delete_title: 'Удалить категорию', cat_delete_msg: 'Категория будет удалена. Товары переместятся в «Другое». Продолжить?',
+    btn_edit: 'Редактировать', btn_delete: 'Удалить',
     history_title: 'История', history_empty: 'Нет истории',
     stats_title: 'Статистика', stats_revenue: 'Выручка',
     stats_cost: 'Себестоимость', stats_profit: 'Чистая прибыль',
@@ -7820,8 +8389,8 @@ function toggleExpCurrency() {
 function calcExpEquiv() {
   var isUsd = document.querySelector('input[name="exp-currency"]:checked').value === 'usd';
   if (!isUsd) return;
-  var amount = parseFloat(document.getElementById('expense-amount').value) || 0;
-  var rate   = parseFloat(document.getElementById('expense-rate').value) || 0;
+  var amount = getRawNumber(document.getElementById('expense-amount')) || 0;
+  var rate   = getRawNumber(document.getElementById('expense-rate')) || 0;
   var equivEl = document.getElementById('exp-equiv');
   if (amount > 0 && rate > 0) {
     equivEl.style.display = 'block';
@@ -7836,9 +8405,9 @@ async function saveExpense() {
   var editId   = document.getElementById('expense-edit-id').value;
   var category = (document.getElementById('expense-category-input').value || '').trim();
   var note     = document.getElementById('expense-note').value.trim();
-  var amount   = parseFloat(document.getElementById('expense-amount').value);
+  var amount   = getRawNumber(document.getElementById('expense-amount'));
   var currency = document.querySelector('input[name="exp-currency"]:checked').value;
-  var rate     = parseFloat(document.getElementById('expense-rate').value) || 0;
+  var rate     = getRawNumber(document.getElementById('expense-rate')) || 0;
 
   if (!category) { showToast(t('exp_cat_err'), 'error'); document.getElementById('expense-category-input').focus(); return; }
   if (!amount || amount <= 0) { showToast(t('payment_amount_err'), 'error'); return; }
@@ -8972,8 +9541,8 @@ function toggleOdCurrency() {
 function calcOdEquiv() {
   var isUsd = document.querySelector('input[name="od-currency"]:checked').value === 'usd';
   if (!isUsd) { document.getElementById('od-equiv').style.display = 'none'; return; }
-  var amount = parseFloat(document.getElementById('od-amount').value) || 0;
-  var rate   = parseFloat(document.getElementById('od-rate').value) || 0;
+  var amount = getRawNumber(document.getElementById('od-amount')) || 0;
+  var rate   = getRawNumber(document.getElementById('od-rate')) || 0;
   var el     = document.getElementById('od-equiv');
   if (amount > 0 && rate > 0) {
     el.style.display = 'block';
@@ -8989,9 +9558,9 @@ async function saveOurDebt() {
   var creditor = document.getElementById('od-creditor').value.trim();
   var phone    = document.getElementById('od-phone').value.trim();
   var note     = document.getElementById('od-note').value.trim();
-  var amount   = parseFloat(document.getElementById('od-amount').value);
+  var amount   = getRawNumber(document.getElementById('od-amount'));
   var currency = document.querySelector('input[name="od-currency"]:checked').value;
-  var rate     = parseFloat(document.getElementById('od-rate').value) || 0;
+  var rate     = getRawNumber(document.getElementById('od-rate')) || 0;
 
   if (!creditor)           { showToast(t('debt_creditor_label').replace(' *','') + ' kiritilmagan!', 'error'); return; }
   if (!amount || amount<=0){ showToast(t('payment_amount_err'), 'error'); return; }
@@ -9053,7 +9622,8 @@ async function saveOurDebt() {
     logAudit('our_debt', 'create', creditor, {
       entityId: newDebtId,
       newValue: amtStr,
-      meta: { phone: phone || null, note: note || null }
+      meta: { phone: phone || null, note: note || null },
+      telegram: false
     });
 
     loadOurDebts();
@@ -9159,8 +9729,8 @@ function toggleOdPayCurrency() {
 function calcOdPayEquiv() {
   var isUsd = document.querySelector('input[name="od-pay-currency"]:checked').value === 'usd';
   if (!isUsd) { document.getElementById('od-pay-equiv').style.display = 'none'; return; }
-  var amount = parseFloat(document.getElementById('od-pay-amount').value) || 0;
-  var rate   = parseFloat(document.getElementById('od-pay-rate').value) || 0;
+  var amount = getRawNumber(document.getElementById('od-pay-amount')) || 0;
+  var rate   = getRawNumber(document.getElementById('od-pay-rate')) || 0;
   var el     = document.getElementById('od-pay-equiv');
   if (amount > 0 && rate > 0) {
     el.style.display = 'block';
@@ -9178,7 +9748,7 @@ async function saveOurDebtPayment() {
   var amtRaw   = document.getElementById('od-pay-amount').value;
   var amount   = parseFloat(amtRaw);
   var currency = document.querySelector('input[name="od-pay-currency"]:checked').value;
-  var rate     = parseFloat(document.getElementById('od-pay-rate').value) || 0;
+  var rate     = getRawNumber(document.getElementById('od-pay-rate')) || 0;
   var note     = document.getElementById('od-pay-note').value.trim();
 
   // ── Validatsiya ──────────────────────────────────
@@ -9290,7 +9860,8 @@ async function saveOurDebtPayment() {
     logAudit('our_debt', txnType, debt.creditor_name || '—', {
       entityId: debtId,
       newValue: amtStr,
-      meta: { note: note || null, closed: isClosed }
+      meta: { note: note || null, closed: isClosed },
+      telegram: false
     });
 
     // Detail + list reactive yangilansin
