@@ -1879,6 +1879,25 @@ body{
             </div>
           </div>
 
+          <!-- 1.5. OMBOR -->
+          <div class="settings-section">
+            <div class="settings-section-title">OMBOR</div>
+            <div class="card">
+              <div class="settings-item" onclick="navigate('warehouse')" style="cursor:pointer;border:none">
+                <div class="settings-item-left">
+                  <div class="settings-item-icon" style="background:#ECFDF5;color:#059669">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                  </div>
+                  <div>
+                    <div class="settings-item-label">Mahsulot ombori</div>
+                    <div class="settings-item-sublabel">Kirim, chiqim, qoldiq boshqaruvi</div>
+                  </div>
+                </div>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted)"><path d="m9 18 6-6-6-6"/></svg>
+              </div>
+            </div>
+          </div>
+
           <!-- 2. MOLIYA — Xarajatlar + Qarzlar bir joyda -->
           <div class="settings-section">
             <div class="settings-section-title" id="s-sec-finance">MOLIYA</div>
@@ -2285,6 +2304,88 @@ body{
 
           <!-- Ro'yxat -->
           <div id="audit-list" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+      </div>
+
+      <!-- OMBOR SAHIFASI -->
+      <div id="page-warehouse" class="page">
+        <div class="page-content">
+          <div class="section-header">
+            <button class="back-btn" onclick="navigate('settings')" style="margin:0">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+              <span>Orqaga</span>
+            </button>
+            <div style="display:flex;gap:6px">
+              <button class="btn-icon" onclick="openWarehouseInSheet()" title="Kirim">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+              <button class="btn-icon" onclick="openWarehouseOutSheet()" title="Chiqim">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Stat kartalar -->
+          <div class="stats-grid" style="margin-bottom:14px">
+            <div class="stat-card">
+              <div class="stat-card-icon blue">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>
+              </div>
+              <div class="stat-label">JAMI MAHSULOT</div>
+              <div class="stat-value" id="wh-stat-total" style="font-size:1.4rem">—</div>
+              <div class="stat-trend">omborda</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-icon green">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              </div>
+              <div class="stat-label">JAMI QOLDIQ</div>
+              <div class="stat-value" id="wh-stat-stock" style="font-size:1.4rem">—</div>
+              <div class="stat-trend">dona</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-icon" style="background:var(--danger-light);color:var(--danger)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <div class="stat-label">KAM QOLGAN</div>
+              <div class="stat-value" id="wh-stat-low" style="font-size:1.4rem;color:var(--danger)">—</div>
+              <div class="stat-trend">mahsulot</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-icon amber">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+              </div>
+              <div class="stat-label">TUGAGAN</div>
+              <div class="stat-value" id="wh-stat-zero" style="font-size:1.4rem;color:var(--warning)">—</div>
+              <div class="stat-trend">mahsulot</div>
+            </div>
+          </div>
+
+          <!-- Qidiruv -->
+          <div class="search-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="search-input" id="wh-search" placeholder="Mahsulot qidirish (nom yoki kod)..." oninput="searchWarehouse(this.value)">
+          </div>
+
+          <!-- Filter -->
+          <div class="filter-tabs" style="margin-bottom:14px">
+            <button class="filter-tab active" onclick="filterWarehouse(this,'all')">Barchasi</button>
+            <button class="filter-tab" onclick="filterWarehouse(this,'low')" style="color:var(--danger)">⚠️ Kam</button>
+            <button class="filter-tab" onclick="filterWarehouse(this,'zero')">Tugagan</button>
+            <button class="filter-tab" onclick="filterWarehouse(this,'instock')">Mavjud</button>
+          </div>
+
+          <!-- Kategoriya pills -->
+          <div id="wh-cat-pills" class="cat-pills-wrap" style="margin-bottom:10px"></div>
+
+          <!-- Mahsulotlar ro'yxati -->
+          <div id="warehouse-list" class="list-container"></div>
+
+          <!-- So'nggi harakatlar -->
+          <div style="margin-top:20px">
+            <div class="section-label">SO'NGGI HARAKATLAR</div>
+            <div id="wh-history" class="list-container"></div>
+          </div>
         </div>
       </div>
 
@@ -2891,10 +2992,77 @@ body{
   </div>
 </div>
 
+<!-- WAREHOUSE KIRIM SHEET -->
+<div class="sheet-overlay" id="wh-in-sheet">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <h3 class="sheet-title" style="color:var(--success)">📦 Omborga kirim</h3>
+    <div class="form-group">
+      <label class="form-label">MAHSULOT *</label>
+      <div class="search-wrap" style="margin-bottom:6px">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" id="wh-in-search" placeholder="Nom yoki kod..." oninput="filterWhProducts('in',this.value)">
+      </div>
+      <div class="product-select-list" id="wh-in-product-list" style="max-height:160px"></div>
+      <input type="hidden" id="wh-in-product-id">
+      <div id="wh-in-selected" class="selected-product-preview hidden">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span id="wh-in-selected-text"></span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">MIQDOR *</label>
+      <input type="number" class="form-input" id="wh-in-qty" value="1" min="0.01" step="0.01">
+    </div>
+    <div class="form-group">
+      <label class="form-label">IZOH</label>
+      <input type="text" class="form-input" id="wh-in-note" placeholder="Masalan: yetkazib beruvchidan keldi...">
+    </div>
+    <button class="btn btn-success btn-full" id="wh-in-save-btn" onclick="saveWarehouseMove('in')" style="height:48px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Kirim saqlash
+    </button>
+  </div>
+</div>
+
+<!-- WAREHOUSE CHIQIM SHEET -->
+<div class="sheet-overlay" id="wh-out-sheet">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <h3 class="sheet-title" style="color:var(--danger)">📤 Ombordan chiqim</h3>
+    <div class="form-group">
+      <label class="form-label">MAHSULOT *</label>
+      <div class="search-wrap" style="margin-bottom:6px">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" id="wh-out-search" placeholder="Nom yoki kod..." oninput="filterWhProducts('out',this.value)">
+      </div>
+      <div class="product-select-list" id="wh-out-product-list" style="max-height:160px"></div>
+      <input type="hidden" id="wh-out-product-id">
+      <div id="wh-out-selected" class="selected-product-preview hidden">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span id="wh-out-selected-text"></span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">MIQDOR *</label>
+      <input type="number" class="form-input" id="wh-out-qty" value="1" min="0.01" step="0.01">
+      <div class="form-hint" id="wh-out-stock-hint" style="color:var(--accent)"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">IZOH</label>
+      <input type="text" class="form-input" id="wh-out-note" placeholder="Masalan: ishchiga berildi...">
+    </div>
+    <button class="btn btn-danger btn-full" id="wh-out-save-btn" onclick="saveWarehouseMove('out')" style="height:48px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Chiqim saqlash
+    </button>
+  </div>
+</div>
+
 <!-- ============== SCRIPTS ============== -->
 <script>
 const SURL = 'https://khxdzqrxrbrzvqntyjzw.supabase.co';
-const SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtoeGR6cXJ4cmJyenZxbnR5anp3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3Mjk4NjA2NSwiZXhwIjoyMDg4NTYyMDY1fQ.hQEX_y35zZ1Uyqup3I82uLGRlwHqi4Iy7Q4peAUiXT0';
+const SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtoeGR6cXJ4cmJyenZxbnR5anp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5ODYwNjUsImV4cCI6MjA4ODU2MjA2NX0.kYK0gSjd4DKEqx67ikA_n4YxYc2XR5fg1IdMAju-v70';
 const _supabaseLib = window.supabase || (typeof supabase !== 'undefined' ? supabase : null);
 if (!_supabaseLib) { console.error('Supabase yuklanmadi!'); }
 const db = _supabaseLib ? _supabaseLib.createClient(SURL, SKEY) : null;
@@ -2963,17 +3131,28 @@ function fmtInputNumber(input) {
   input.value = parts.length > 1 ? intPart + '.' + parts[1] : intPart;
 }
 function getRawNumber(input) {
-  var raw = (input.dataset && input.dataset.rawValue) || input.value.replace(/\s/g, '').replace(',', '.');
-  return parseFloat(raw) || 0;
+  // Avval haqiqiy input qiymatidan bo'shliqlarni olib parse qilish
+  var displayVal = input.value.replace(/\s/g, '').replace(',', '.');
+  var rawVal = (input.dataset && input.dataset.rawValue) || '';
+  // Agar rawValue bo'sh bo'lsa yoki input qiymatidan farq qilsa — display qiymatini ishlatamiz
+  if (!rawVal || rawVal === '') {
+    return parseFloat(displayVal) || 0;
+  }
+  return parseFloat(rawVal) || parseFloat(displayVal) || 0;
 }
 // Sahifa yuklanganda barcha number inputlarga avto-format qo'shish
 function initNumberFormatting() {
   document.addEventListener('input', function(e) {
     var el = e.target;
-    if (el.tagName === 'INPUT' && el.type === 'number' && el.closest('.sheet, .form-group')) {
-      el.type = 'text';
-      el.inputMode = 'decimal';
-      fmtInputNumber(el);
+    if (el.tagName === 'INPUT' && el.closest('.sheet, .form-group')) {
+      if (el.type === 'number') {
+        el.type = 'text';
+        el.inputMode = 'decimal';
+        fmtInputNumber(el);
+      } else if (el.type === 'text' && el.inputMode === 'decimal') {
+        // Allaqachon text ga o'zgartirilgan — faqat raw qiymatni yangilash
+        fmtInputNumber(el);
+      }
     }
   });
   // Sheet ochilganda number → text ga o'zgartirish
@@ -3080,7 +3259,7 @@ async function handleLogin() {
       }
       // Admin to'liq ma'lumotlarini olish
       var adminRes = await db.from('admins')
-        .select('*')
+        .select('id, telegram_id, username, full_name, is_active, language, theme, created_at, last_login')
         .eq('telegram_id', telegramId)
         .eq('is_active', true)
         .single();
@@ -3096,31 +3275,8 @@ async function handleLogin() {
       return;
     }
 
-    // 2-usul: RPC mavjud bo'lmasa — password maydoni orqali to'g'ridan tekshirish
-    var directRes = await db.from('admins')
-      .select('id, full_name, username, telegram_id, is_active, theme, language, password')
-      .eq('telegram_id', telegramId)
-      .eq('is_active', true)
-      .single();
-
-    if (directRes.error || !directRes.data) {
-      showLoginError(t('login_err_notfound'));
-      return;
-    }
-
-    // Parolni tekshirish (oddiy matn sifatida saqlangan bo'lsa)
-    var adminData = directRes.data;
-    if (adminData.password && adminData.password !== password) {
-      showLoginError(t('login_err_wrong'));
-      return;
-    }
-
-    // Parol to'g'ri — kirish
-    delete adminData.password; // parolni xotirada saqlamaymiz
-    currentAdmin = adminData;
-    localStorage.setItem('nina_admin', JSON.stringify(currentAdmin));
-    if (currentAdmin.theme) setTheme(currentAdmin.theme);
-    showMainApp();
+    // RPC xato qaytarsa — parolni tekshirish imkonsiz
+    showLoginError(t('login_err_wrong'));
 
   } catch(e) {
     console.error('Login xato:', e);
@@ -3819,119 +3975,182 @@ function openSpiskaPreview() {
   var grandTotal = prodTotal + extraDebt;
   var custName  = (s.customers && s.customers.full_name) || '—';
   var custPhone = (s.customers && s.customers.phone) || '';
-  var adminName = (s.admins && s.admins.full_name) || (currentAdmin && currentAdmin.full_name) || '—';
   var totalDona = items.reduce(function(sum,i){ return sum+(i.quantity||0); }, 0);
   var som = d.som || "so'm";
 
-  var rowsHtml = items.map(function(item, idx) {
-    return '<tr style="background:' + (idx%2===0?'#ffffff':'#F8FAFC') + '">' +
-      '<td style="padding:9px 10px;text-align:center;color:#64748B;font-size:13px;font-family:monospace;border-bottom:1px solid #F1F5F9">' + (idx+1) + '</td>' +
-      '<td style="padding:9px 10px;border-bottom:1px solid #F1F5F9">' +
-        '<div style="font-weight:600;font-size:14px;color:#0F172A">' + item.product_name + '</div>' +
-      '</td>' +
-      '<td style="padding:9px 10px;text-align:center;font-size:14px;font-weight:700;color:#0F172A;border-bottom:1px solid #F1F5F9;font-family:monospace">' + item.quantity + '</td>' +
-      '<td style="padding:9px 10px;text-align:right;font-size:12px;color:#64748B;border-bottom:1px solid #F1F5F9;font-family:monospace">' + fmt(item.unit_price) + '</td>' +
-      '<td style="padding:9px 10px;text-align:right;font-weight:700;font-size:14px;color:#1D4ED8;border-bottom:1px solid #F1F5F9;font-family:monospace">' + fmt(item.total_price) + '</td>' +
-    '</tr>';
-  }).join('');
+  // Kategoriya bo'yicha guruhlash
+  var hasCategories = allCategories.length > 0 && items.some(function(i){ return i.category_id; });
+  var catColors = ['#D97706','#2563EB','#059669','#DC2626','#7C3AED','#DB2777','#0891B2','#EA580C'];
+  var rowsHtml = '';
+  var globalIdx = 0;
+
+  if (hasCategories) {
+    var groups = {};
+    var noCatItems = [];
+    var catOrder = [];
+    allCategories.forEach(function(c) { groups[c.id] = { cat: c, items: [] }; catOrder.push(c.id); });
+    items.forEach(function(item) {
+      if (item.category_id && groups[item.category_id]) groups[item.category_id].items.push(item);
+      else noCatItems.push(item);
+    });
+    var colorIdx = 0;
+    catOrder.forEach(function(cid) {
+      var g = groups[cid];
+      if (!g.items.length) return;
+      var color = catColors[colorIdx % catColors.length];
+      colorIdx++;
+      rowsHtml += '<tr><td colspan="5" style="padding:7px 10px 4px;background:#F8FAFC;border-bottom:1px solid #F1F5F9">' +
+        '<div style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:' + color + '">' +
+          '<span style="display:inline-block;width:3px;height:14px;border-radius:2px;background:' + color + '"></span>' +
+          (g.cat.icon || '') + ' ' + g.cat.name +
+        '</div></td></tr>';
+      g.items.forEach(function(item) {
+        globalIdx++;
+        rowsHtml += '<tr style="background:' + (globalIdx%2===0?'#ffffff':'#FAFBFC') + '">' +
+          '<td style="padding:8px 10px;text-align:center;color:#64748B;font-size:12px;font-family:monospace;border-bottom:1px solid #F1F5F9">' + globalIdx + '</td>' +
+          '<td style="padding:8px 10px;border-bottom:1px solid #F1F5F9"><div style="font-weight:600;font-size:13px;color:#0F172A">' + item.product_name + '</div></td>' +
+          '<td style="padding:8px 10px;text-align:center;font-size:13px;font-weight:700;color:#0F172A;border-bottom:1px solid #F1F5F9;font-family:monospace">' + item.quantity + '</td>' +
+          '<td style="padding:8px 10px;text-align:right;font-size:11px;color:#64748B;border-bottom:1px solid #F1F5F9;font-family:monospace">' + fmt(item.unit_price) + '</td>' +
+          '<td style="padding:8px 10px;text-align:right;font-weight:700;font-size:13px;color:#1D4ED8;border-bottom:1px solid #F1F5F9;font-family:monospace">' + fmt(item.total_price) + '</td>' +
+        '</tr>';
+      });
+    });
+    if (noCatItems.length) {
+      rowsHtml += '<tr><td colspan="5" style="padding:7px 10px 4px;background:#F8FAFC;border-bottom:1px solid #F1F5F9">' +
+        '<div style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#64748B">' +
+          '<span style="display:inline-block;width:3px;height:14px;border-radius:2px;background:#94A3B8"></span>' +
+          (d.cat_other || 'Boshqa') +
+        '</div></td></tr>';
+      noCatItems.forEach(function(item) {
+        globalIdx++;
+        rowsHtml += '<tr style="background:' + (globalIdx%2===0?'#ffffff':'#FAFBFC') + '">' +
+          '<td style="padding:8px 10px;text-align:center;color:#64748B;font-size:12px;font-family:monospace;border-bottom:1px solid #F1F5F9">' + globalIdx + '</td>' +
+          '<td style="padding:8px 10px;border-bottom:1px solid #F1F5F9"><div style="font-weight:600;font-size:13px;color:#0F172A">' + item.product_name + '</div></td>' +
+          '<td style="padding:8px 10px;text-align:center;font-size:13px;font-weight:700;color:#0F172A;border-bottom:1px solid #F1F5F9;font-family:monospace">' + item.quantity + '</td>' +
+          '<td style="padding:8px 10px;text-align:right;font-size:11px;color:#64748B;border-bottom:1px solid #F1F5F9;font-family:monospace">' + fmt(item.unit_price) + '</td>' +
+          '<td style="padding:8px 10px;text-align:right;font-weight:700;font-size:13px;color:#1D4ED8;border-bottom:1px solid #F1F5F9;font-family:monospace">' + fmt(item.total_price) + '</td>' +
+        '</tr>';
+      });
+    }
+  } else {
+    items.forEach(function(item, idx) {
+      globalIdx++;
+      rowsHtml += '<tr style="background:' + (idx%2===0?'#ffffff':'#F8FAFC') + '">' +
+        '<td style="padding:8px 10px;text-align:center;color:#64748B;font-size:12px;font-family:monospace;border-bottom:1px solid #F1F5F9">' + globalIdx + '</td>' +
+        '<td style="padding:8px 10px;border-bottom:1px solid #F1F5F9"><div style="font-weight:600;font-size:13px;color:#0F172A">' + item.product_name + '</div></td>' +
+        '<td style="padding:8px 10px;text-align:center;font-size:13px;font-weight:700;color:#0F172A;border-bottom:1px solid #F1F5F9;font-family:monospace">' + item.quantity + '</td>' +
+        '<td style="padding:8px 10px;text-align:right;font-size:11px;color:#64748B;border-bottom:1px solid #F1F5F9;font-family:monospace">' + fmt(item.unit_price) + '</td>' +
+        '<td style="padding:8px 10px;text-align:right;font-weight:700;font-size:13px;color:#1D4ED8;border-bottom:1px solid #F1F5F9;font-family:monospace">' + fmt(item.total_price) + '</td>' +
+      '</tr>';
+    });
+  }
 
   var extraDebtRow = extraDebt > 0
     ? '<tr style="background:#FEF2F2">' +
-        '<td colspan="4" style="padding:9px 10px;text-align:right;color:#EF4444;font-weight:600;font-size:13px">' + d.preview_prev_debt + ':</td>' +
-        '<td style="padding:9px 10px;text-align:right;font-weight:700;color:#EF4444;font-size:14px;font-family:monospace">+' + fmt(extraDebt) + '</td>' +
+        '<td colspan="4" style="padding:9px 10px;text-align:right;color:#EF4444;font-weight:600;font-size:12px">' + d.preview_prev_debt + ':</td>' +
+        '<td style="padding:9px 10px;text-align:right;font-weight:700;color:#EF4444;font-size:13px;font-family:monospace">+' + fmt(extraDebt) + '</td>' +
       '</tr>'
     : '';
 
   var noteHtml = s.note
-    ? '<div style="margin:0 0 16px;padding:12px 14px;background:#EFF6FF;border-radius:10px;border-left:3px solid #2563EB">' +
-        '<div style="font-size:10px;color:#93C5FD;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">' + d.preview_note_label + '</div>' +
-        '<div style="font-size:13px;color:#1E40AF">' + s.note + '</div>' +
+    ? '<div style="margin:0 0 12px;padding:10px 12px;background:#EFF6FF;border-radius:10px;border-left:3px solid #2563EB">' +
+        '<div style="font-size:9px;color:#93C5FD;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">' + d.preview_note_label + '</div>' +
+        '<div style="font-size:12px;color:#1E40AF">' + s.note + '</div>' +
       '</div>'
     : '';
 
-  // Overlay usuli - orqaga tugma ishonchli ishlaydi
   var overlay = document.createElement('div');
   overlay.id = 'spiska-preview-overlay';
   overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#EFF6FF;overflow-y:auto;-webkit-overflow-scrolling:touch';
 
   overlay.innerHTML =
-    '<div style="max-width:480px;margin:0 auto;background:#EFF6FF;min-height:100vh">' +
+    '<div style="max-width:480px;margin:0 auto;background:#EFF6FF;min-height:100vh;display:flex;flex-direction:column">' +
 
-      // HEADER
-      '<div style="background:linear-gradient(135deg,#1D4ED8 0%,#2563EB 100%);padding:20px 18px 16px;color:#fff">' +
-        '<div style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.2);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;letter-spacing:.04em;margin-bottom:10px">' + d.preview_closed + '</div>' +
-        '<div style="font-size:22px;font-weight:800;letter-spacing:-.03em;line-height:1.2">' + custName + '</div>' +
-        (custPhone ? '<div style="font-size:13px;color:rgba(255,255,255,.75);margin-top:4px">📞 ' + custPhone + '</div>' : '') +
-        '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.2)">' +
-          '<div style="font-size:11px;color:rgba(255,255,255,.7)">📅 ' + fmtDate(s.created_at) + '</div>' +
-          '<div style="font-size:11px;color:rgba(255,255,255,.7);text-align:right">👤 ' + adminName + '</div>' +
-        '</div>' +
-      '</div>' +
+      // ===== SCREENSHOT ZONA =====
+      '<div id="preview-screenshot-zone">' +
 
-      '<div style="padding:14px">' +
-
-        // JADVAL
-        '<div style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:14px">' +
-          '<table style="width:100%;border-collapse:collapse">' +
-            '<thead><tr style="background:#1E40AF">' +
-              '<th style="padding:9px 10px;color:#fff;font-size:11px;font-weight:700;text-align:center;width:26px">#</th>' +
-              '<th style="padding:9px 10px;color:#fff;font-size:11px;font-weight:700;text-align:left">' + d.preview_product + '</th>' +
-              '<th style="padding:9px 10px;color:#fff;font-size:11px;font-weight:700;text-align:center;width:46px">' + d.preview_qty + '</th>' +
-              '<th style="padding:9px 10px;color:#fff;font-size:11px;font-weight:700;text-align:right;width:70px">' + d.preview_price + '</th>' +
-              '<th style="padding:9px 10px;color:#fff;font-size:11px;font-weight:700;text-align:right;width:76px">' + d.preview_total + '</th>' +
-            '</tr></thead>' +
-            '<tbody>' + rowsHtml + extraDebtRow + '</tbody>' +
-          '</table>' +
-        '</div>' +
-
-        // DONA + SUMMA kartalar
-        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">' +
-          '<div style="background:#fff;border-radius:12px;padding:12px 14px;box-shadow:0 1px 4px rgba(0,0,0,.08)">' +
-            '<div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">' + d.preview_total_qty + '</div>' +
-            '<div style="font-size:22px;font-weight:800;color:#0F172A;font-family:monospace;letter-spacing:-.02em">' + Math.round(totalDona) + '</div>' +
-            '<div style="font-size:11px;color:#94A3B8;margin-top:2px">' + d.preview_pieces + '</div>' +
-          '</div>' +
-          '<div style="background:#fff;border-radius:12px;padding:12px 14px;box-shadow:0 1px 4px rgba(0,0,0,.08)">' +
-            '<div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">' + d.preview_products_sum + '</div>' +
-            '<div style="font-size:16px;font-weight:800;color:#0F172A;font-family:monospace;letter-spacing:-.02em">' + fmt(prodTotal) + '</div>' +
-            '<div style="font-size:11px;color:#94A3B8;margin-top:2px">' + som + '</div>' +
+        // HEADER — ixcham
+        '<div style="background:linear-gradient(135deg,#1D4ED8 0%,#2563EB 100%);padding:14px 16px 11px;color:#fff">' +
+          '<div style="display:flex;justify-content:space-between;align-items:flex-start">' +
+            '<div style="flex:1;min-width:0">' +
+              '<div style="font-size:19px;font-weight:800;letter-spacing:-.03em;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + custName + '</div>' +
+              (custPhone ? '<div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:2px">' + custPhone + '</div>' : '') +
+            '</div>' +
+            '<div style="text-align:right;flex-shrink:0;margin-left:12px">' +
+              '<div style="font-size:11px;color:rgba(255,255,255,.5)">' + fmtDateShort(s.created_at) + '</div>' +
+              '<div style="display:inline-flex;align-items:center;background:rgba(255,255,255,.15);border-radius:10px;padding:2px 7px;font-size:8px;font-weight:700;letter-spacing:.03em;margin-top:3px">NINA SPISKA</div>' +
+            '</div>' +
           '</div>' +
         '</div>' +
 
-        // IZOH
-        noteHtml +
+        '<div style="padding:10px 12px 0">' +
 
-        // JAMI
-        '<div style="background:linear-gradient(135deg,#1D4ED8,#2563EB);border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;box-shadow:0 4px 12px rgba(37,99,235,.35)">' +
-          '<div style="font-size:13px;color:rgba(255,255,255,.8);font-weight:500">' + d.preview_grand + '</div>' +
-          '<div style="font-size:22px;font-weight:800;color:#fff;font-family:monospace">' + fmt(grandTotal) + ' ' + som + '</div>' +
-        '</div>' +
+          // JADVAL
+          '<div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:10px">' +
+            '<table style="width:100%;border-collapse:collapse">' +
+              '<thead><tr style="background:#1E40AF">' +
+                '<th style="padding:7px 10px;color:#fff;font-size:10px;font-weight:700;text-align:center;width:24px">#</th>' +
+                '<th style="padding:7px 10px;color:#fff;font-size:10px;font-weight:700;text-align:left">' + d.preview_product + '</th>' +
+                '<th style="padding:7px 10px;color:#fff;font-size:10px;font-weight:700;text-align:center;width:40px">' + d.preview_qty + '</th>' +
+                '<th style="padding:7px 10px;color:#fff;font-size:10px;font-weight:700;text-align:right;width:62px">' + d.preview_price + '</th>' +
+                '<th style="padding:7px 10px;color:#fff;font-size:10px;font-weight:700;text-align:right;width:72px">' + d.preview_total + '</th>' +
+              '</tr></thead>' +
+              '<tbody>' + rowsHtml + extraDebtRow + '</tbody>' +
+            '</table>' +
+          '</div>' +
 
-        // ORQAGA TUGMA
-        '<div style="padding:0 0 16px">' +
-          '<button id="preview-back-btn" style="width:100%;padding:14px;background:#F1F5F9;color:#475569;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">' +
-            d.preview_back +
-          '</button>' +
-        '</div>' +
+          // IZOH
+          noteHtml +
 
-        // HINT
-        '<div style="text-align:center;padding:12px;color:#94A3B8;font-size:12px;line-height:1.5">' +
-          '<b style="color:#64748B">' + d.preview_hint + '</b><br>' +
-          d.preview_hint2 +
+          // STAT KARTALAR — soni va mahsulotlar summasi
+          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">' +
+            // VSEGO EDINITS — chap karta
+            '<div style="background:#fff;border-radius:10px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,.06);border:1px solid #F1F5F9">' +
+              '<div style="font-size:9px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">' + d.preview_total_units + '</div>' +
+              '<div style="font-size:22px;font-weight:800;color:#0F172A;font-family:monospace;letter-spacing:-.02em;line-height:1">' + Math.round(totalDona) + '</div>' +
+              '<div style="font-size:10px;color:#94A3B8;margin-top:2px">' + d.preview_units_label + '</div>' +
+            '</div>' +
+            // TOVARY — o'ng karta
+            '<div style="background:#fff;border-radius:10px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,.06);border:1px solid #F1F5F9">' +
+              '<div style="font-size:9px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">' + d.preview_products_label + '</div>' +
+              '<div style="font-size:22px;font-weight:800;color:#0F172A;font-family:monospace;letter-spacing:-.02em;line-height:1">' + fmt(prodTotal) + '</div>' +
+              '<div style="font-size:10px;color:#94A3B8;margin-top:2px">' + som + '</div>' +
+            '</div>' +
+          '</div>' +
+
+          // JAMI — katta va aniq
+          '<div style="background:linear-gradient(135deg,#1D4ED8,#2563EB);border-radius:10px;padding:14px 16px;margin-bottom:12px;box-shadow:0 3px 10px rgba(37,99,235,.3)">' +
+            '<div style="display:flex;justify-content:space-between;align-items:center">' +
+              '<div style="font-size:13px;color:rgba(255,255,255,.85);font-weight:700">' + d.preview_grand + '</div>' +
+              '<div style="display:flex;align-items:baseline;gap:8px">' +
+                '<div style="font-size:24px;font-weight:800;color:#fff;font-family:monospace;letter-spacing:-.02em;line-height:1">' + fmt(grandTotal) + '</div>' +
+                '<div style="font-size:13px;color:rgba(255,255,255,.65);font-weight:600">' + som + '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+
         '</div>' +
 
       '</div>' +
+      // ===== SCREENSHOT ZONA TUGADI =====
+
+      // ORQAGA TUGMA — screenshot zonadan tashqarida
+      '<div style="padding:0 12px 16px;margin-top:auto">' +
+        '<button id="preview-back-btn" style="width:100%;padding:13px;background:#F1F5F9;color:#475569;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .15s">' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>' +
+          d.preview_back +
+        '</button>' +
+      '</div>' +
+
     '</div>';
 
   document.body.appendChild(overlay);
 
-  // Orqaga tugma - overlay ni olib tashlaymiz
   document.getElementById('preview-back-btn').addEventListener('click', function() {
     var el = document.getElementById('spiska-preview-overlay');
     if (el) el.parentNode.removeChild(el);
   });
 
-  // Telegram WebApp back button
   if (window.Telegram && window.Telegram.WebApp) {
     try {
       Telegram.WebApp.BackButton.show();
@@ -3956,41 +4175,73 @@ function copySpiskaText() {
   var prodTotal = items.reduce(function(sum,i){ return sum+(i.total_price||0); }, 0);
   var grandTotal = prodTotal + extraDebt;
   var custName  = (s.customers && s.customers.full_name) || '—';
-  var custPhone = (s.customers && s.customers.phone) || '';
   var totalDona = items.reduce(function(sum,i){ return sum+(i.quantity||0); }, 0);
 
   var d2 = LANGS[getLang()] || LANGS['uz_latin'];
   var som2 = d2.som || "so'm";
   var lines = [];
-  lines.push('📋 ' + d2.page_spiska_detail.toUpperCase() + ' — ' + custName);
-  if (custPhone) lines.push('📞 ' + custPhone);
-  lines.push('📅 ' + fmtDate(s.created_at));
+
+  // Bosh qism
+  lines.push(custName + ' | ' + fmtDateShort(s.created_at));
   lines.push('');
-  lines.push('─────────────────────');
 
-  items.forEach(function(item, i) {
-    lines.push((i+1) + '. ' + item.product_name);
-    lines.push('   ' + item.quantity + ' ' + d2.pieces + ' × ' + fmt(item.unit_price) + ' ' + som2 + ' = ' + fmt(item.total_price) + ' ' + som2);
-  });
+  // Kategoriya bo'yicha guruhlash
+  var hasCategories = allCategories.length > 0 && items.some(function(i){ return i.category_id; });
+  var gi = 0;
 
-  lines.push('─────────────────────');
-  lines.push('📦 ' + d2.preview_total_qty + ': ' + Math.round(totalDona) + ' ' + d2.pieces);
-  lines.push('💰 ' + d2.preview_products_sum + ': ' + fmt(prodTotal) + ' ' + som2);
-  if (extraDebt > 0) {
-    lines.push('💸 ' + d2.preview_prev_debt + ': +' + fmt(extraDebt) + ' ' + som2);
+  if (hasCategories) {
+    var groups = {};
+    var noCatItems = [];
+    var catOrder = [];
+    allCategories.forEach(function(c) { groups[c.id] = { cat: c, items: [] }; catOrder.push(c.id); });
+    items.forEach(function(item) {
+      if (item.category_id && groups[item.category_id]) groups[item.category_id].items.push(item);
+      else noCatItems.push(item);
+    });
+
+    catOrder.forEach(function(cid) {
+      var g = groups[cid];
+      if (!g.items.length) return;
+      lines.push((g.cat.icon || '') + ' ' + g.cat.name + ':');
+      g.items.forEach(function(item) {
+        gi++;
+        lines.push(gi + '. ' + item.product_name + ' \u2014 ' + item.quantity + '\u00d7' + fmt(item.unit_price) + ' = ' + fmt(item.total_price));
+      });
+      lines.push('');
+    });
+    if (noCatItems.length) {
+      lines.push((d2.cat_other || 'Boshqa') + ':');
+      noCatItems.forEach(function(item) {
+        gi++;
+        lines.push(gi + '. ' + item.product_name + ' \u2014 ' + item.quantity + '\u00d7' + fmt(item.unit_price) + ' = ' + fmt(item.total_price));
+      });
+      lines.push('');
+    }
+  } else {
+    items.forEach(function(item, i) {
+      lines.push((i+1) + '. ' + item.product_name + ' \u2014 ' + item.quantity + '\u00d7' + fmt(item.unit_price) + ' = ' + fmt(item.total_price));
+    });
+    lines.push('');
   }
-  lines.push('');
-  lines.push('✅ ' + d2.preview_grand + ': ' + fmt(grandTotal) + ' ' + som2);
+
+  lines.push('\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500');
+
+  if (extraDebt > 0) {
+    lines.push(d2.preview_prev_debt + ': +' + fmt(extraDebt) + ' ' + som2);
+  }
+
+  lines.push(d2.preview_grand + ': ' + fmt(grandTotal) + ' ' + som2 + ' (' + Math.round(totalDona) + ' ' + d2.pieces + ')');
+
   if (s.note) {
     lines.push('');
-    lines.push('📝 ' + s.note);
+    lines.push(d2.preview_note_label + ': ' + s.note);
   }
+
   lines.push('');
-  lines.push('— Nina Spiska');
+  lines.push('\u2014 Nina Spiska');
 
   var text = lines.join('\n');
 
-  // Clipboard ga nusxalash
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text).then(function() {
       showToast(t('copy_success'), 'success');
@@ -4041,7 +4292,7 @@ async function openSpiskaDebtSheet() {
             '<div style="font-size:.68rem;font-weight:700;color:var(--danger);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">⚠️ MIJOZNING MAVJUD QARZI</div>' +
             '<div style="display:flex;justify-content:space-between;align-items:center">' +
               '<span style="font-size:1.1rem;font-weight:800;color:var(--danger);font-family:JetBrains Mono,monospace">' + fmt(realDebt) + " so'm</span>" +
-              '<button class="btn btn-sm" style="background:var(--danger);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:.78rem;font-weight:700;cursor:pointer" onclick="document.getElementById(\'spiska-debt-amount\').value=' + realDebt + '">' +
+              '<button class="btn btn-sm" style="background:var(--danger);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:.78rem;font-weight:700;cursor:pointer" onclick="var _di=document.getElementById(\'spiska-debt-amount\');_di.value=' + realDebt + ';_di.dataset.rawValue=\'' + realDebt + '\'">' +
                 'Shu summani kiriting' +
               '</button>' +
             '</div>' +
@@ -4097,6 +4348,15 @@ async function confirmCloseSpiska(sid, btnEl) {
   if (btnEl) { btnEl.disabled = true; btnEl.style.opacity = '0.5'; }
   try {
     await db.from('spiska').update({status:'closed', closed_at:new Date().toISOString()}).eq('id', sid);
+
+    // ═══ OMBOR: spiska yopilganda avtomatik ombordan ayirish ═══
+    try {
+      await db.rpc('warehouse_spiska_close', {
+        p_spiska_id: sid,
+        p_admin_id: currentAdmin ? currentAdmin.id : null,
+        p_admin_name: currentAdmin ? currentAdmin.full_name : null
+      });
+    } catch(whErr) { console.warn('Ombor ayirish xatosi:', whErr); }
 
     var s = currentSpiskaData;
     var extraDebt = s ? (s.extra_debt || 0) : 0;
@@ -4301,7 +4561,9 @@ async function openAddItemSheet() {
   renderProductSelectList(allProducts);
   document.getElementById('item-product-search').value = '';
   document.getElementById('selected-product-id').value = '';
-  document.getElementById('item-quantity').value = '1';
+  var qtyInput = document.getElementById('item-quantity');
+  qtyInput.value = '1';
+  qtyInput.dataset.rawValue = '1';
   document.getElementById('selected-product-preview').classList.add('hidden');
   showSheet('add-item-sheet');
 }
@@ -4384,6 +4646,7 @@ async function addItemToSpiska() {
     var pr = await db.from('products').select('*').eq('id', productId).single();
     var product = pr.data;
     var unitPrice = product.sell_price || product.price || 0;
+    var addedName = product.name;
 
     // Spiskada bu mahsulot allaqachon bormi?
     var existing = await db.from('spiska_items')
@@ -4413,8 +4676,22 @@ async function addItemToSpiska() {
     var totalAmount = (ir.data||[]).reduce(function(s, i) { return s + (i.total_price||0); }, 0);
     await db.from('spiska').update({total_amount: totalAmount}).eq('id', currentSpiskaId);
 
-    hideSheet('add-item-sheet');
-    showToast(t('add_item_btn') + ' ✓');
+    // ✅ SHEET YOPILMASIN — formani tozalab davom etamiz
+    showToast('✓ ' + addedName + ' × ' + Math.round(quantity) + ' qo\'shildi');
+
+    // Formani tozalash — keyingi mahsulot uchun tayyor
+    document.getElementById('selected-product-id').value = '';
+    document.getElementById('selected-product-id').dataset.price = '';
+    document.getElementById('selected-product-id').dataset.name = '';
+    document.getElementById('selected-product-preview').classList.add('hidden');
+    document.getElementById('item-product-search').value = '';
+    var qtyInput = document.getElementById('item-quantity');
+    qtyInput.value = '1';
+    qtyInput.dataset.rawValue = '1';
+    // Mahsulotlar ro'yxatini qayta ko'rsatish
+    renderProductSelectList(allProducts);
+
+    // Orqa fonda spiska detailni yangilash
     loadSpiskaDetail(currentSpiskaId);
   } catch(e) {
     showToast(e.message, 'error');
@@ -4722,7 +4999,7 @@ async function openAdminListSheet() {
   var el = document.getElementById('admin-list-content');
   el.innerHTML = '<div class="loading-spinner"><div class="spinner"></div></div>';
   try {
-    var res = await db.from('admins').select('*').order('full_name');
+    var res = await db.from('admins').select('id, telegram_id, username, full_name, is_active, created_at').order('full_name');
     var list = res.data || [];
     if (!list.length) { el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-muted)">' + t('admin_list_title') + '</div>'; return; }
     el.innerHTML = list.map(function(a) {
@@ -4938,7 +5215,7 @@ function openPaymentSheet(customerId, customerName, currentDebt) {
 
   document.getElementById('pay-quick-btns').innerHTML =
     quickAmounts.map(function(a) {
-      return '<button class="pay-quick-btn" onclick="document.getElementById(\'payment-amount\').value=' + a + '">' +
+      return '<button class="pay-quick-btn" onclick="var _pi=document.getElementById(\'payment-amount\');_pi.value=' + a + ';_pi.dataset.rawValue=\'' + a + '\'">' +
         fmt(a) + " so'm" +
       '</button>';
     }).join('') +
@@ -5803,11 +6080,15 @@ function filterByCat(catId, mode) {
     renderProductCatPills(document.getElementById('product-cat-pills'), allProducts, 'product');
     var filtered = catId === 'all' ? allProducts : catId === 'none' ? allProducts.filter(function(p){ return !p.category_id; }) : allProducts.filter(function(p){ return p.category_id === catId; });
     renderProductsGrouped(filtered, document.getElementById('products-list'));
-  } else {
+  } else if (mode === 'item') {
     currentItemCatFilter = catId;
     renderProductCatPills(document.getElementById('item-cat-pills'), allProducts, 'item');
     var q = document.getElementById('item-product-search').value.trim();
     filterProductsInSheet(q);
+  } else if (mode === 'warehouse') {
+    whCatFilter = catId;
+    renderProductCatPills(document.getElementById('wh-cat-pills'), whAllProducts, 'warehouse');
+    applyWhFilter();
   }
 }
 
@@ -5973,11 +6254,24 @@ async function saveProduct() {
   var btn = btnStart('product-save-btn', t('saving'));
   if (!btn) return;
   try {
+    // ═══ KOD TEKSHIRUVI ═══
+    // 1. Aktiv mahsulotlarda bu kod bormi? (o'zidan tashqari)
+    var activeCheck = db.from('products').select('id,name').eq('code', code).eq('is_active', true);
+    if (id) activeCheck = activeCheck.neq('id', id); // tahrirlashda o'zini chiqarib tashlaymiz
+    var activeRes = await activeCheck;
+    if (activeRes.data && activeRes.data.length > 0) {
+      soundError();
+      showToast('⚠️ "' + code + '" kodi allaqachon "' + activeRes.data[0].name + '" mahsulotida mavjud!', 'error');
+      btnEnd(btn);
+      return;
+    }
+
     if (id) {
-      // Eski qiymatni olamiz (audit uchun)
+      // ═══ TAHRIRLASH ═══
       var oldRes = await db.from('products').select('name, sell_price, cost_price').eq('id', id).single();
       var oldData = oldRes.data || {};
-      await db.from('products').update(saveData).eq('id', id);
+      var updateRes = await db.from('products').update(saveData).eq('id', id).select();
+      if (updateRes.error) throw updateRes.error;
       showToast(t('product_saved') + ' ✅');
 
       // AUDIT: narx o'zgargan bo'lsa alohida log
@@ -5989,23 +6283,42 @@ async function saveProduct() {
           meta: { type: 'sell_price' }
         });
       } else if (oldData.cost_price !== costPrice || oldData.name !== name) {
-        // Boshqa narsalar o'zgargan bo'lsa
         logAudit('product', 'update', name, {
           entityId: id,
           meta: { changes: 'name/cost' }
         });
       }
     } else {
-      saveData.created_by = currentAdmin.id;
-      var insertRes = await db.from('products').insert(saveData).select().single();
-      showToast(t('product_saved') + ' ✅');
+      // ═══ YANGI MAHSULOT ═══
+      // 2. O'chirilgan (is_active:false) mahsulotda bu kod bormi?
+      var deletedCheck = await db.from('products').select('id,name').eq('code', code).eq('is_active', false);
+      if (deletedCheck.data && deletedCheck.data.length > 0) {
+        // O'chirilgan mahsulotni qayta faollashtirish
+        var reactivateId = deletedCheck.data[0].id;
+        saveData.is_active = true;
+        saveData.created_by = currentAdmin.id;
+        var reactivateRes = await db.from('products').update(saveData).eq('id', reactivateId).select().single();
+        if (reactivateRes.error) throw reactivateRes.error;
+        showToast(t('product_saved') + ' ✅ (qayta tiklandi)');
 
-      // AUDIT: yangi mahsulot
-      logAudit('product', 'create', name, {
-        entityId: insertRes.data && insertRes.data.id,
-        newValue: fmt(sellPrice) + " so'm",
-        meta: { code: code }
-      });
+        logAudit('product', 'create', name, {
+          entityId: reactivateId,
+          newValue: fmt(sellPrice) + " so'm",
+          meta: { code: code, reactivated: true }
+        });
+      } else {
+        // Butunlay yangi mahsulot
+        saveData.created_by = currentAdmin.id;
+        var insertRes = await db.from('products').insert(saveData).select().single();
+        if (insertRes.error) throw insertRes.error;
+        showToast(t('product_saved') + ' ✅');
+
+        logAudit('product', 'create', name, {
+          entityId: insertRes.data && insertRes.data.id,
+          newValue: fmt(sellPrice) + " so'm",
+          meta: { code: code }
+        });
+      }
     }
     hideSheet('product-sheet');
     loadProducts();
@@ -6280,10 +6593,10 @@ function renderProductDetail(p, soldItems, totalQty, totalRevenue, totalCost, to
         '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>' +
       '</div>' +
       '<div style="flex:1">' +
-        '<div style="font-size:1.1rem;font-weight:800">' + p.name + '</div>' +
-        '<span style="font-family:JetBrains Mono,monospace;background:var(--bg-tertiary);padding:1px 6px;border-radius:4px;font-size:.72rem">' + p.code + '</span>' +
+        '<div style="font-size:1.1rem;font-weight:800">' + htmlEscape(p.name) + '</div>' +
+        '<span style="font-family:JetBrains Mono,monospace;background:var(--bg-tertiary);padding:1px 6px;border-radius:4px;font-size:.72rem">' + htmlEscape(p.code) + '</span>' +
       '</div>' +
-      '<button class="btn-icon" onclick="openProductSheet(\'' + p.id + '\',\'' + p.name.replace(/\'/g,"\\\'") + '\',\'' + p.code + '\',' + costPrice + ',' + sellPrice + ')">' +
+      '<button class="btn-icon" onclick="openProductSheet(\'' + p.id + '\',\'' + attrEscape(p.name) + '\',\'' + attrEscape(p.code) + '\',' + costPrice + ',' + sellPrice + ',\'' + (p.category_id||'') + '\')">' +
         '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>' +
       '</button>' +
     '</div>' +
@@ -6546,12 +6859,12 @@ var LANGS = {
     preview_price: 'Narx', preview_total: 'Jami',
     preview_total_qty: 'Jami dona', preview_products_sum: 'Mahsulotlar',
     preview_pieces: 'dona mahsulot',
+    preview_total_units: 'JAMI DONA', preview_units_label: 'dona mahsulot',
+    preview_products_label: 'MAHSULOTLAR',
     preview_prev_debt: 'Oldingi qarz',
     preview_grand: "JAMI TO'LASH",
     preview_note_label: 'IZOH',
-    preview_back: '← Orqaga qaytish',
-    preview_hint: 'Screenshot oling va Telegramga yuboring 📲',
-    preview_hint2: 'Telefon tugmasi: Ovoz balandligi + Quvvat',
+    preview_back: 'Orqaga',
     copy_success: 'Matn nusxalandi! 📋 Telegramga joylashtiring',
     exp_title: 'Xarajatlar', exp_add_btn: "Xarajat qo'shish",
     exp_edit_title: 'Xarajatni tahrirlash',
@@ -6963,12 +7276,12 @@ var LANGS = {
     preview_price: 'Цена', preview_total: 'Итого',
     preview_total_qty: 'Всего единиц', preview_products_sum: 'Товары',
     preview_pieces: 'ед. товара',
+    preview_total_units: 'ВСЕГО ЕДИНИЦ', preview_units_label: 'ед. товара',
+    preview_products_label: 'ТОВАРЫ',
     preview_prev_debt: 'Предыдущий долг',
     preview_grand: 'ИТОГО К ОПЛАТЕ',
     preview_note_label: 'ПРИМЕЧАНИЕ',
-    preview_back: '← Назад',
-    preview_hint: 'Сделайте скриншот и отправьте в Telegram 📲',
-    preview_hint2: 'Кнопки телефона: Громкость + Питание',
+    preview_back: 'Назад',
     copy_success: 'Текст скопирован! 📋 Вставьте в Telegram',
     exp_title: 'Расходы', exp_add_btn: 'Добавить расход',
     exp_edit_title: 'Редактировать расход',
@@ -9966,6 +10279,7 @@ function hapticSelect()  { try { if (_tgHaptic) _tgHaptic.selectionChanged(); } 
     else if (id === 'page-stats') statsLoadCurrent();
     else if (id === 'page-expenses') loadExpenses();
     else if (id === 'page-our-debts') loadOurDebts();
+    else if (id === 'page-warehouse') loadWarehouse();
   }
 
   function _ptrInit() {
@@ -10141,6 +10455,274 @@ function toggleSoundEnabled(val) {
 
 window.toggleSoundEnabled = toggleSoundEnabled;
 
+// ===================== OMBOR TIZIMI =====================
+var whFilter = 'all';
+var whCatFilter = 'all';
+var whAllProducts = [];
+
+async function loadWarehouse() {
+  var el = document.getElementById('warehouse-list');
+  showLoading(el);
+  try {
+    var results = await Promise.all([
+      db.from('products').select('id,name,code,stock,min_stock,unit,category_id,sell_price,is_active').eq('is_active',true).order('name'),
+      loadCategories(),
+      db.from('warehouse_transactions').select('*').order('created_at',{ascending:false}).limit(20)
+    ]);
+    whAllProducts = results[0].data || [];
+    var history = results[2].data || [];
+
+    // Statistikalar
+    var totalProducts = whAllProducts.length;
+    var totalStock = whAllProducts.reduce(function(s,p){ return s+(p.stock||0); },0);
+    var lowStock = whAllProducts.filter(function(p){ return (p.stock||0) > 0 && (p.min_stock||0) > 0 && (p.stock||0) <= (p.min_stock||0); }).length;
+    var zeroStock = whAllProducts.filter(function(p){ return (p.stock||0) <= 0; }).length;
+
+    _set('wh-stat-total', totalProducts);
+    _set('wh-stat-stock', Math.round(totalStock));
+    _set('wh-stat-low', lowStock);
+    _set('wh-stat-zero', zeroStock);
+
+    // Kategoriya pills
+    renderProductCatPills(document.getElementById('wh-cat-pills'), whAllProducts, 'warehouse');
+
+    // Ro'yxat
+    renderWarehouseList(whAllProducts, el);
+
+    // Tarix
+    renderWhHistory(history);
+  } catch(e) { el.innerHTML = '<div class="empty-state"><div class="empty-text">Xato: '+e.message+'</div></div>'; }
+}
+
+function filterWarehouse(btn, type) {
+  whFilter = type;
+  document.querySelectorAll('#page-warehouse .filter-tab').forEach(function(t){ t.classList.remove('active'); });
+  btn.classList.add('active');
+  applyWhFilter();
+}
+
+function searchWarehouse(q) {
+  applyWhFilter(q);
+}
+
+function applyWhFilter(q) {
+  q = q || (document.getElementById('wh-search') ? document.getElementById('wh-search').value : '');
+  var list = whAllProducts;
+
+  // Kategoriya filter
+  if (whCatFilter !== 'all') {
+    list = list.filter(function(p) {
+      if (whCatFilter === 'none') return !p.category_id;
+      return p.category_id === whCatFilter;
+    });
+  }
+
+  // Status filter
+  if (whFilter === 'low') list = list.filter(function(p){ return (p.stock||0) > 0 && (p.min_stock||0) > 0 && (p.stock||0) <= (p.min_stock||0); });
+  else if (whFilter === 'zero') list = list.filter(function(p){ return (p.stock||0) <= 0; });
+  else if (whFilter === 'instock') list = list.filter(function(p){ return (p.stock||0) > 0; });
+
+  // Qidiruv
+  if (q && q.trim()) {
+    var ql = q.toLowerCase();
+    list = list.filter(function(p){ return p.name.toLowerCase().indexOf(ql)>=0 || p.code.toLowerCase().indexOf(ql)>=0; });
+  }
+
+  renderWarehouseList(list, document.getElementById('warehouse-list'));
+}
+
+function renderWarehouseList(list, el) {
+  if (!list.length) {
+    el.innerHTML = renderEmpty(
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>',
+      'Mahsulot topilmadi', 'Qidiruv yoki filtrni o\'zgartiring'
+    );
+    return;
+  }
+  el.innerHTML = list.map(function(p) {
+    var stock = p.stock || 0;
+    var minStock = p.min_stock || 0;
+    var isLow = stock > 0 && minStock > 0 && stock <= minStock;
+    var isZero = stock <= 0;
+    var statusColor = isZero ? 'var(--danger)' : isLow ? 'var(--warning)' : 'var(--success)';
+    var statusBg = isZero ? 'var(--danger-light)' : isLow ? 'var(--warning-light)' : 'var(--success-light)';
+    var statusText = isZero ? 'Tugagan' : isLow ? 'Kam' : 'Mavjud';
+    var unit = p.unit || 'dona';
+
+    return '<div class="list-item" onclick="openWhDetailSheet(\''+p.id+'\')">' +
+      '<div class="list-item-avatar" style="background:'+statusBg+';color:'+statusColor+'">' +
+        '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>' +
+      '</div>' +
+      '<div class="list-item-info">' +
+        '<div class="list-item-title">' + htmlEscape(p.name) + '</div>' +
+        '<div style="display:flex;align-items:center;gap:5px;margin-top:3px">' +
+          '<span style="font-family:JetBrains Mono,monospace;background:var(--bg-tertiary);padding:1px 6px;border-radius:4px;font-size:.68rem">' + htmlEscape(p.code) + '</span>' +
+          '<span style="font-size:.65rem;font-weight:700;background:'+statusBg+';color:'+statusColor+';padding:1px 6px;border-radius:4px">'+statusText+'</span>' +
+        '</div>' +
+      '</div>' +
+      '<div style="text-align:right">' +
+        '<div style="font-size:1.1rem;font-weight:800;color:'+statusColor+';font-family:JetBrains Mono,monospace">' + Math.round(stock) + '</div>' +
+        '<div style="font-size:.65rem;color:var(--text-muted)">' + unit + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderWhHistory(history) {
+  var el = document.getElementById('wh-history');
+  if (!history || !history.length) {
+    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:.82rem">Harakatlar yo\'q</div>';
+    return;
+  }
+  el.innerHTML = history.map(function(h) {
+    var isIn = h.type === 'in';
+    var isSpiska = h.type === 'spiska_out';
+    var icon = isIn ? '📥' : isSpiska ? '📋' : '📤';
+    var color = isIn ? 'var(--success)' : 'var(--danger)';
+    var sign = isIn ? '+' : '-';
+    var typeLabel = isIn ? 'Kirim' : isSpiska ? 'Spiska' : h.type === 'adjust' ? 'Tuzatish' : 'Chiqim';
+    return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)">' +
+      '<div style="font-size:1.2rem">' + icon + '</div>' +
+      '<div style="flex:1;min-width:0">' +
+        '<div style="font-size:.82rem;font-weight:600">' + htmlEscape(h.product_name) + '</div>' +
+        '<div style="font-size:.7rem;color:var(--text-muted)">' + typeLabel + (h.note ? ' · '+htmlEscape(h.note) : '') + '</div>' +
+        '<div style="font-size:.65rem;color:var(--text-muted)">' + fmtDateShort(h.created_at) + (h.admin_name ? ' · '+htmlEscape(h.admin_name) : '') + '</div>' +
+      '</div>' +
+      '<div style="text-align:right">' +
+        '<div style="font-weight:800;color:'+color+';font-family:JetBrains Mono,monospace;font-size:.9rem">' + sign + Math.round(h.quantity) + '</div>' +
+        '<div style="font-size:.65rem;color:var(--text-muted)">' + Math.round(h.stock_before) + ' → ' + Math.round(h.stock_after) + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+// Kirim/Chiqim sheetlar
+async function openWarehouseInSheet() {
+  var res = await db.from('products').select('id,name,code,stock,unit').eq('is_active',true).order('name');
+  whAllProducts = res.data || [];
+  document.getElementById('wh-in-search').value = '';
+  document.getElementById('wh-in-product-id').value = '';
+  document.getElementById('wh-in-qty').value = '1';
+  document.getElementById('wh-in-qty').dataset.rawValue = '1';
+  document.getElementById('wh-in-note').value = '';
+  document.getElementById('wh-in-selected').classList.add('hidden');
+  renderWhProductList('in', whAllProducts);
+  showSheet('wh-in-sheet');
+}
+
+async function openWarehouseOutSheet() {
+  var res = await db.from('products').select('id,name,code,stock,unit').eq('is_active',true).order('name');
+  whAllProducts = res.data || [];
+  document.getElementById('wh-out-search').value = '';
+  document.getElementById('wh-out-product-id').value = '';
+  document.getElementById('wh-out-qty').value = '1';
+  document.getElementById('wh-out-qty').dataset.rawValue = '1';
+  document.getElementById('wh-out-note').value = '';
+  document.getElementById('wh-out-selected').classList.add('hidden');
+  document.getElementById('wh-out-stock-hint').textContent = '';
+  renderWhProductList('out', whAllProducts);
+  showSheet('wh-out-sheet');
+}
+
+function filterWhProducts(mode, q) {
+  var list = whAllProducts;
+  if (q && q.trim()) {
+    var ql = q.toLowerCase();
+    list = list.filter(function(p){ return p.name.toLowerCase().indexOf(ql)>=0 || p.code.toLowerCase().indexOf(ql)>=0; });
+  }
+  renderWhProductList(mode, list);
+}
+
+function renderWhProductList(mode, list) {
+  var el = document.getElementById('wh-'+mode+'-product-list');
+  if (!list.length) { el.innerHTML = '<div style="padding:12px;text-align:center;color:var(--text-muted);font-size:.82rem">Topilmadi</div>'; return; }
+  el.innerHTML = list.map(function(p) {
+    var stock = p.stock || 0;
+    return '<div class="product-select-item" onclick="selectWhProduct(\''+mode+'\',\''+p.id+'\',\''+attrEscape(p.name)+'\','+stock+',\''+attrEscape(p.unit||'dona')+'\')">' +
+      '<div><div class="product-select-item-name">'+htmlEscape(p.name)+'</div>' +
+      '<div class="product-select-item-code">'+htmlEscape(p.code)+' · Ombor: '+Math.round(stock)+'</div></div>' +
+      '<div style="font-weight:700;font-family:JetBrains Mono,monospace;font-size:.85rem;color:'+(stock>0?'var(--success)':'var(--danger)')+'">'+Math.round(stock)+'</div>' +
+    '</div>';
+  }).join('');
+}
+
+function selectWhProduct(mode, id, name, stock, unit) {
+  document.getElementById('wh-'+mode+'-product-id').value = id;
+  document.getElementById('wh-'+mode+'-product-id').dataset.stock = stock;
+  document.getElementById('wh-'+mode+'-product-id').dataset.name = name;
+  document.getElementById('wh-'+mode+'-selected-text').textContent = name + ' (ombor: '+Math.round(stock)+' '+unit+')';
+  document.getElementById('wh-'+mode+'-selected').classList.remove('hidden');
+  document.getElementById('wh-'+mode+'-search').value = name;
+  document.getElementById('wh-'+mode+'-product-list').innerHTML = '';
+  if (mode === 'out') {
+    document.getElementById('wh-out-stock-hint').textContent = 'Omborda: ' + Math.round(stock) + ' ' + unit;
+  }
+}
+
+async function saveWarehouseMove(mode) {
+  var productId = document.getElementById('wh-'+mode+'-product-id').value;
+  var qty = getRawNumber(document.getElementById('wh-'+mode+'-qty'));
+  var note = document.getElementById('wh-'+mode+'-note').value.trim();
+
+  if (!productId) { showToast('Mahsulot tanlang!', 'error'); return; }
+  if (!qty || qty <= 0) { showToast('Miqdorni kiriting!', 'error'); return; }
+
+  // Chiqimda ombordagidan ko'p bo'lsa ogohlantirish
+  if (mode === 'out') {
+    var currentStock = parseFloat(document.getElementById('wh-out-product-id').dataset.stock) || 0;
+    if (qty > currentStock) {
+      var ok = await showConfirm('Omborda yetarli emas!', 'Omborda '+Math.round(currentStock)+' dona bor, siz '+Math.round(qty)+' dona chiqim qilmoqchisiz. Davom etilsinmi?', 'Ha, davom et');
+      if (!ok) return;
+    }
+  }
+
+  var btnId = 'wh-'+mode+'-save-btn';
+  var btn = btnStart(btnId, 'Saqlanmoqda...');
+  if (!btn) return;
+
+  try {
+    var type = mode === 'in' ? 'in' : 'out';
+    var res = await db.rpc('warehouse_move', {
+      p_product_id: productId,
+      p_type: type,
+      p_quantity: qty,
+      p_note: note || null,
+      p_source: 'manual',
+      p_admin_id: currentAdmin ? currentAdmin.id : null,
+      p_admin_name: currentAdmin ? currentAdmin.full_name : null
+    });
+
+    if (res.error) throw res.error;
+    var result = res.data;
+    if (result && !result.success) throw new Error(result.error || 'Xatolik');
+
+    soundSuccess(); hapticSuccess();
+    var productName = document.getElementById('wh-'+mode+'-product-id').dataset.name || '';
+    hideSheet('wh-'+mode+'-sheet');
+    showToast((mode === 'in' ? '📥 Kirim' : '📤 Chiqim') + ': ' + productName + ' ' + (mode==='in'?'+':'-') + Math.round(qty));
+
+    // AUDIT
+    logAudit('warehouse', mode === 'in' ? 'create' : 'update', productName, {
+      entityId: productId,
+      newValue: (mode==='in'?'+':'-') + Math.round(qty),
+      meta: { type: type, note: note, stock_after: result ? result.stock_after : null }
+    });
+
+    loadWarehouse();
+  } catch(e) { showToast(e.message, 'error'); }
+  finally { btnEnd(btn); }
+}
+
+// Ombor detail — tezkor kirim/chiqim
+async function openWhDetailSheet(productId) {
+  // Hozircha tezkor kirim sheet ochib, mahsulotni avval tanlangan holda ko'rsatamiz
+  var p = whAllProducts.find(function(x){ return x.id === productId; });
+  if (!p) return;
+  // Kirim sheetni ochish va mahsulotni avto-tanlash
+  await openWarehouseInSheet();
+  selectWhProduct('in', p.id, p.name, p.stock||0, p.unit||'dona');
+}
+
 // ===================== WINDOW BINDINGS =====================
 // onclick="..." attributlar uchun barcha funksiyalarni window ga bog'lash
 window.handleLogin = handleLogin;
@@ -10213,6 +10795,24 @@ window.odOpenAddTxnSheet = odOpenAddTxnSheet;
 window.odOpenDetail = odOpenDetail;
 window.tourNext = tourNext;
 window.tourFinish = tourFinish;
+window.loadWarehouse = loadWarehouse;
+window.filterWarehouse = filterWarehouse;
+window.searchWarehouse = searchWarehouse;
+window.openWarehouseInSheet = openWarehouseInSheet;
+window.openWarehouseOutSheet = openWarehouseOutSheet;
+window.filterWhProducts = filterWhProducts;
+window.selectWhProduct = selectWhProduct;
+window.saveWarehouseMove = saveWarehouseMove;
+window.openWhDetailSheet = openWhDetailSheet;
+window.filterByCat = filterByCat;
+window.toggleProductAcc = toggleProductAcc;
+window.openCategoryManageSheet = openCategoryManageSheet;
+window.openCategoryEditSheet = openCategoryEditSheet;
+window.saveCategory = saveCategory;
+window.deleteCategory = deleteCategory;
+window.deleteProduct = deleteProduct;
+window.loadOurDebtDetail = loadOurDebtDetail;
+window.toggleCatProduct = toggleCatProduct;
 </script>
 
 <!-- ============ CUSTOM CONFIRM MODAL ============ -->
