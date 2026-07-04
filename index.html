@@ -3259,7 +3259,7 @@ async function handleLogin() {
       }
       // Admin to'liq ma'lumotlarini olish
       var adminRes = await db.from('admins')
-        .select('id, telegram_id, username, full_name, is_active, language, theme, created_at, last_login')
+        .select('id, telegram_id, full_name, is_active, role, created_at, last_login_at')
         .eq('telegram_id', telegramId)
         .eq('is_active', true)
         .single();
