@@ -1271,6 +1271,7 @@ body{
 .debt-badge.has-debt{background:var(--danger-light);color:var(--danger);}
 .debt-badge.no-debt{background:var(--success-light);color:var(--success);}
 .debt-badge.partial{background:var(--warning-light);color:var(--warning);}
+.debt-badge.credit{background:var(--accent-light);color:var(--accent);}
 
 .pay-amount-row{
   display:flex;gap:8px;align-items:center;margin-bottom:8px;
@@ -1293,6 +1294,10 @@ body{
 .customer-debt-card.paid{
   background:var(--success-light);
   border-color:rgba(16,185,129,.2);
+}
+.customer-debt-card.credit{
+  background:var(--accent-light);
+  border-color:rgba(var(--accent-rgb),.25);
 }
 
 /* ===================== STATISTIKA ===================== */
@@ -1798,13 +1803,14 @@ body{
           </div>
 
           <!-- Umumiy qarz banner -->
-          <div id="total-debt-banner" style="display:none;background:var(--danger-light);border:1px solid rgba(239,68,68,.2);border-radius:var(--radius-md);padding:12px 16px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
-            <div>
-              <div style="font-size:.68rem;font-weight:700;color:var(--danger);text-transform:uppercase;letter-spacing:.06em">UMUMIY QARZ (OBSHI HISOB)</div>
-              <div style="font-size:1.3rem;font-weight:800;color:var(--danger);font-family:'JetBrains Mono',monospace" id="total-debt-amount">0 so'm</div>
+          <div id="total-debt-banner" style="display:none;gap:10px;margin-bottom:12px">
+            <div id="total-debt-banner-owed" style="display:none;flex:1;background:var(--danger-light);border:1px solid rgba(239,68,68,.2);border-radius:var(--radius-md);padding:12px 14px">
+              <div style="font-size:.64rem;font-weight:700;color:var(--danger);text-transform:uppercase;letter-spacing:.05em">MIJOZLAR QARZI</div>
+              <div style="font-size:1.1rem;font-weight:800;color:var(--danger);font-family:'JetBrains Mono',monospace" id="total-debt-amount">0 so'm</div>
             </div>
-            <div style="background:var(--danger);border-radius:12px;padding:8px 10px;display:flex;align-items:center;justify-content:center">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <div id="total-debt-banner-credit" style="display:none;flex:1;background:var(--accent-light);border:1px solid rgba(var(--accent-rgb),.2);border-radius:var(--radius-md);padding:12px 14px">
+              <div style="font-size:.64rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em">🔵 BIZNING QARZIMIZ</div>
+              <div style="font-size:1.1rem;font-weight:800;color:var(--accent);font-family:'JetBrains Mono',monospace" id="total-credit-amount">0 so'm</div>
             </div>
           </div>
 
@@ -1815,6 +1821,7 @@ body{
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
               Qarzlilar
             </button>
+            <button class="filter-tab" id="ft-cust-credit" onclick="filterCustomers(this,'credit')">🔵 Biz qarzmiz</button>
             <button class="filter-tab" id="ft-cust-clean" onclick="filterCustomers(this,'clean')">✓ Tozalar</button>
           </div>
 
@@ -3416,11 +3423,16 @@ async function loadDashboard() {
       db.from('spiska').select('id', {count:'exact',head:true}).eq('status','closed'),
       db.from('customers').select('id', {count:'exact',head:true}).eq('is_active',true),
       db.from('products').select('id', {count:'exact',head:true}).eq('is_active',true),
-      db.from('spiska_items').select('quantity'),
+      db.rpc('rpc_sales_summary', { p_from: null, p_to: null }),
       db.from('spiska').select('*, customers(full_name)').order('created_at',{ascending:false}).limit(5),
     ]);
 
-    var totalItemsDona = (r[4].data || []).reduce(function(sum, i){ return sum + (i.quantity||0); }, 0);
+    // MUHIM: bu qiymat endi Postgres RPC orqali serverning o'zida SUM() bilan
+    // hisoblanadi (spiska_items qatorlari to'g'ridan-to'g'ri tortib olinmaydi),
+    // shuning uchun Supabase REST'ning standart 1000-qatorlik javob chegarasi
+    // bu yerga umuman ta'sir qilmaydi va son har doim to'g'ri bo'ladi.
+    var salesSummaryRow = (r[4].data && r[4].data[0]) || { qty: 0 };
+    var totalItemsDona = Number(salesSummaryRow.qty) || 0;
     var vals = [r[0].count||0, r[1].count||0, r[2].count||0, r[3].count||0];
     var ids = ['stat-open','stat-closed','stat-customers','stat-products'];
     ids.forEach(function(id, i) {
@@ -4298,6 +4310,12 @@ async function openSpiskaDebtSheet() {
             '</div>' +
             '<div style="font-size:.72rem;color:var(--danger);margin-top:6px;opacity:.8">⚡ Bu qarz allaqachon tizimda bor — spiskaga qo\'shsangiz, yakunlanganda 2 marta hisoblanmaydi</div>' +
           '</div>';
+      } else if (realDebt < 0) {
+        quickEl.innerHTML =
+          '<div style="width:100%;background:var(--accent-light);border:1px solid rgba(var(--accent-rgb),.2);border-radius:var(--radius-md);padding:10px 12px">' +
+            '<div style="font-size:.78rem;color:var(--accent);font-weight:700">🔵 ' + t('customer_credit_full') + ': ' + fmt(Math.abs(realDebt)) + " so'm</div>" +
+            '<div style="font-size:.7rem;color:var(--accent);opacity:.85;margin-top:2px">' + t('customer_credit_sub') + '</div>' +
+          '</div>';
       } else {
         quickEl.innerHTML =
           '<div style="width:100%;background:var(--success-light);border:1px solid rgba(16,185,129,.2);border-radius:var(--radius-md);padding:8px 12px">' +
@@ -4496,9 +4514,10 @@ async function deleteSpiska(sid) {
           .maybeSingle();
 
         if (dr.data) {
+          // MUHIM: endi 0 ga cheklanmaydi — signed balans mantig'iga mos
+          // holda, agar bu ayirish natijasida manfiy chiqsa, demak mijoz
+          // shu spiska hisobidan ortiqcha to'lagan (biz unga qarzdormiz).
           var newBalance = (dr.data.balance || 0) - spiskaTotal;
-          // Manfiy bo'lib ketmasligi uchun 0 dan past bo'lsa 0 qilamiz
-          if (newBalance < 0) newBalance = 0;
           await db.from('customer_debts')
             .update({ balance: newBalance, updated_at: new Date().toISOString() })
             .eq('customer_id', spiska.customer_id);
@@ -4724,13 +4743,26 @@ async function loadCustomers() {
   allDebtsCache = {};
   (dRes.data || []).forEach(function(d) { allDebtsCache[d.customer_id] = d.balance || 0; });
 
-  // Umumiy qarz
-  var totalDebt = Object.values(allDebtsCache).reduce(function(s, v){ return s + v; }, 0);
+  // Umumiy qarz va umumiy kredit — ALOHIDA hisoblanadi, chunki agar
+  // shunchaki barcha balanslarni qo'shsak, mijozga bo'lgan qarzimiz
+  // mijozlarning qarzini "yutib" yuborib, chalg'ituvchi son chiqishi mumkin.
+  var totalOwedToUs = 0, totalWeOwe = 0;
+  Object.values(allDebtsCache).forEach(function(v){
+    if (v > 0) totalOwedToUs += v;
+    else if (v < 0) totalWeOwe += Math.abs(v);
+  });
   var banner = document.getElementById('total-debt-banner');
+  var owedBox = document.getElementById('total-debt-banner-owed');
+  var creditBox = document.getElementById('total-debt-banner-credit');
   var amountEl = document.getElementById('total-debt-amount');
-  if (banner && amountEl) {
-    amountEl.textContent = fmt(totalDebt) + " so'm";
-    banner.style.display = totalDebt > 0 ? 'flex' : 'none';
+  var creditAmountEl = document.getElementById('total-credit-amount');
+  if (banner) {
+    var showAny = totalOwedToUs > 0 || totalWeOwe > 0;
+    banner.style.display = showAny ? 'flex' : 'none';
+    if (owedBox)   owedBox.style.display   = totalOwedToUs > 0 ? 'block' : 'none';
+    if (creditBox) creditBox.style.display = totalWeOwe    > 0 ? 'block' : 'none';
+    if (amountEl)       amountEl.textContent       = fmt(totalOwedToUs) + " so'm";
+    if (creditAmountEl) creditAmountEl.textContent  = fmt(totalWeOwe) + " so'm";
   }
 
   applyCustomerFilter();
@@ -4748,8 +4780,10 @@ function applyCustomerFilter() {
   var list = allCustomersCache;
   if (currentCustomerFilter === 'debt') {
     list = list.filter(function(c){ return (allDebtsCache[c.id] || 0) > 0; });
+  } else if (currentCustomerFilter === 'credit') {
+    list = list.filter(function(c){ return (allDebtsCache[c.id] || 0) < 0; });
   } else if (currentCustomerFilter === 'clean') {
-    list = list.filter(function(c){ return !(allDebtsCache[c.id] > 0); });
+    list = list.filter(function(c){ return (allDebtsCache[c.id] || 0) === 0; });
   }
   renderCustomersList(list, el, allDebtsCache);
 }
@@ -4772,12 +4806,18 @@ function renderCustomersList(list, el, debts) {
     var attrName  = attrEscape(c.full_name);
     var attrPhone = attrEscape(c.phone || '');
     var attrNote  = attrEscape(c.note || '');
+    // 3 holat: debt>0 -> mijoz bizga qarzdor; debt<0 -> biz mijozga
+    // qarzdormiz (ortiqcha to'lov); debt===0 -> hisob toza.
     var debtBadge = debt > 0
       ? '<span class="debt-badge has-debt">💸 ' + fmt(debt) + " so'm</span>"
-      : '<span class="debt-badge no-debt">✓ ' + t('customer_no_debt') + '</span>';
+      : debt < 0
+        ? '<span class="debt-badge credit">🔵 ' + t('customer_credit_label') + ' ' + fmt(Math.abs(debt)) + " so'm</span>"
+        : '<span class="debt-badge no-debt">✓ ' + t('customer_no_debt') + '</span>';
     var debtBtn = debt > 0
       ? '<button class="btn btn-ghost btn-sm" style="border-color:var(--danger);color:var(--danger);font-size:.72rem;padding:4px 8px;height:auto" onclick="event.stopPropagation();openDebtManageSheet(\'' + c.id + '\',\'' + attrName + '\',' + debt + ')">'+t('customer_debt_label').replace(':','')+'</button>'
-      : '<button class="btn btn-ghost btn-sm" style="font-size:.72rem;padding:4px 8px;height:auto" onclick="event.stopPropagation();openDebtManageSheet(\'' + c.id + '\',\'' + attrName + '\',0)">+'+t('customer_debt_label').replace(':','')+'</button>';
+      : debt < 0
+        ? '<button class="btn btn-ghost btn-sm" style="border-color:var(--accent);color:var(--accent);font-size:.72rem;padding:4px 8px;height:auto" onclick="event.stopPropagation();openDebtManageSheet(\'' + c.id + '\',\'' + attrName + '\',' + debt + ')">'+t('customer_credit_label').replace(':','')+'</button>'
+        : '<button class="btn btn-ghost btn-sm" style="font-size:.72rem;padding:4px 8px;height:auto" onclick="event.stopPropagation();openDebtManageSheet(\'' + c.id + '\',\'' + attrName + '\',0)">+'+t('customer_debt_label').replace(':','')+'</button>';
     return '<div class="list-item" onclick="loadCustomerDetail(\'' + c.id + '\')">' +
       '<div class="list-item-avatar" style="background:' + color + '20;color:' + color + ';font-weight:700;font-size:.82rem">' + ini + '</div>' +
       '<div class="list-item-info">' +
@@ -4809,10 +4849,14 @@ function openDebtManageSheet(customerId, customerName, currentDebt) {
   document.getElementById('debt-manage-title').textContent = customerName;
   document.getElementById('debt-amount-input').value = '';
   document.getElementById('debt-note-input').value = '';
+  // 3 holat: qarz (qizil) / toza (yashil) / biz qarzmiz-kredit (ko'k)
+  var infoColor = currentDebt > 0 ? 'var(--danger)' : (currentDebt < 0 ? 'var(--accent)' : 'var(--success)');
+  var infoBg    = currentDebt > 0 ? 'var(--danger-light)' : (currentDebt < 0 ? 'var(--accent-light)' : 'var(--success-light)');
+  var infoLabel = currentDebt > 0 ? t('debt_amount_zero_label') : (currentDebt < 0 ? t('customer_credit_full') : t('debt_amount_zero_label'));
   document.getElementById('debt-current-info').innerHTML =
-    '<div style="background:' + (currentDebt > 0 ? 'var(--danger-light)' : 'var(--success-light)') + ';border-radius:var(--radius-md);padding:12px 14px">' +
-      '<div style="font-size:.65rem;font-weight:700;color:' + (currentDebt > 0 ? 'var(--danger)' : 'var(--success)') + ';text-transform:uppercase;margin-bottom:4px">' + t('debt_amount_zero_label') + '</div>' +
-      '<div style="font-size:1.4rem;font-weight:800;color:' + (currentDebt > 0 ? 'var(--danger)' : 'var(--success)') + ';font-family:JetBrains Mono,monospace">' + fmt(currentDebt) + " so'm</div>" +
+    '<div style="background:' + infoBg + ';border-radius:var(--radius-md);padding:12px 14px">' +
+      '<div style="font-size:.65rem;font-weight:700;color:' + infoColor + ';text-transform:uppercase;margin-bottom:4px">' + infoLabel + '</div>' +
+      '<div style="font-size:1.4rem;font-weight:800;color:' + infoColor + ';font-family:JetBrains Mono,monospace">' + fmt(Math.abs(currentDebt)) + " so'm</div>" +
     '</div>';
   switchDebtTab('add');
   showSheet('debt-manage-sheet');
@@ -4859,7 +4903,10 @@ async function saveDebtChange() {
     newBalance = currentBalance + amount; actionText = t('debt_add_btn') + ': +' + fmt(amount) + ' ' + t('som');
   } else {
     if (!amount || amount <= 0) { showToast(t('payment_amount_err'), 'error'); return; }
-    newBalance = Math.max(0, currentBalance - amount); actionText = "Qarz -" + fmt(amount) + " so'm kamaydi";
+    // MUHIM: endi 0 ga cheklanmaydi — agar kamaytirilayotgan summa joriy
+    // qarzdan katta bo'lsa, natija manfiy chiqadi va bu "biz mijozga
+    // qarzdormiz" degani (masalan ortiqcha to'lov holatida).
+    newBalance = currentBalance - amount; actionText = "Qarz -" + fmt(amount) + " so'm kamaydi";
   }
 
   var btn = btnStart('debt-save-btn', t('saving'));
@@ -5061,29 +5108,40 @@ async function loadCustomerDetail(customerId) {
       db.from('spiska').select('*').eq('customer_id', customerId).order('created_at', {ascending:false}),
       db.from('customer_debts').select('*').eq('customer_id', customerId).maybeSingle(),
       db.from('payments').select('*').eq('customer_id', customerId).order('created_at', {ascending:false}).limit(10),
+      // MUHIM: haqiqiy "jami xarid" spiska.total_amount emas, balki
+      // spiska_items yig'indisidan RPC orqali olinadi — chunki ba'zi eski
+      // yozuvlarda total_amount ichiga extra_debt ham qo'shib yuborilgan edi.
+      db.rpc('rpc_customer_total_spent', { p_customer_id: customerId }),
     ]);
     var c = results[0].data;
     var spiskalar = results[1].data || [];
     var debt = (results[2].data && results[2].data.balance) || 0;
     var payments = results[3].data || [];
+    var correctTotalSpent = Number(results[4].data) || 0;
 
-    renderCustomerDetail(c, spiskalar, debt, payments);
+    renderCustomerDetail(c, spiskalar, debt, payments, correctTotalSpent);
   } catch(e) {
     el.innerHTML = '<div class="empty-state"><div class="empty-text">' + t("err_generic") + ': ' + e.message + '</div></div>';
   }
 }
 
-function renderCustomerDetail(c, spiskalar, debt, payments) {
+function renderCustomerDetail(c, spiskalar, debt, payments, correctTotalSpent) {
   var el = document.getElementById('customer-detail-content');
   var color = randomColor(c.full_name);
   var ini = initials(c.full_name);
 
   var totalOrders = spiskalar.length;
   var closedOrders = spiskalar.filter(function(s){ return s.status === 'closed'; }).length;
-  var totalSpent = spiskalar.filter(function(s){ return s.status === 'closed'; })
-    .reduce(function(sum, s){ return sum + (s.total_amount || 0); }, 0);
+  // MUHIM: totalSpent endi loadCustomerDetail'dan RPC orqali kelgan aniq
+  // qiymat (spiska.total_amount emas — ba'zi eski yozuvlarda extra_debt
+  // qo'shib yuborilgan bo'lishi mumkin edi).
+  var totalSpent = Number(correctTotalSpent) || 0;
 
-  // Qarz bloki
+  // Qarz bloki — 3 holat:
+  //  debt > 0  -> mijoz bizga qarzdor (qizil, to'lov qabul qilish tugmasi)
+  //  debt < 0  -> biz mijozga qarzdormiz / ortiqcha to'lov (ko'k, hisobni
+  //               boshqarish tugmasi — masalan naqd qaytarib berilganda)
+  //  debt === 0 -> hisob toza (yashil)
   var debtHtml = debt > 0
     ? '<div class="customer-debt-card">' +
         '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
@@ -5094,6 +5152,18 @@ function renderCustomerDetail(c, spiskalar, debt, payments) {
           '</button>' +
         '</div>' +
         '<div style="font-size:1.6rem;font-weight:800;color:var(--danger);font-family:JetBrains Mono,monospace">' + fmt(debt) + " so'm</div>" +
+      '</div>'
+    : debt < 0
+    ? '<div class="customer-debt-card credit">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
+          '<div style="font-size:.75rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em">🔵 ' + t('customer_credit_full') + '</div>' +
+          '<button class="btn btn-primary btn-sm" onclick="openDebtManageSheet(\'' + c.id + '\',\'' + c.full_name.replace(/'/g,"\\'") + '\',' + debt + ')">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>' +
+            ' Boshqarish' +
+          '</button>' +
+        '</div>' +
+        '<div style="font-size:1.6rem;font-weight:800;color:var(--accent);font-family:JetBrains Mono,monospace">' + fmt(Math.abs(debt)) + " so'm</div>" +
+        '<div style="font-size:.72rem;color:var(--accent);opacity:.85;margin-top:2px">' + t('customer_credit_sub') + '</div>' +
       '</div>'
     : '<div class="customer-debt-card paid">' +
         '<div style="display:flex;align-items:center;gap:8px">' +
@@ -5252,7 +5322,9 @@ async function savePayment() {
       console.warn('RPC ishlamadi:', rpcRes.error);
       var dr = await db.from('customer_debts').select('*').eq('customer_id', customerId).maybeSingle();
       if (dr.data) {
-        var newBalance = Math.max(0, (dr.data.balance || 0) - amount);
+        // MUHIM: endi 0 ga cheklanmaydi — ortiqcha to'lov qilingan bo'lsa,
+        // balans manfiy bo'ladi ("biz mijozga qarzdormiz").
+        var newBalance = (dr.data.balance || 0) - amount;
         await db.from('customer_debts').update({ balance: newBalance }).eq('customer_id', customerId);
       }
     }
@@ -5363,23 +5435,32 @@ async function loadStats() {
     if (range.from) eq = eq.gte('created_at', range.from);
     if (range.to)   eq = eq.lte('created_at', range.to);
 
+    // MUHIM: revenue, tan narx, top-mijoz va top-mahsulot hisoblari endi
+    // Postgres RPC orqali serverning o'zida GROUP BY/SUM bilan hisoblanadi.
+    // spiska_items jadvali to'g'ridan-to'g'ri tortib olinmaydi, shuning
+    // uchun Supabase REST'ning standart 1000-qatorlik javob chegarasi
+    // bu yerga endi ta'sir qilmaydi (hozir bazada 1043 ta spiska_items bor).
     var parallel1 = await Promise.all([
       q.order('closed_at', {ascending:false}),
       db.from('customer_debts').select('balance'),
       eq,
+      db.rpc('rpc_sales_summary', { p_from: range.from, p_to: range.to }),
+      db.rpc('rpc_product_sales_breakdown', { p_from: range.from, p_to: range.to }),
+      db.rpc('rpc_customer_sales_breakdown', { p_from: range.from, p_to: range.to }),
     ]);
 
     var list = parallel1[0].data || [];
-    var totalDebt = (parallel1[1].data||[]).reduce(function(s,d){ return s+(d.balance||0); }, 0);
+    // MUHIM: faqat musbat balanslar (mijozlar bizga qarzi) qo'shiladi.
+    // Manfiy balanslar (biz mijozga qarzdor bo'lgan holatlar) bu yerga
+    // qo'shilmaydi — aks holda ular "Jami qarz" ni chalg'ituvchi tarzda
+    // kamaytirib ko'rsatgan bo'lardi.
+    var totalDebt = (parallel1[1].data||[]).reduce(function(s,d){ return s + Math.max(0, d.balance||0); }, 0);
     var expSum = (parallel1[2].data||[]).reduce(function(s,e){ return s+(e.amount_sum||(e.currency==='sum'?e.amount:0)||0); },0);
+    var summaryRow = (parallel1[3].data && parallel1[3].data[0]) || { revenue:0, qty:0, orders_count:0 };
+    var productRows = parallel1[4].data || [];
+    var customerRows = parallel1[5].data || [];
 
-    var spiskaIds = list.map(function(s){ return s.id; });
-    var allItems = [];
-    if (spiskaIds.length > 0) {
-      var ir = await db.from('spiska_items').select('product_id,product_name,quantity,unit_price,total_price,spiska_id').in('spiska_id', spiskaIds);
-      allItems = ir.data || [];
-    }
-    var totalRevenue = allItems.reduce(function(s,i){ return s+(i.total_price||0); }, 0);
+    var totalRevenue = Number(summaryRow.revenue) || 0;
     var totalOrders  = list.length;
     var uniqueC = {}; list.forEach(function(s){ if(s.customer_id) uniqueC[s.customer_id]=true; });
 
@@ -5388,13 +5469,13 @@ async function loadStats() {
     _set('ov-customers', Object.keys(uniqueC).length);
     _set('ov-debt', fmt(totalDebt));
 
-    // Tan narxi
-    var uPids = []; allItems.forEach(function(i){ if(i.product_id && uPids.indexOf(i.product_id)<0) uPids.push(i.product_id); });
+    // Tan narxi — mahsulot kesimidagi (product_id, qty) va products.cost_price asosida
+    var uPids = productRows.map(function(p){ return p.product_id; }).filter(Boolean);
     var totalCost = 0;
     if (uPids.length > 0) {
       var pr = await db.from('products').select('id,cost_price').in('id',uPids);
       var cm = {}; (pr.data||[]).forEach(function(p){ cm[p.id]=p.cost_price||0; });
-      allItems.forEach(function(i){ totalCost += (cm[i.product_id]||0)*(i.quantity||0); });
+      productRows.forEach(function(p){ totalCost += (cm[p.product_id]||0)*(Number(p.qty)||0); });
     }
     var netProfit = totalRevenue - totalCost - expSum;
     var pct = totalRevenue > 0 ? Math.round((netProfit/totalRevenue)*100) : 0;
@@ -5405,24 +5486,19 @@ async function loadStats() {
     _set('ov-pr-exp',  fmt(expSum)+" so'm");
     _set('ov-pr-pct',  (pct>=0?'+':'')+pct+'%');
 
-    // Top mijozlar — spiska map yaratib, find o'rniga ishlatamiz
-    var spiskaMap = {};
-    list.forEach(function(s) { spiskaMap[s.id] = s; });
-    var cs = {}; allItems.forEach(function(i){
-      var sp = spiskaMap[i.spiska_id];
-      if (!sp) return;
-      var n = (sp.customers&&sp.customers.full_name)||'—';
-      cs[n] = (cs[n]||0)+(i.total_price||0);
-    });
-    renderTopCustomers(Object.keys(cs).map(function(n){ return {name:n,total:cs[n]}; }).sort(function(a,b){ return b.total-a.total; }).slice(0,5));
+    // Top mijozlar — allaqachon serverda mijoz bo'yicha guruhlangan
+    var topCustomers = customerRows
+      .filter(function(c){ return c.customer_id; })
+      .map(function(c){ return { name: c.customer_name || '—', total: Number(c.revenue)||0 }; })
+      .sort(function(a,b){ return b.total-a.total; })
+      .slice(0,5);
+    renderTopCustomers(topCustomers);
 
-    // Top mahsulotlar
-    var ps = {}; allItems.forEach(function(i){
-      var k = i.product_id||i.product_name;
-      if(!ps[k]) ps[k]={name:i.product_name,qty:0,revenue:0};
-      ps[k].qty += i.quantity||0; ps[k].revenue += i.total_price||0;
-    });
-    cachedTopProducts = Object.values(ps).sort(function(a,b){ return b.qty-a.qty; }).slice(0,5);
+    // Top mahsulotlar — allaqachon serverda mahsulot bo'yicha guruhlangan
+    cachedTopProducts = productRows
+      .map(function(p){ return { name: p.product_name, qty: Number(p.qty)||0, revenue: Number(p.revenue)||0 }; })
+      .sort(function(a,b){ return b.qty-a.qty; })
+      .slice(0,5);
     renderTopProducts(cachedTopProducts, currentProductSort);
     renderMonthlyChart();
   } catch(e){ console.error(e); }
@@ -5452,16 +5528,17 @@ async function loadStatsCustomers() {
     _set('sc-debtors', debtors);
     _set('sc-new', newCount);
 
-    // Top 5 mijoz — spiska bo'yicha
-    var q = db.from('spiska').select('customer_id, customers(full_name), total_amount').eq('status','closed');
-    if (range.from) q = q.gte('closed_at', range.from);
-    if (range.to)   q = q.lte('closed_at', range.to);
-    var sr = await q;
-    var cs = {}; (sr.data||[]).forEach(function(s){
-      var n = (s.customers&&s.customers.full_name)||'—';
-      cs[n] = (cs[n]||0) + (s.total_amount||0);
-    });
-    var top5 = Object.keys(cs).map(function(n){ return {name:n,total:cs[n]}; }).sort(function(a,b){ return b.total-a.total; }).slice(0,5);
+    // Top 5 mijoz — mahsulot summasi bo'yicha (spiska.total_amount ISHLATILMAYDI,
+    // chunki ba'zi eski yozuvlarda u extra_debt bilan qo'shib hisoblangan bo'lishi
+    // mumkin; RPC esa faqat spiska_items.total_price yig'indisini beradi va
+    // 1000-qatorlik javob chegarasidan ham xoli).
+    var cbRes = await db.rpc('rpc_customer_sales_breakdown', { p_from: range.from, p_to: range.to });
+    var custRows = cbRes.data || [];
+    var top5 = custRows
+      .filter(function(c){ return c.customer_id; })
+      .map(function(c){ return { name: c.customer_name || '—', total: Number(c.revenue)||0 }; })
+      .sort(function(a,b){ return b.total-a.total; })
+      .slice(0,5);
     _renderRankList('sc-top5-list', top5, function(c){ return fmt(c.total)+" so'm"; }, 'var(--accent)');
 
     // Oylik yangi mijozlar grafigi
@@ -5485,35 +5562,26 @@ async function loadStatsProducts() {
     _set('sp-total', allP.length);
     _set('sp-active', allP.filter(function(p){ return p.is_active; }).length);
 
-    // Spiska items
-    var q = db.from('spiska').select('id,closed_at').eq('status','closed');
-    if (range.from) q = q.gte('closed_at', range.from);
-    if (range.to)   q = q.lte('closed_at', range.to);
-    var sr = await q;
-    var sIds = (sr.data||[]).map(function(s){ return s.id; });
+    // MUHIM: mahsulot bo'yicha sotuv yig'indisi endi Postgres RPC orqali
+    // serverda GROUP BY bilan hisoblanadi — spiska_items ni to'g'ridan-to'g'ri
+    // tortib olish shart emas, shuning uchun 1000-qatorlik javob chegarasi
+    // bu yerga ta'sir qilmaydi.
+    var pbRes = await db.rpc('rpc_product_sales_breakdown', { p_from: range.from, p_to: range.to });
+    var productRows = pbRes.data || [];
 
-    var allItems = [];
-    if (sIds.length > 0) {
-      var ir = await db.from('spiska_items').select('product_id,product_name,quantity,total_price').in('spiska_id', sIds);
-      allItems = ir.data || [];
-    }
-
-    var totalQty = allItems.reduce(function(s,i){ return s+(i.quantity||0); }, 0);
-    var totalSum = allItems.reduce(function(s,i){ return s+(i.total_price||0); }, 0);
+    var totalQty = productRows.reduce(function(s,p){ return s+(Number(p.qty)||0); }, 0);
+    var totalSum = productRows.reduce(function(s,p){ return s+(Number(p.revenue)||0); }, 0);
     _set('sp-sold-qty', Math.round(totalQty));
     _set('sp-sold-sum', fmt(totalSum));
 
+    var psList = productRows.map(function(p){ return { name: p.product_name, qty: Number(p.qty)||0, revenue: Number(p.revenue)||0 }; });
+
     // Top 5
-    var ps = {}; allItems.forEach(function(i){
-      var k = i.product_id||i.product_name;
-      if(!ps[k]) ps[k]={name:i.product_name,qty:0,revenue:0};
-      ps[k].qty += i.quantity||0; ps[k].revenue += i.total_price||0;
-    });
-    cachedTopProducts = Object.values(ps).sort(function(a,b){ return b.qty-a.qty; }).slice(0,5);
+    cachedTopProducts = psList.slice().sort(function(a,b){ return b.qty-a.qty; }).slice(0,5);
     renderTopProducts(cachedTopProducts, currentProductSort);
 
     // Eng kam sotilgan
-    var least = Object.values(ps).sort(function(a,b){ return a.qty-b.qty; }).slice(0,5);
+    var least = psList.slice().sort(function(a,b){ return a.qty-b.qty; }).slice(0,5);
     _renderRankList('sp-least-list', least, function(p){ return Math.round(p.qty)+' dona'; }, 'var(--warning)');
   } catch(e){ console.error(e); }
 }
@@ -5530,14 +5598,21 @@ async function loadStatsSpiska() {
     var open   = all.filter(function(s){ return s.status==='open'; });
     var closed = all.filter(function(s){ return s.status==='closed'; });
 
-    // Itemlar (yopilgan)
+    // MUHIM: yopilgan spiskalar bo'yicha yig'indi va oylik taqsimot endi
+    // Postgres RPC orqali serverda hisoblanadi (tanlangan spiska ID'lari
+    // asosida) — spiska_items ni to'g'ridan-to'g'ri tortib olish shart
+    // emas, shuning uchun 1000-qatorlik javob chegarasi ta'sir qilmaydi.
     var cIds = closed.map(function(s){ return s.id; });
-    var allItems = [];
+    var totalSum = 0;
+    var monthlyRowsById = [];
     if (cIds.length > 0) {
-      var ir = await db.from('spiska_items').select('spiska_id,total_price').in('spiska_id', cIds);
-      allItems = ir.data || [];
+      var rpcResults = await Promise.all([
+        db.rpc('rpc_sales_summary_by_ids', { p_ids: cIds }),
+        db.rpc('rpc_monthly_sales_by_ids', { p_ids: cIds })
+      ]);
+      totalSum = Number((rpcResults[0].data && rpcResults[0].data[0] && rpcResults[0].data[0].revenue) || 0);
+      monthlyRowsById = rpcResults[1].data || [];
     }
-    var totalSum = allItems.reduce(function(s,i){ return s+(i.total_price||0); }, 0);
 
     _set('ss-total-sum', fmt(totalSum));
     _set('ss-total-cnt', all.length+' ta spiska');
@@ -5555,15 +5630,19 @@ async function loadStatsSpiska() {
       {label:'Yopilgan', value:closed.length, color:'#10B981'}
     ]);
 
-    // Oylik bar chart
+    // Oylik bar chart — RPC natijasidan "YYYY-MM-DD" satrni Date obyektiga
+    // aylantirmasdan, mahalliy vaqt zonasi ta'siridan xoli holda o'qiymiz.
     var months = _getMonths();
+    var monthlyMap = {};
+    monthlyRowsById.forEach(function(row){
+      var parts = String(row.month_start).split('-');
+      var key = parts[0] + '-' + parseInt(parts[1], 10);
+      monthlyMap[key] = Number(row.revenue) || 0;
+    });
     months.forEach(function(m){
-      var mItems = allItems.filter(function(i){
-        var sp = closed.find(function(s){ return s.id===i.spiska_id; });
-        if (!sp||!sp.closed_at) return false;
-        return new Date(sp.closed_at) >= new Date(m.from) && new Date(sp.closed_at) <= new Date(m.to);
-      });
-      m.val = mItems.reduce(function(s,i){ return s+(i.total_price||0); }, 0);
+      var d = new Date(m.from);
+      var key = d.getFullYear() + '-' + (d.getMonth() + 1);
+      m.val = monthlyMap[key] || 0;
     });
     _renderBarChart('ss-bar-chart', months, 'var(--accent)', function(v){ return v>0?fmt(Math.round(v/1000))+'K':''; });
   } catch(e){ console.error(e); }
@@ -5842,6 +5921,7 @@ async function renderMonthlyChart() {
     var d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     months.push({
       label: d.toLocaleDateString('uz-UZ', {month:'short'}),
+      key: d.getFullYear() + '-' + (d.getMonth() + 1),
       from: new Date(d.getFullYear(), d.getMonth(), 1).toISOString(),
       to: new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59).toISOString(),
       total: 0,
@@ -5851,41 +5931,23 @@ async function renderMonthlyChart() {
 
   var isDona = currentChartMode === 'dona';
 
-  // Spiskalar va items ni birgalikda olamiz
-  var res = await db.from('spiska')
-    .select('id, closed_at')
-    .eq('status','closed')
-    .gte('closed_at', months[0].from)
-    .lte('closed_at', months[5].to);
+  // MUHIM: oy bo'yicha yig'indi endi Postgres RPC ichida GROUP BY bilan
+  // hisoblanadi — bitta-bitta spiska_items qatorini tortib olish shart emas.
+  // Shu sababli qatorlar soni 1000 dan oshib ketgan taqdirda ham
+  // (hozir bazada 1043 ta spiska_items bor) natija to'liq va to'g'ri bo'ladi.
+  var res = await db.rpc('rpc_monthly_sales', { p_from: months[0].from, p_to: months[5].to });
+  var monthlyRows = res.data || [];
 
-  var spList = res.data || [];
-
-  if (spList.length > 0) {
-    var sIds = spList.map(function(s){ return s.id; });
-    // items dan ham summa ham dona olamiz (total_amount emas — extra_debt bo'lishi mumkin)
-    var iRes = await db.from('spiska_items')
-      .select('spiska_id, quantity, total_price')
-      .in('spiska_id', sIds);
-
-    var sumMap = {};
-    var donaMap = {};
-    (iRes.data || []).forEach(function(item){
-      sumMap[item.spiska_id]  = (sumMap[item.spiska_id]  || 0) + (item.total_price || 0);
-      donaMap[item.spiska_id] = (donaMap[item.spiska_id] || 0) + (item.quantity    || 0);
-    });
-    spList.forEach(function(s){
-      s._sum  = sumMap[s.id]  || 0;
-      s._dona = donaMap[s.id] || 0;
-    });
-  }
-
-  spList.forEach(function(s) {
-    months.forEach(function(m) {
-      if (new Date(s.closed_at) >= new Date(m.from) && new Date(s.closed_at) <= new Date(m.to)) {
-        m.total += s._sum  || 0;
-        m.dona  += s._dona || 0;
-      }
-    });
+  monthlyRows.forEach(function(row) {
+    // row.month_start "YYYY-MM-DD" ko'rinishida keladi — Date obyektiga
+    // aylantirmasdan, mahalliy vaqt zonasi ta'siridan xoli holda o'qiymiz.
+    var parts = String(row.month_start).split('-');
+    var key = parts[0] + '-' + parseInt(parts[1], 10);
+    var m = months.filter(function(mm){ return mm.key === key; })[0];
+    if (m) {
+      m.total = Number(row.revenue) || 0;
+      m.dona  = Number(row.qty) || 0;
+    }
   });
 
   var vals = months.map(function(m){ return isDona ? m.dona : m.total; });
@@ -6723,6 +6785,9 @@ var LANGS = {
     customers_add_btn: "Mijoz qo'shish",
     customer_empty_title: "Mijoz yo'q", customer_empty_sub: "Mijoz qo'shing",
     customer_debt_label: 'Qarz:', customer_no_debt: "Qarz yo'q",
+    customer_credit_label: 'Biz qarzmiz:', customer_credit_full: 'Biz mijozga qarzdormiz',
+    customer_credit_sub: "Ortiqcha to'lov qilingan", ft_cust_credit: 'Biz qarzmiz',
+    payment_btn_full: "To'lov qabul qilish",
     customer_sheet_title: 'Yangi Mijoz', customer_sheet_edit: 'Mijozni Tahrirlash',
     customer_name_label: 'ISM *', customer_name_ph: "To'liq ism",
     customer_phone_label: 'TELEFON', customer_phone_ph: '+998 XX XXX XX XX',
@@ -7144,6 +7209,9 @@ var LANGS = {
     customers_add_btn: 'Добавить клиента',
     customer_empty_title: 'Нет клиентов', customer_empty_sub: 'Добавьте клиента',
     customer_debt_label: 'Долг:', customer_no_debt: 'Долгов нет',
+    customer_credit_label: 'Мы должны:', customer_credit_full: 'Мы должны клиенту',
+    customer_credit_sub: 'Излишне оплачено', ft_cust_credit: 'Мы должны',
+    payment_btn_full: 'Принять оплату',
     customer_sheet_title: 'Новый клиент', customer_sheet_edit: 'Редактировать клиента',
     customer_name_label: 'ИМЯ *', customer_name_ph: 'Полное имя',
     customer_phone_label: 'ТЕЛЕФОН', customer_phone_ph: '+998 XX XXX XX XX',
@@ -7801,6 +7869,7 @@ function applyLang() {
   sid('pg-cust-title',  d.customers_title);
   sid('ft-cust-all',    d.spiska_all);
   sid('ft-cust-debt', '⚠️ ' + d.ft_cust_debt);
+  sid('ft-cust-credit', '🔵 ' + d.ft_cust_credit);
   sid('ft-cust-clean',  '✓ ' + d.ft_cust_clean);
   var csEl = document.getElementById('customer-search'); if(csEl) csEl.placeholder = d.customers_search_ph;
 
