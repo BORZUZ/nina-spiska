@@ -2320,13 +2320,13 @@ body{
           <div class="section-header">
             <button class="back-btn" onclick="navigate('settings')" style="margin:0">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
-              <span>Orqaga</span>
+              <span id="wh-back-label">Orqaga</span>
             </button>
             <div style="display:flex;gap:6px">
-              <button class="btn-icon" onclick="openWarehouseInSheet()" title="Kirim">
+              <button class="btn-icon" onclick="openWarehouseInSheet()" title="Kirim" id="wh-in-tooltip-btn">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               </button>
-              <button class="btn-icon" onclick="openWarehouseOutSheet()" title="Chiqim">
+              <button class="btn-icon" onclick="openWarehouseOutSheet()" title="Chiqim" id="wh-out-tooltip-btn">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
               </button>
             </div>
@@ -2338,33 +2338,33 @@ body{
               <div class="stat-card-icon blue">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>
               </div>
-              <div class="stat-label">JAMI MAHSULOT</div>
+              <div class="stat-label" id="wh-stat-total-label">JAMI MAHSULOT</div>
               <div class="stat-value" id="wh-stat-total" style="font-size:1.4rem">—</div>
-              <div class="stat-trend">omborda</div>
+              <div class="stat-trend" id="wh-stat-total-sub">omborda</div>
             </div>
             <div class="stat-card">
               <div class="stat-card-icon green">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
               </div>
-              <div class="stat-label">JAMI QOLDIQ</div>
+              <div class="stat-label" id="wh-stat-stock-label">JAMI QOLDIQ</div>
               <div class="stat-value" id="wh-stat-stock" style="font-size:1.4rem">—</div>
-              <div class="stat-trend">dona</div>
+              <div class="stat-trend" id="wh-stat-stock-sub">dona</div>
             </div>
             <div class="stat-card">
               <div class="stat-card-icon" style="background:var(--danger-light);color:var(--danger)">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
               </div>
-              <div class="stat-label">KAM QOLGAN</div>
+              <div class="stat-label" id="wh-stat-low-label">KAM QOLGAN</div>
               <div class="stat-value" id="wh-stat-low" style="font-size:1.4rem;color:var(--danger)">—</div>
-              <div class="stat-trend">mahsulot</div>
+              <div class="stat-trend" id="wh-stat-low-sub">mahsulot</div>
             </div>
             <div class="stat-card">
               <div class="stat-card-icon amber">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
               </div>
-              <div class="stat-label">TUGAGAN</div>
+              <div class="stat-label" id="wh-stat-zero-label">TUGAGAN</div>
               <div class="stat-value" id="wh-stat-zero" style="font-size:1.4rem;color:var(--warning)">—</div>
-              <div class="stat-trend">mahsulot</div>
+              <div class="stat-trend" id="wh-stat-zero-sub">mahsulot</div>
             </div>
           </div>
 
@@ -2376,10 +2376,10 @@ body{
 
           <!-- Filter -->
           <div class="filter-tabs" style="margin-bottom:14px">
-            <button class="filter-tab active" onclick="filterWarehouse(this,'all')">Barchasi</button>
-            <button class="filter-tab" onclick="filterWarehouse(this,'low')" style="color:var(--danger)">⚠️ Kam</button>
-            <button class="filter-tab" onclick="filterWarehouse(this,'zero')">Tugagan</button>
-            <button class="filter-tab" onclick="filterWarehouse(this,'instock')">Mavjud</button>
+            <button class="filter-tab active" onclick="filterWarehouse(this,'all')" id="wh-ft-all">Barchasi</button>
+            <button class="filter-tab" onclick="filterWarehouse(this,'low')" style="color:var(--danger)" id="wh-ft-low">⚠️ Kam</button>
+            <button class="filter-tab" onclick="filterWarehouse(this,'zero')" id="wh-ft-zero">Tugagan</button>
+            <button class="filter-tab" onclick="filterWarehouse(this,'instock')" id="wh-ft-instock">Mavjud</button>
           </div>
 
           <!-- Kategoriya pills -->
@@ -2390,7 +2390,7 @@ body{
 
           <!-- So'nggi harakatlar -->
           <div style="margin-top:20px">
-            <div class="section-label">SO'NGGI HARAKATLAR</div>
+            <div class="section-label" id="wh-recent-label">SO'NGGI HARAKATLAR</div>
             <div id="wh-history" class="list-container"></div>
           </div>
         </div>
@@ -2959,22 +2959,22 @@ body{
 
     <!-- Narx bo'limi -->
     <div style="background:var(--bg-tertiary);border-radius:var(--radius-md);padding:14px;margin-bottom:16px">
-      <div style="font-size:.7rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">NARX MA'LUMOTLARI</div>
+      <div style="font-size:.7rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px" id="product-price-section-label">NARX MA'LUMOTLARI</div>
 
       <div class="form-group" style="margin-bottom:12px">
         <label class="form-label" style="display:flex;align-items:center;gap:6px">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-          TAN NARXI (SO'M) *
-          <span style="font-size:.62rem;background:var(--danger-light);color:var(--danger);padding:1px 6px;border-radius:8px;font-weight:700">FAQAT ADMIN</span>
+          <span id="product-cost-label">TAN NARXI (SO'M) *</span>
+          <span style="font-size:.62rem;background:var(--danger-light);color:var(--danger);padding:1px 6px;border-radius:8px;font-weight:700" id="product-cost-admin-only">FAQAT ADMIN</span>
         </label>
         <input type="number" class="form-input" id="product-cost-input" placeholder="0" min="0">
-        <div class="form-hint">Sotib olish narxi — mijozga ko'rinmaydi</div>
+        <div class="form-hint" id="product-cost-hint">Sotib olish narxi — mijozga ko'rinmaydi</div>
       </div>
 
       <div class="form-group" style="margin-bottom:0">
         <label class="form-label" style="display:flex;align-items:center;gap:6px">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-          SOTISH NARXI (SO'M) *
+          <span id="product-sell-label">SOTISH NARXI (SO'M) *</span>
         </label>
         <input type="number" class="form-input" id="product-sell-input" placeholder="0" min="0" oninput="calcProductMargin()">
       </div>
@@ -2982,11 +2982,11 @@ body{
       <!-- Foyda preview -->
       <div id="product-margin-preview" style="display:none;margin-top:10px;padding:10px;background:var(--success-light);border-radius:var(--radius-sm);border:1px solid rgba(16,185,129,.2)">
         <div style="display:flex;justify-content:space-between;align-items:center">
-          <span style="font-size:.75rem;color:var(--success);font-weight:600">📈 Foyda (1 dona)</span>
+          <span style="font-size:.75rem;color:var(--success);font-weight:600" id="product-margin-label">📈 Foyda (1 dona)</span>
           <span style="font-weight:800;color:var(--success);font-family:'JetBrains Mono',monospace" id="product-margin-value">0 so'm</span>
         </div>
         <div style="display:flex;justify-content:space-between;margin-top:4px">
-          <span style="font-size:.72rem;color:var(--text-muted)">Ustama foizi</span>
+          <span style="font-size:.72rem;color:var(--text-muted)" id="product-margin-pct-label">Ustama foizi</span>
           <span style="font-size:.78rem;font-weight:700;color:var(--success)" id="product-margin-pct">0%</span>
         </div>
       </div>
@@ -3003,9 +3003,9 @@ body{
 <div class="sheet-overlay" id="wh-in-sheet">
   <div class="sheet">
     <div class="sheet-handle"></div>
-    <h3 class="sheet-title" style="color:var(--success)">📦 Omborga kirim</h3>
+    <h3 class="sheet-title" style="color:var(--success)" id="wh-in-sheet-title">📦 Omborga kirim</h3>
     <div class="form-group">
-      <label class="form-label">MAHSULOT *</label>
+      <label class="form-label" id="wh-in-product-label">MAHSULOT *</label>
       <div class="search-wrap" style="margin-bottom:6px">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input class="search-input" id="wh-in-search" placeholder="Nom yoki kod..." oninput="filterWhProducts('in',this.value)">
@@ -3018,16 +3018,16 @@ body{
       </div>
     </div>
     <div class="form-group">
-      <label class="form-label">MIQDOR *</label>
+      <label class="form-label" id="wh-in-qty-label">MIQDOR *</label>
       <input type="number" class="form-input" id="wh-in-qty" value="1" min="0.01" step="0.01">
     </div>
     <div class="form-group">
-      <label class="form-label">IZOH</label>
+      <label class="form-label" id="wh-in-note-label">IZOH</label>
       <input type="text" class="form-input" id="wh-in-note" placeholder="Masalan: yetkazib beruvchidan keldi...">
     </div>
     <button class="btn btn-success btn-full" id="wh-in-save-btn" onclick="saveWarehouseMove('in')" style="height:48px">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      Kirim saqlash
+      <span id="wh-in-save-label">Kirim saqlash</span>
     </button>
   </div>
 </div>
@@ -3036,9 +3036,9 @@ body{
 <div class="sheet-overlay" id="wh-out-sheet">
   <div class="sheet">
     <div class="sheet-handle"></div>
-    <h3 class="sheet-title" style="color:var(--danger)">📤 Ombordan chiqim</h3>
+    <h3 class="sheet-title" style="color:var(--danger)" id="wh-out-sheet-title">📤 Ombordan chiqim</h3>
     <div class="form-group">
-      <label class="form-label">MAHSULOT *</label>
+      <label class="form-label" id="wh-out-product-label">MAHSULOT *</label>
       <div class="search-wrap" style="margin-bottom:6px">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input class="search-input" id="wh-out-search" placeholder="Nom yoki kod..." oninput="filterWhProducts('out',this.value)">
@@ -3051,17 +3051,17 @@ body{
       </div>
     </div>
     <div class="form-group">
-      <label class="form-label">MIQDOR *</label>
+      <label class="form-label" id="wh-out-qty-label">MIQDOR *</label>
       <input type="number" class="form-input" id="wh-out-qty" value="1" min="0.01" step="0.01">
       <div class="form-hint" id="wh-out-stock-hint" style="color:var(--accent)"></div>
     </div>
     <div class="form-group">
-      <label class="form-label">IZOH</label>
+      <label class="form-label" id="wh-out-note-label">IZOH</label>
       <input type="text" class="form-input" id="wh-out-note" placeholder="Masalan: ishchiga berildi...">
     </div>
     <button class="btn btn-danger btn-full" id="wh-out-save-btn" onclick="saveWarehouseMove('out')" style="height:48px">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      Chiqim saqlash
+      <span id="wh-out-save-label">Chiqim saqlash</span>
     </button>
   </div>
 </div>
@@ -3265,8 +3265,12 @@ async function handleLogin() {
         return;
       }
       // Admin to'liq ma'lumotlarini olish
+      // MUHIM: 'role' va 'last_login_at' ustunlari admins jadvalida
+      // UMUMAN MAVJUD EMAS edi ('last_login' bor, 'role' yo'q) — shu
+      // sabab bu so'rov har doim xato bilan tugab, login (asosiy
+      // admindan boshqa hech kim uchun) ishlamay qolgan edi.
       var adminRes = await db.from('admins')
-        .select('id, telegram_id, full_name, is_active, role, created_at, last_login_at')
+        .select('id, telegram_id, username, full_name, is_active, created_at, last_login, theme, language')
         .eq('telegram_id', telegramId)
         .eq('is_active', true)
         .single();
@@ -3496,8 +3500,8 @@ async function loadSpiskaList() {
     if (!list.length) {
       el.innerHTML = renderEmpty(
         '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
-        currentSpiskaSearch ? "Topilmadi" : t('spiska_empty_title'),
-        currentSpiskaSearch ? "'" + currentSpiskaSearch + "' bo'yicha spiska yo'q" : t('spiska_empty_sub')
+        currentSpiskaSearch ? t('search_not_found_title') : t('spiska_empty_title'),
+        currentSpiskaSearch ? t('search_not_found_spiska_sub', currentSpiskaSearch) : t('spiska_empty_sub')
       );
       return;
     }
@@ -4607,7 +4611,7 @@ function filterProductsInSheet(q) {
 function renderProductSelectList(products) {
   var el = document.getElementById('product-select-list');
   if (!products.length) {
-    el.innerHTML = '<div style="padding:16px;text-align:center;color:var(--text-muted);font-size:.82rem">Topilmadi</div>';
+    el.innerHTML = '<div style="padding:16px;text-align:center;color:var(--text-muted);font-size:.82rem">' + t('search_not_found_title') + '</div>';
     return;
   }
   el.innerHTML = products.map(function(p) {
@@ -4696,7 +4700,7 @@ async function addItemToSpiska() {
     await db.from('spiska').update({total_amount: totalAmount}).eq('id', currentSpiskaId);
 
     // ✅ SHEET YOPILMASIN — formani tozalab davom etamiz
-    showToast('✓ ' + addedName + ' × ' + Math.round(quantity) + ' qo\'shildi');
+    showToast('✓ ' + addedName + ' × ' + Math.round(quantity) + ' ' + t('item_added_suffix'));
 
     // Formani tozalash — keyingi mahsulot uchun tayyor
     document.getElementById('selected-product-id').value = '';
@@ -5678,7 +5682,7 @@ async function loadStatsExpenses() {
     var catList = Object.keys(cats).map(function(c){ return {name:c, total:cats[c]}; }).sort(function(a,b){ return b.total-a.total; });
     var catEl = document.getElementById('se-cat-list');
     if (catEl) {
-      if (!catList.length) { catEl.innerHTML = '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">Ma\'lumot yo\'q</div>'; }
+      if (!catList.length) { catEl.innerHTML = '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">' + t('no_data') + '</div>'; }
       else {
         var maxC = catList[0].total||1;
         catEl.innerHTML = catList.map(function(c,i){
@@ -5829,7 +5833,7 @@ function _renderBarChart(elId, months, color, labelFn) {
 function _renderRankList(elId, list, valFn, color) {
   var el = document.getElementById(elId);
   if (!el) return;
-  if (!list.length) { el.innerHTML = '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">Ma\'lumot yo\'q</div>'; return; }
+  if (!list.length) { el.innerHTML = '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">' + t('no_data') + '</div>'; return; }
   var maxV = list[0]?list[0].total:1;
   var medals = ['🥇','🥈','🥉','4.','5.'];
   el.innerHTML = list.map(function(item, i){
@@ -5850,7 +5854,7 @@ function _renderPieChart(elId, segments) {
   var el = document.getElementById(elId);
   if (!el) return;
   var total = segments.reduce(function(s,seg){ return s+(seg.value||0); }, 0);
-  if (!total) { el.innerHTML = '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">Ma\'lumot yo\'q</div>'; return; }
+  if (!total) { el.innerHTML = '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">' + t('no_data') + '</div>'; return; }
   var html = '<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">';
   // SVG donut
   var size = 120, cx=60, cy=60, r=45, stroke=18;
@@ -5977,7 +5981,7 @@ function renderTopCustomers(list) {
   var el = document.getElementById('top-customers-list');
   if (!el) return;
   if (!list.length) {
-    el.innerHTML = '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">Ma\'lumot yo\'q</div>';
+    el.innerHTML = '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">' + t('no_data') + '</div>';
     return;
   }
   var rankClasses = ['gold', 'silver', 'bronze', '', ''];
@@ -6003,7 +6007,7 @@ function renderTopProducts(list, sortMode) {
   var el = document.getElementById('top-products-list');
   if (!el) return;
   if (!list.length) {
-    el.innerHTML = '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">Ma\'lumot yo\'q</div>';
+    el.innerHTML = '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">' + t('no_data') + '</div>';
     return;
   }
   sortMode = sortMode || currentProductSort;
@@ -6323,7 +6327,7 @@ async function saveProduct() {
     var activeRes = await activeCheck;
     if (activeRes.data && activeRes.data.length > 0) {
       soundError();
-      showToast('⚠️ "' + code + '" kodi allaqachon "' + activeRes.data[0].name + '" mahsulotida mavjud!', 'error');
+      showToast(t('product_code_duplicate_err', [code, activeRes.data[0].name]), 'error');
       btnEnd(btn);
       return;
     }
@@ -7087,6 +7091,39 @@ var LANGS = {
     stats_unpaid: "to'lanmagan",
     settings_listadmin_btn: "Ko'rish",
     settings_listadmin_sub: "Barcha adminlar ro'yxati",
+    // OMBOR (Warehouse)
+    wh_back: 'Orqaga', wh_in_tooltip: 'Kirim', wh_out_tooltip: 'Chiqim',
+    wh_stat_total_label: 'JAMI MAHSULOT', wh_stat_total_sub: 'omborda',
+    wh_stat_stock_label: 'JAMI QOLDIQ', wh_stat_stock_sub: 'dona',
+    wh_stat_low_label: 'KAM QOLGAN', wh_stat_low_sub: 'mahsulot',
+    wh_stat_zero_label: 'TUGAGAN', wh_stat_zero_sub: 'mahsulot',
+    wh_search_ph: 'Mahsulot qidirish (nom yoki kod)...',
+    wh_filter_all: 'Barchasi', wh_filter_low: '⚠️ Kam',
+    wh_filter_zero: 'Tugagan', wh_filter_instock: 'Mavjud',
+    wh_recent_moves: "SO'NGGI HARAKATLAR",
+    wh_empty_title: 'Mahsulot topilmadi', wh_empty_sub: "Qidiruv yoki filtrni o'zgartiring",
+    wh_status_out: 'Tugagan', wh_status_low: 'Kam', wh_status_ok: 'Mavjud',
+    wh_unit_default: 'dona', wh_no_history: "Harakatlar yo'q",
+    wh_hist_in: 'Kirim', wh_hist_spiska: 'Spiska', wh_hist_adjust: 'Tuzatish', wh_hist_out: 'Chiqim',
+    wh_not_found: 'Topilmadi', wh_store_prefix: 'Ombor:', wh_in_store_prefix: 'Omborda:',
+    wh_select_product_err: 'Mahsulot tanlang!', wh_enter_qty_err: 'Miqdorni kiriting!',
+    wh_not_enough_title: 'Omborda yetarli emas!',
+    wh_not_enough_msg: "Omborda {0} dona bor, siz {1} dona chiqim qilmoqchisiz. Davom etilsinmi?",
+    wh_continue_btn: 'Ha, davom et', wh_error_generic: 'Xatolik',
+    wh_in_toast: 'Kirim', wh_out_toast: 'Chiqim',
+    wh_in_sheet_title: '📦 Omborga kirim', wh_out_sheet_title: '📤 Ombordan chiqim',
+    wh_product_label: 'MAHSULOT *', wh_search_name_code_ph: 'Nom yoki kod...',
+    wh_qty_label: 'MIQDOR *', wh_note_label: 'IZOH',
+    wh_in_note_ph: 'Masalan: yetkazib beruvchidan keldi...',
+    wh_out_note_ph: 'Masalan: ishchiga berildi...',
+    wh_in_save_btn: 'Kirim saqlash', wh_out_save_btn: 'Chiqim saqlash',
+    item_added_suffix: "qo'shildi",
+    product_code_duplicate_err: '⚠️ "{0}" kodi allaqachon "{1}" mahsulotida mavjud!',
+    search_not_found_title: 'Topilmadi',
+    search_not_found_spiska_sub: "'{0}' bo'yicha spiska yo'q",
+    search_no_results: "Qidiruv natijasi yo'q",
+    product_admin_only: 'FAQAT ADMIN',
+    no_data: "Ma'lumot yo'q",
     // Sub-tabs
     stab_overview: 'Umumiy', stab_customers: 'Mijozlar',
     stab_products: 'Mahsulotlar', stab_spiska: 'Spiska',
@@ -7507,6 +7544,39 @@ var LANGS = {
     stats_unpaid: 'не оплачено',
     settings_listadmin_btn: 'Открыть',
     settings_listadmin_sub: 'Список всех администраторов',
+    // СКЛАД (Warehouse)
+    wh_back: 'Назад', wh_in_tooltip: 'Приход', wh_out_tooltip: 'Расход',
+    wh_stat_total_label: 'ВСЕГО ТОВАРОВ', wh_stat_total_sub: 'на складе',
+    wh_stat_stock_label: 'ОБЩИЙ ОСТАТОК', wh_stat_stock_sub: 'шт.',
+    wh_stat_low_label: 'МАЛО ОСТАЛОСЬ', wh_stat_low_sub: 'товаров',
+    wh_stat_zero_label: 'ЗАКОНЧИЛСЯ', wh_stat_zero_sub: 'товаров',
+    wh_search_ph: 'Поиск товара (название или код)...',
+    wh_filter_all: 'Все', wh_filter_low: '⚠️ Мало',
+    wh_filter_zero: 'Закончился', wh_filter_instock: 'В наличии',
+    wh_recent_moves: 'ПОСЛЕДНИЕ ДВИЖЕНИЯ',
+    wh_empty_title: 'Товар не найден', wh_empty_sub: 'Измените поиск или фильтр',
+    wh_status_out: 'Закончился', wh_status_low: 'Мало', wh_status_ok: 'В наличии',
+    wh_unit_default: 'шт.', wh_no_history: 'Движений нет',
+    wh_hist_in: 'Приход', wh_hist_spiska: 'Список', wh_hist_adjust: 'Корректировка', wh_hist_out: 'Расход',
+    wh_not_found: 'Не найдено', wh_store_prefix: 'Склад:', wh_in_store_prefix: 'На складе:',
+    wh_select_product_err: 'Выберите товар!', wh_enter_qty_err: 'Введите количество!',
+    wh_not_enough_title: 'Недостаточно на складе!',
+    wh_not_enough_msg: 'На складе {0} шт., вы хотите списать {1} шт. Продолжить?',
+    wh_continue_btn: 'Да, продолжить', wh_error_generic: 'Ошибка',
+    wh_in_toast: 'Приход', wh_out_toast: 'Расход',
+    wh_in_sheet_title: '📦 Приход на склад', wh_out_sheet_title: '📤 Расход со склада',
+    wh_product_label: 'ТОВАР *', wh_search_name_code_ph: 'Название или код...',
+    wh_qty_label: 'КОЛИЧЕСТВО *', wh_note_label: 'ПРИМЕЧАНИЕ',
+    wh_in_note_ph: 'Например: получено от поставщика...',
+    wh_out_note_ph: 'Например: выдано работнику...',
+    wh_in_save_btn: 'Сохранить приход', wh_out_save_btn: 'Сохранить расход',
+    item_added_suffix: 'добавлено',
+    product_code_duplicate_err: '⚠️ Код "{0}" уже используется товаром "{1}"!',
+    search_not_found_title: 'Не найдено',
+    search_not_found_spiska_sub: "Список по '{0}' не найден",
+    search_no_results: 'Нет результатов поиска',
+    product_admin_only: 'ТОЛЬКО АДМИН',
+    no_data: 'Нет данных',
     // Sub-tabs
     stab_overview: 'Общий', stab_customers: 'Клиенты',
     stab_products: 'Товары', stab_spiska: 'Списки',
@@ -7583,7 +7653,13 @@ function t(key, param) {
   var lang = getLang();
   var dict = LANGS[lang] || LANGS['uz_latin'];
   var val = dict[key] !== undefined ? dict[key] : (LANGS['uz_latin'][key] || key);
-  if (param !== undefined) val = val.replace('{0}', param);
+  if (param !== undefined) {
+    if (Array.isArray(param)) {
+      param.forEach(function(p, i) { val = val.replace('{' + i + '}', p); });
+    } else {
+      val = val.replace('{0}', param);
+    }
+  }
   return val;
 }
 
@@ -7695,6 +7771,13 @@ function applyLang() {
   var pcInput = document.getElementById('product-code-input');
   if (pcInput) pcInput.placeholder = d.product_code_ph;
   applySheetBtnText('product-sheet', '.btn-primary', d.product_save_btn);
+  sid('product-price-section-label', d.product_price_section);
+  sid('product-cost-label',      d.product_cost_label);
+  sid('product-cost-admin-only', d.product_admin_only);
+  sid('product-cost-hint',       d.product_cost_hint);
+  sid('product-sell-label',      d.product_sell_label);
+  sid('product-margin-label',    '📈 ' + d.product_margin_label);
+  sid('product-margin-pct-label',d.product_margin_pct);
 
   // === PAYMENT SHEET ===
   var ptitle = document.getElementById('payment-sheet-title');
@@ -7975,9 +8058,57 @@ function applyLang() {
   var odPayRate = document.getElementById('od-pay-rate');
   if (odPayRate) odPayRate.placeholder = d.debt_rate_ph;
 
+  // ===== OMBOR (Warehouse) =====
+  sid('wh-back-label', d.wh_back);
+  var whInBtn = document.getElementById('wh-in-tooltip-btn'); if (whInBtn) whInBtn.title = d.wh_in_tooltip;
+  var whOutBtn = document.getElementById('wh-out-tooltip-btn'); if (whOutBtn) whOutBtn.title = d.wh_out_tooltip;
+  sid('wh-stat-total-label', d.wh_stat_total_label);
+  sid('wh-stat-total-sub',   d.wh_stat_total_sub);
+  sid('wh-stat-stock-label', d.wh_stat_stock_label);
+  sid('wh-stat-stock-sub',   d.wh_stat_stock_sub);
+  sid('wh-stat-low-label',   d.wh_stat_low_label);
+  sid('wh-stat-low-sub',     d.wh_stat_low_sub);
+  sid('wh-stat-zero-label',  d.wh_stat_zero_label);
+  sid('wh-stat-zero-sub',    d.wh_stat_zero_sub);
+  var whSearch = document.getElementById('wh-search'); if (whSearch) whSearch.placeholder = d.wh_search_ph;
+  sid('wh-ft-all',     d.wh_filter_all);
+  sid('wh-ft-low',     d.wh_filter_low);
+  sid('wh-ft-zero',    d.wh_filter_zero);
+  sid('wh-ft-instock', d.wh_filter_instock);
+  sid('wh-recent-label', d.wh_recent_moves);
+  sid('wh-in-sheet-title',  d.wh_in_sheet_title);
+  sid('wh-out-sheet-title', d.wh_out_sheet_title);
+  sid('wh-in-product-label',  d.wh_product_label);
+  sid('wh-out-product-label', d.wh_product_label);
+  var whInSearch = document.getElementById('wh-in-search');   if (whInSearch)  whInSearch.placeholder  = d.wh_search_name_code_ph;
+  var whOutSearch = document.getElementById('wh-out-search'); if (whOutSearch) whOutSearch.placeholder = d.wh_search_name_code_ph;
+  sid('wh-in-qty-label',  d.wh_qty_label);
+  sid('wh-out-qty-label', d.wh_qty_label);
+  sid('wh-in-note-label',  d.wh_note_label);
+  sid('wh-out-note-label', d.wh_note_label);
+  var whInNote = document.getElementById('wh-in-note');   if (whInNote)  whInNote.placeholder  = d.wh_in_note_ph;
+  var whOutNote = document.getElementById('wh-out-note'); if (whOutNote) whOutNote.placeholder = d.wh_out_note_ph;
+  sid('wh-in-save-label',  d.wh_in_save_btn);
+  sid('wh-out-save-label', d.wh_out_save_btn);
+  // Ombor sahifasi hozir ochiq bo'lsa, ro'yxat/tarixni yangi tilda qayta chizamiz
+  if (typeof whAllProducts !== 'undefined' && whAllProducts.length && document.getElementById('page-warehouse') && document.getElementById('page-warehouse').classList.contains('active')) {
+    if (typeof applyWhFilter === 'function') applyWhFilter();
+  }
+
   // theme label — dark/light
   var tl = document.getElementById('theme-label');
   if (tl) tl.textContent = (getTheme() === 'dark') ? d.settings_theme_dark : d.settings_theme_label;
+
+  // "Yuklanmoqda..." kabi boshlang'ich (hali ma'lumot kelmagan) holatlarni
+  // umumiy tarzda tarjima qilamiz — har biriga alohida id qo'yish shart emas.
+  // Ikkala tildagi variantni ham tekshiramiz, shunda til bir necha marta
+  // almashtirilganda ham to'g'ri ishlaydi.
+  var loadingVariants = ["Yuklanmoqda...", 'Загрузка...'];
+  document.querySelectorAll('div, span').forEach(function(elx) {
+    if (elx.children.length === 0 && loadingVariants.indexOf(elx.textContent) >= 0) {
+      elx.textContent = d.loading;
+    }
+  });
 }
 
 function setNavLabel(id, text) {
@@ -8434,8 +8565,8 @@ async function loadExpenses() {
   // Grafik va breakdown ni ham loading qilamiz
   var chartEl = document.getElementById('exp-monthly-chart');
   var catEl   = document.getElementById('exp-cat-breakdown');
-  if (chartEl) chartEl.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;width:100%;color:var(--text-muted);font-size:.82rem">Yuklanmoqda...</div>';
-  if (catEl)   catEl.innerHTML   = '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">Yuklanmoqda...</div>';
+  if (chartEl) chartEl.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;width:100%;color:var(--text-muted);font-size:.82rem">' + t('loading') + '</div>';
+  if (catEl)   catEl.innerHTML   = '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:.82rem">' + t('loading') + '</div>';
 
   try {
     var range = expGetDateRange();
@@ -8543,7 +8674,7 @@ function _renderExpCatBreakdown(list, totalSum) {
   if (!catEl) return;
 
   if (!list.length) {
-    catEl.innerHTML = '<div style="text-align:center;padding:12px;color:var(--text-muted);font-size:.82rem">Ma\'lumot yo\'q</div>';
+    catEl.innerHTML = '<div style="text-align:center;padding:12px;color:var(--text-muted);font-size:.82rem">' + t('no_data') + '</div>';
     return;
   }
 
@@ -8625,7 +8756,7 @@ function _renderExpensesList(list) {
   if (!filtered.length) {
     el.innerHTML = renderEmpty(
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
-      t('exp_empty'), _expSearchQuery ? "Qidiruv natijasi yo'q" : t('exp_empty_sub')
+      t('exp_empty'), _expSearchQuery ? t('search_no_results') : t('exp_empty_sub')
     );
     return;
   }
@@ -10068,7 +10199,7 @@ function odOpenAddTxnSheet(txnType, debtId) {
   // Qolgan balansni ko'rsatish (to'lov va qaytarish uchun)
   var infoEl = document.getElementById('od-pay-info');
   if (infoEl && (txnType === 'payment' || txnType === 'return')) {
-    infoEl.innerHTML = '<div style="background:var(--warning-light);border-radius:var(--radius-md);padding:8px 12px;font-size:.8rem;color:var(--warning)">⏳ Yuklanmoqda...</div>';
+    infoEl.innerHTML = '<div style="background:var(--warning-light);border-radius:var(--radius-md);padding:8px 12px;font-size:.8rem;color:var(--warning)">⏳ ' + t('loading') + '</div>';
     // async balance olish
     db.from('our_debts').select('amount, currency, amount_sum').eq('id', debtId).single().then(function(dr) {
       db.from('debt_transactions').select('type, amount, currency, amount_sum').eq('debt_id', debtId).then(function(tr) {
@@ -10560,7 +10691,7 @@ async function loadWarehouse() {
 
     // Tarix
     renderWhHistory(history);
-  } catch(e) { el.innerHTML = '<div class="empty-state"><div class="empty-text">Xato: '+e.message+'</div></div>'; }
+  } catch(e) { el.innerHTML = '<div class="empty-state"><div class="empty-text">' + t('err_generic') + ': '+e.message+'</div></div>'; }
 }
 
 function filterWarehouse(btn, type) {
@@ -10604,7 +10735,7 @@ function renderWarehouseList(list, el) {
   if (!list.length) {
     el.innerHTML = renderEmpty(
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>',
-      'Mahsulot topilmadi', 'Qidiruv yoki filtrni o\'zgartiring'
+      t('wh_empty_title'), t('wh_empty_sub')
     );
     return;
   }
@@ -10615,8 +10746,8 @@ function renderWarehouseList(list, el) {
     var isZero = stock <= 0;
     var statusColor = isZero ? 'var(--danger)' : isLow ? 'var(--warning)' : 'var(--success)';
     var statusBg = isZero ? 'var(--danger-light)' : isLow ? 'var(--warning-light)' : 'var(--success-light)';
-    var statusText = isZero ? 'Tugagan' : isLow ? 'Kam' : 'Mavjud';
-    var unit = p.unit || 'dona';
+    var statusText = isZero ? t('wh_status_out') : isLow ? t('wh_status_low') : t('wh_status_ok');
+    var unit = p.unit || t('wh_unit_default');
 
     return '<div class="list-item" onclick="openWhDetailSheet(\''+p.id+'\')">' +
       '<div class="list-item-avatar" style="background:'+statusBg+';color:'+statusColor+'">' +
@@ -10640,7 +10771,7 @@ function renderWarehouseList(list, el) {
 function renderWhHistory(history) {
   var el = document.getElementById('wh-history');
   if (!history || !history.length) {
-    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:.82rem">Harakatlar yo\'q</div>';
+    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:.82rem">' + t('wh_no_history') + '</div>';
     return;
   }
   el.innerHTML = history.map(function(h) {
@@ -10649,7 +10780,7 @@ function renderWhHistory(history) {
     var icon = isIn ? '📥' : isSpiska ? '📋' : '📤';
     var color = isIn ? 'var(--success)' : 'var(--danger)';
     var sign = isIn ? '+' : '-';
-    var typeLabel = isIn ? 'Kirim' : isSpiska ? 'Spiska' : h.type === 'adjust' ? 'Tuzatish' : 'Chiqim';
+    var typeLabel = isIn ? t('wh_hist_in') : isSpiska ? t('wh_hist_spiska') : h.type === 'adjust' ? t('wh_hist_adjust') : t('wh_hist_out');
     return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)">' +
       '<div style="font-size:1.2rem">' + icon + '</div>' +
       '<div style="flex:1;min-width:0">' +
@@ -10704,12 +10835,12 @@ function filterWhProducts(mode, q) {
 
 function renderWhProductList(mode, list) {
   var el = document.getElementById('wh-'+mode+'-product-list');
-  if (!list.length) { el.innerHTML = '<div style="padding:12px;text-align:center;color:var(--text-muted);font-size:.82rem">Topilmadi</div>'; return; }
+  if (!list.length) { el.innerHTML = '<div style="padding:12px;text-align:center;color:var(--text-muted);font-size:.82rem">' + t('wh_not_found') + '</div>'; return; }
   el.innerHTML = list.map(function(p) {
     var stock = p.stock || 0;
-    return '<div class="product-select-item" onclick="selectWhProduct(\''+mode+'\',\''+p.id+'\',\''+attrEscape(p.name)+'\','+stock+',\''+attrEscape(p.unit||'dona')+'\')">' +
+    return '<div class="product-select-item" onclick="selectWhProduct(\''+mode+'\',\''+p.id+'\',\''+attrEscape(p.name)+'\','+stock+',\''+attrEscape(p.unit||t('wh_unit_default'))+'\')">' +
       '<div><div class="product-select-item-name">'+htmlEscape(p.name)+'</div>' +
-      '<div class="product-select-item-code">'+htmlEscape(p.code)+' · Ombor: '+Math.round(stock)+'</div></div>' +
+      '<div class="product-select-item-code">'+htmlEscape(p.code)+' · ' + t('wh_store_prefix') + ' '+Math.round(stock)+'</div></div>' +
       '<div style="font-weight:700;font-family:JetBrains Mono,monospace;font-size:.85rem;color:'+(stock>0?'var(--success)':'var(--danger)')+'">'+Math.round(stock)+'</div>' +
     '</div>';
   }).join('');
@@ -10719,12 +10850,12 @@ function selectWhProduct(mode, id, name, stock, unit) {
   document.getElementById('wh-'+mode+'-product-id').value = id;
   document.getElementById('wh-'+mode+'-product-id').dataset.stock = stock;
   document.getElementById('wh-'+mode+'-product-id').dataset.name = name;
-  document.getElementById('wh-'+mode+'-selected-text').textContent = name + ' (ombor: '+Math.round(stock)+' '+unit+')';
+  document.getElementById('wh-'+mode+'-selected-text').textContent = name + ' (' + t('wh_store_prefix').replace(':','').toLowerCase() + ': '+Math.round(stock)+' '+unit+')';
   document.getElementById('wh-'+mode+'-selected').classList.remove('hidden');
   document.getElementById('wh-'+mode+'-search').value = name;
   document.getElementById('wh-'+mode+'-product-list').innerHTML = '';
   if (mode === 'out') {
-    document.getElementById('wh-out-stock-hint').textContent = 'Omborda: ' + Math.round(stock) + ' ' + unit;
+    document.getElementById('wh-out-stock-hint').textContent = t('wh_in_store_prefix') + ' ' + Math.round(stock) + ' ' + unit;
   }
 }
 
@@ -10733,20 +10864,20 @@ async function saveWarehouseMove(mode) {
   var qty = getRawNumber(document.getElementById('wh-'+mode+'-qty'));
   var note = document.getElementById('wh-'+mode+'-note').value.trim();
 
-  if (!productId) { showToast('Mahsulot tanlang!', 'error'); return; }
-  if (!qty || qty <= 0) { showToast('Miqdorni kiriting!', 'error'); return; }
+  if (!productId) { showToast(t('wh_select_product_err'), 'error'); return; }
+  if (!qty || qty <= 0) { showToast(t('wh_enter_qty_err'), 'error'); return; }
 
   // Chiqimda ombordagidan ko'p bo'lsa ogohlantirish
   if (mode === 'out') {
     var currentStock = parseFloat(document.getElementById('wh-out-product-id').dataset.stock) || 0;
     if (qty > currentStock) {
-      var ok = await showConfirm('Omborda yetarli emas!', 'Omborda '+Math.round(currentStock)+' dona bor, siz '+Math.round(qty)+' dona chiqim qilmoqchisiz. Davom etilsinmi?', 'Ha, davom et');
+      var ok = await showConfirm(t('wh_not_enough_title'), t('wh_not_enough_msg', [Math.round(currentStock), Math.round(qty)]), t('wh_continue_btn'));
       if (!ok) return;
     }
   }
 
   var btnId = 'wh-'+mode+'-save-btn';
-  var btn = btnStart(btnId, 'Saqlanmoqda...');
+  var btn = btnStart(btnId, t('saving'));
   if (!btn) return;
 
   try {
@@ -10763,12 +10894,12 @@ async function saveWarehouseMove(mode) {
 
     if (res.error) throw res.error;
     var result = res.data;
-    if (result && !result.success) throw new Error(result.error || 'Xatolik');
+    if (result && !result.success) throw new Error(result.error || t('wh_error_generic'));
 
     soundSuccess(); hapticSuccess();
     var productName = document.getElementById('wh-'+mode+'-product-id').dataset.name || '';
     hideSheet('wh-'+mode+'-sheet');
-    showToast((mode === 'in' ? '📥 Kirim' : '📤 Chiqim') + ': ' + productName + ' ' + (mode==='in'?'+':'-') + Math.round(qty));
+    showToast((mode === 'in' ? '📥 ' + t('wh_in_toast') : '📤 ' + t('wh_out_toast')) + ': ' + productName + ' ' + (mode==='in'?'+':'-') + Math.round(qty));
 
     // AUDIT
     logAudit('warehouse', mode === 'in' ? 'create' : 'update', productName, {
