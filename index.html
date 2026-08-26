@@ -1378,7 +1378,7 @@ body{
     </div>
 
     <!-- Parol -->
-    <div class="login-field">
+    <div class="login-field" id="login-password-group">
       <div class="login-field-inner">
         <span class="login-field-icon">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -1394,11 +1394,30 @@ body{
     </div>
 
     <!-- Kirish tugmasi -->
-    <div class="login-btn-wrap">
+    <div class="login-btn-wrap" id="login-btn-wrap">
       <button class="login-btn-main" id="login-btn" onclick="handleLogin()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
         Kirish
       </button>
+    </div>
+
+    <!-- YANGI: Avtomatik aniqlangan ID tizimda yo'q bo'lsa ko'rinadigan panel -->
+    <div id="access-request-panel" class="hidden" style="text-align:center">
+      <div style="width:56px;height:56px;border-radius:16px;background:var(--accent-light);color:var(--accent);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+      </div>
+      <div style="font-size:1rem;font-weight:700;margin-bottom:6px" id="access-request-title">Siz hali admin sifatida ro'yxatdan o'tmagansiz</div>
+      <div style="font-size:.84rem;color:var(--text-muted);margin-bottom:16px" id="access-request-sub">Quyidagi ID Telegram'ning o'zidan avtomatik olindi — bu aniq, xatosiz raqam:</div>
+      <div style="background:var(--bg-secondary);border-radius:var(--radius-lg);padding:16px;margin-bottom:16px;box-shadow:var(--shadow-sm)">
+        <div style="font-size:.68rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">TELEGRAM ID</div>
+        <div id="access-request-id" style="font-size:1.6rem;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--accent)">—</div>
+        <div id="access-request-name" style="font-size:.8rem;color:var(--text-muted);margin-top:4px"></div>
+      </div>
+      <button class="login-btn-main" id="access-request-btn" onclick="sendAdminAccessRequest()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        <span id="access-request-btn-label">So'rov yuborish</span>
+      </button>
+      <div style="font-size:.72rem;color:var(--text-muted);margin-top:14px" id="access-request-already">Allaqachon adminsiz va parolingiz bormi? <a href="#" onclick="showManualLoginForm();return false;" style="color:var(--accent);font-weight:600;text-decoration:none">Parol bilan kirish</a></div>
     </div>
 
     <div class="login-version">Nina Spiska v2.1.0 · Premium</div>
@@ -2619,13 +2638,13 @@ body{
 <div class="sheet-overlay" id="spiska-debt-sheet">
   <div class="sheet">
     <div class="sheet-handle"></div>
-    <h3 class="sheet-title">Spiskaga Qarz Qo'shish</h3>
-    <div style="background:var(--warning-light);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:16px;font-size:.82rem;color:var(--warning);border:1px solid rgba(245,158,11,.2)">
+    <h3 class="sheet-title" id="spiska-debt-sheet-title-el">Spiskaga Qarz Qo'shish</h3>
+    <div style="background:var(--warning-light);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:16px;font-size:.82rem;color:var(--warning);border:1px solid rgba(245,158,11,.2)" id="spiska-debt-hint-box">
       💡 Bu mijozning <strong>oldingi qarzi</strong> — bu spiskaga qo'shiladi va jami summa avtomatik hisoblanadi
     </div>
     <div class="form-group">
-      <label class="form-label">QARZ SUMMASI (SO'M)</label>
-      <input type="number" class="form-input" id="spiska-debt-amount" placeholder="0" min="0">
+      <label class="form-label" id="spiska-debt-amount-label">QARZ SUMMASI (SO'M)</label>
+      <input type="number" class="form-input" id="spiska-debt-amount" placeholder="0">
       <div style="display:flex;gap:6px;margin-top:8px" id="spiska-debt-quick"></div>
     </div>
     <div class="form-group">
@@ -3304,6 +3323,88 @@ function showLoginError(msg) {
   el.classList.remove('hidden');
 }
 
+// ===================== KIRISH SO'ROVI (Access Request) =====================
+// Telegram orqali avtomatik aniqlangan ID hali admin sifatida ro'yxatdan
+// o'tmagan bo'lsa, shu panel orqali — XATOSIZ (Telegram'ning o'zidan
+// olingan, hech kim qo'lda kiritmagan) ID bilan asosiy adminga so'rov
+// yuboriladi. Shu tarzda "noto'g'ri kiritilgan ID" muammosi ildizidan
+// bartaraf etiladi.
+function showAccessRequestPanel(tgUser) {
+  var panel = document.getElementById('access-request-panel');
+  var pwGroup = document.getElementById('login-password-group');
+  var btnWrap = document.getElementById('login-btn-wrap');
+  if (!panel) return;
+  panel.classList.remove('hidden');
+  if (pwGroup) pwGroup.style.display = 'none';
+  if (btnWrap) btnWrap.style.display = 'none';
+
+  var idEl = document.getElementById('access-request-id');
+  var nameEl = document.getElementById('access-request-name');
+  if (idEl) idEl.textContent = tgUser.id;
+  if (nameEl) {
+    var fullName = ((tgUser.first_name||'') + ' ' + (tgUser.last_name||'')).trim();
+    var uname = tgUser.username ? '@' + tgUser.username : '';
+    nameEl.textContent = [fullName, uname].filter(Boolean).join(' · ');
+  }
+}
+
+function showManualLoginForm() {
+  var panel = document.getElementById('access-request-panel');
+  var pwGroup = document.getElementById('login-password-group');
+  var btnWrap = document.getElementById('login-btn-wrap');
+  var tgGroup = document.getElementById('telegram-id-group');
+  if (panel) panel.classList.add('hidden');
+  if (pwGroup) pwGroup.style.display = '';
+  if (btnWrap) btnWrap.style.display = '';
+  // Avtomatik aniqlangan ID tizimda topilmagani uchun, kimdir boshqa
+  // (masalan mavjud) ID/parol bilan kirmoqchi bo'lishi mumkin — shu
+  // sabab qo'lda kiritish maydonini ham ochib qo'yamiz.
+  if (tgGroup) tgGroup.style.display = '';
+}
+
+var _accessRequestSent = false;
+function sendAdminAccessRequest() {
+  if (_accessRequestSent) return;
+  var tgUser = window._detectedTgUser;
+  if (!tgUser || !tgUser.id) return;
+  _accessRequestSent = true;
+
+  var btn = document.getElementById('access-request-btn');
+  var btnLabel = document.getElementById('access-request-btn-label');
+  if (btn) btn.disabled = true;
+  if (btnLabel) btnLabel.textContent = t('saving');
+
+  var fullName = ((tgUser.first_name||'') + ' ' + (tgUser.last_name||'')).trim() || '—';
+  var uname = tgUser.username ? '@' + tgUser.username : '—';
+
+  var msg =
+    '🔑 <b>' + t('access_req_tg_title') + '</b>\n\n' +
+    '👤 <b>' + t('tg_name') + ':</b> ' + tgEscape(fullName) + '\n' +
+    '🔹 <b>Username:</b> ' + tgEscape(uname) + '\n' +
+    '🆔 <b>Telegram ID:</b> <code>' + tgUser.id + '</code>\n\n' +
+    '<i>' + t('access_req_tg_hint') + '</i>';
+
+  // Faqat ASOSIY adminga yuboriladi (barcha TG_CHAT_IDS'ga emas) — bu
+  // shaxsiy kirish so'rovi, hamma ko'rishi shart emas.
+  fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: TG_CHAT_IDS[0], text: msg, parse_mode: 'HTML' })
+  }).then(function(resp) {
+    if (resp.ok) {
+      if (btnLabel) btnLabel.textContent = '✅ ' + t('access_req_sent');
+    } else {
+      if (btnLabel) btnLabel.textContent = t('access_req_failed');
+      _accessRequestSent = false;
+      if (btn) btn.disabled = false;
+    }
+  }).catch(function() {
+    if (btnLabel) btnLabel.textContent = t('access_req_failed');
+    _accessRequestSent = false;
+    if (btn) btn.disabled = false;
+  });
+}
+
 
 function showMainApp() {
   document.getElementById('login-page').style.display = 'none';
@@ -3858,9 +3959,9 @@ function renderSpiskaDetail(s) {
     );
   }
 
-  // Hisob bloki: mahsulot + qarz = jami
+  // Hisob bloki: mahsulot + qarz(yoki kredit) = jami
   var calcHtml = '';
-  if (items.length || extraDebt > 0) {
+  if (items.length || extraDebt !== 0) {
     calcHtml =
       '<div style="border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;margin-top:4px;margin-bottom:4px">' +
         // Mahsulotlar summasi
@@ -3868,7 +3969,7 @@ function renderSpiskaDetail(s) {
           '<span style="font-size:.82rem;color:var(--text-muted)">📦 Mahsulotlar</span>' +
           '<span style="font-weight:700;font-family:JetBrains Mono,monospace;font-size:.88rem">' + fmt(productTotal) + " so'm</span>" +
         '</div>' +
-        // Qarz qatori (agar bor bo'lsa)
+        // Qarz yoki kredit qatori (agar bor bo'lsa)
         (extraDebt > 0
           ? '<div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--danger-light);border-top:1px solid var(--border)">' +
               '<span style="font-size:.82rem;color:var(--danger);display:flex;align-items:center;gap:4px">' +
@@ -3876,6 +3977,14 @@ function renderSpiskaDetail(s) {
                 ' Oldingi qarz (ko\'rsatish uchun)' +
               '</span>' +
               '<span style="font-weight:700;color:var(--danger);font-family:JetBrains Mono,monospace;font-size:.88rem">+' + fmt(extraDebt) + " so'm</span>" +
+            '</div>'
+          : extraDebt < 0
+          ? '<div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--accent-light);border-top:1px solid var(--border)">' +
+              '<span style="font-size:.82rem;color:var(--accent);display:flex;align-items:center;gap:4px">' +
+                '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M9.5 10.5 12 8l2.5 2.5"/><line x1="8" y1="16" x2="16" y2="16"/></svg>' +
+                ' 🔵 ' + t('spiska_extra_credit_row_label') +
+              '</span>' +
+              '<span style="font-weight:700;color:var(--accent);font-family:JetBrains Mono,monospace;font-size:.88rem">-' + fmt(Math.abs(extraDebt)) + " so'm</span>" +
             '</div>'
           : '') +
         // JAMI
@@ -3909,7 +4018,7 @@ function renderSpiskaDetail(s) {
           // Qarz qo'shish — sariq matn
           '<button onclick="openSpiskaDebtSheet()" style="display:flex;align-items:center;gap:6px;background:transparent;border:none;color:var(--warning);cursor:pointer;font-family:inherit;font-size:.78rem;font-weight:600;padding:6px 8px;border-radius:var(--radius-sm)" onmouseover="this.style.background=\'var(--warning-light)\'" onmouseout="this.style.background=\'transparent\'">' +
             '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' +
-            (extraDebt > 0 ? ' ' + t('spiska_edit_debt', fmt(extraDebt)) : ' ' + t('spiska_add_debt')) +
+            (extraDebt > 0 ? ' ' + t('spiska_edit_debt', fmt(extraDebt)) : extraDebt < 0 ? ' ' + t('spiska_edit_credit', fmt(Math.abs(extraDebt))) : ' ' + t('spiska_add_debt')) +
           '</button>' +
           // O'chirish — eng sust, kurinar-kurinmas
           '<button onclick="confirmDeleteSpiska(\'' + s.id + '\')" style="display:flex;align-items:center;gap:6px;background:transparent;border:none;color:var(--text-muted);cursor:pointer;font-family:inherit;font-size:.78rem;font-weight:500;padding:6px 8px;border-radius:var(--radius-sm);opacity:.65" onmouseover="this.style.opacity=1;this.style.color=\'var(--danger)\'" onmouseout="this.style.opacity=.65;this.style.color=\'var(--text-muted)\'">' +
@@ -4065,6 +4174,11 @@ function openSpiskaPreview() {
     ? '<tr style="background:#FEF2F2">' +
         '<td colspan="4" style="padding:9px 10px;text-align:right;color:#EF4444;font-weight:600;font-size:12px">' + d.preview_prev_debt + ':</td>' +
         '<td style="padding:9px 10px;text-align:right;font-weight:700;color:#EF4444;font-size:13px;font-family:monospace">+' + fmt(extraDebt) + '</td>' +
+      '</tr>'
+    : extraDebt < 0
+    ? '<tr style="background:#EFF6FF">' +
+        '<td colspan="4" style="padding:9px 10px;text-align:right;color:#2563EB;font-weight:600;font-size:12px">🔵 ' + d.preview_prev_credit + ':</td>' +
+        '<td style="padding:9px 10px;text-align:right;font-weight:700;color:#2563EB;font-size:13px;font-family:monospace">-' + fmt(Math.abs(extraDebt)) + '</td>' +
       '</tr>'
     : '';
 
@@ -4244,6 +4358,8 @@ function copySpiskaText() {
 
   if (extraDebt > 0) {
     lines.push(d2.preview_prev_debt + ': +' + fmt(extraDebt) + ' ' + som2);
+  } else if (extraDebt < 0) {
+    lines.push('🔵 ' + d2.preview_prev_credit + ': -' + fmt(Math.abs(extraDebt)) + ' ' + som2);
   }
 
   lines.push(d2.preview_grand + ': ' + fmt(grandTotal) + ' ' + som2 + ' (' + Math.round(totalDona) + ' ' + d2.pieces + ')');
@@ -4291,10 +4407,16 @@ async function openSpiskaDebtSheet() {
   var s = currentSpiskaData;
   if (!s) return;
   var currentDebt = s.extra_debt || 0;
-  document.getElementById('spiska-debt-amount').value = currentDebt > 0 ? currentDebt : '';
+  document.getElementById('spiska-debt-amount').value = currentDebt !== 0 ? currentDebt : '';
   document.getElementById('spiska-debt-note').value = '';
 
   var quickEl = document.getElementById('spiska-debt-quick');
+  var hintBox = document.getElementById('spiska-debt-hint-box');
+  var amountLabel = document.getElementById('spiska-debt-amount-label');
+  // Ushbu spiskadagi mahsulotlar summasi — kreditni undan ortiq
+  // qo'llamaslik uchun (aks holda "jami to'lash" manfiy chiqib, chekda
+  // chalkash ko'rinadi).
+  var productTotal = (s.items||[]).reduce(function(sum,i){ return sum+(i.total_price||0); },0);
 
   // Supabase dan real-time mijoz qarzini olamiz
   try {
@@ -4303,6 +4425,8 @@ async function openSpiskaDebtSheet() {
 
     if (quickEl) {
       if (realDebt > 0) {
+        if (hintBox) hintBox.innerHTML = t('spiska_debt_hint_debt');
+        if (amountLabel) amountLabel.textContent = t('spiska_debt_amount_label_debt');
         quickEl.innerHTML =
           '<div style="width:100%;background:var(--danger-light);border:1px solid rgba(239,68,68,.2);border-radius:var(--radius-md);padding:10px 12px;margin-bottom:4px">' +
             '<div style="font-size:.68rem;font-weight:700;color:var(--danger);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">⚠️ MIJOZNING MAVJUD QARZI</div>' +
@@ -4315,12 +4439,31 @@ async function openSpiskaDebtSheet() {
             '<div style="font-size:.72rem;color:var(--danger);margin-top:6px;opacity:.8">⚡ Bu qarz allaqachon tizimda bor — spiskaga qo\'shsangiz, yakunlanganda 2 marta hisoblanmaydi</div>' +
           '</div>';
       } else if (realDebt < 0) {
+        if (hintBox) hintBox.innerHTML = t('spiska_debt_hint_credit');
+        if (amountLabel) amountLabel.textContent = t('spiska_debt_amount_label_credit');
+        var absCredit = Math.abs(realDebt);
+        // Kredit shu buyurtma summasidan ortiq qo'llanmaydi (manfiy
+        // "jami to'lash" chiqmasligi uchun) — qolgan kredit mijozning
+        // umumiy balansida keyingi xaridlar uchun saqlanib qoladi.
+        var applyAmount = Math.min(absCredit, productTotal);
         quickEl.innerHTML =
           '<div style="width:100%;background:var(--accent-light);border:1px solid rgba(var(--accent-rgb),.2);border-radius:var(--radius-md);padding:10px 12px">' +
-            '<div style="font-size:.78rem;color:var(--accent);font-weight:700">🔵 ' + t('customer_credit_full') + ': ' + fmt(Math.abs(realDebt)) + " so'm</div>" +
-            '<div style="font-size:.7rem;color:var(--accent);opacity:.85;margin-top:2px">' + t('customer_credit_sub') + '</div>' +
+            '<div style="display:flex;justify-content:space-between;align-items:center">' +
+              '<div>' +
+                '<div style="font-size:.68rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">🔵 ' + t('customer_credit_full') + '</div>' +
+                '<span style="font-size:1.1rem;font-weight:800;color:var(--accent);font-family:JetBrains Mono,monospace">' + fmt(absCredit) + " so'm</span>" +
+              '</div>' +
+              (applyAmount > 0
+                ? '<button class="btn btn-sm" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:.78rem;font-weight:700;cursor:pointer" onclick="var _di=document.getElementById(\'spiska-debt-amount\');_di.value=-' + applyAmount + ';_di.dataset.rawValue=\'-' + applyAmount + '\'">' +
+                    t('spiska_credit_apply_btn') +
+                  '</button>'
+                : '') +
+            '</div>' +
+            '<div style="font-size:.72rem;color:var(--accent);margin-top:6px;opacity:.85">' + t('customer_credit_sub') + '</div>' +
           '</div>';
       } else {
+        if (hintBox) hintBox.innerHTML = t('spiska_debt_hint_debt');
+        if (amountLabel) amountLabel.textContent = t('spiska_debt_amount_label_debt');
         quickEl.innerHTML =
           '<div style="width:100%;background:var(--success-light);border:1px solid rgba(16,185,129,.2);border-radius:var(--radius-md);padding:8px 12px">' +
             '<div style="font-size:.78rem;color:var(--success);font-weight:600">✅ Mijozning qarzi yo\'q</div>' +
@@ -4340,8 +4483,17 @@ async function saveSpiskaDebt(forceZero) {
 
   var amount = forceZero === 0 ? 0 : getRawNumber(document.getElementById('spiska-debt-amount')) || 0;
   var note = document.getElementById('spiska-debt-note').value.trim();
+  var productTotal = (s.items||[]).reduce(function(sum,i){ return sum+(i.total_price||0); },0);
 
-  if (amount < 0) { showToast(t('payment_amount_err'), 'error'); return; }
+  // MUHIM: manfiy qiymatga endi ruxsat beriladi — bu "mijozning mavjud
+  // kreditini ushbu buyurtmadan ayirib ko'rsatish" degani (masalan
+  // mijozda -100,000 balans bo'lsa, shu summa yangi spiskaga qo'llanadi).
+  // Lekin kredit shu buyurtma summasidan OSHIB ketmasligi kerak — aks
+  // holda "JAMI TO'LASH" manfiy chiqib, mijozga chalkash ko'rinadi.
+  if (amount < 0 && Math.abs(amount) > productTotal) {
+    showToast(t('spiska_credit_exceeds_err', fmt(productTotal)), 'error');
+    return;
+  }
 
   var btnId = forceZero === 0 ? 'spiska-debt-remove-btn' : 'spiska-debt-save-btn';
   var btn = btnStart(btnId, t('saving'));
@@ -4349,14 +4501,15 @@ async function saveSpiskaDebt(forceZero) {
   try {
     // Spiskaga extra_debt saqlash
     // total_amount = FAQAT tovar summasi (extra_debt qo'shilmaydi — statistika buziladi)
-    var productTotal = (s.items||[]).reduce(function(sum,i){ return sum+(i.total_price||0); },0);
     await db.from('spiska').update({
       extra_debt: amount,
       total_amount: productTotal
     }).eq('id', s.id);
 
     hideSheet('spiska-debt-sheet');
-    showToast(amount > 0 ? t('debt_saved') + ': ' + fmt(amount) + ' ' + t('som') : t('debt_saved'));
+    if (amount > 0) showToast(t('debt_saved') + ': ' + fmt(amount) + ' ' + t('som'));
+    else if (amount < 0) showToast(t('spiska_credit_applied_toast') + ': -' + fmt(Math.abs(amount)) + ' ' + t('som'));
+    else showToast(t('debt_saved'));
     loadSpiskaDetail(s.id);
   } catch(e) {
     showToast(t('spiska_delete_err') + e.message, 'error');
@@ -4463,6 +4616,8 @@ async function confirmCloseSpiska(sid, btnEl) {
         '💼 <b>' + t('tg_products_total') + ':</b> ' + fmt(productTotal) + ' ' + t('som') + '\n' +
         (extraDebt > 0
           ? '💸 <b>' + t('tg_extra_debt') + ':</b> +' + fmt(extraDebt) + ' ' + t('som') + '\n'
+          : extraDebt < 0
+          ? '🔵 <b>' + t('tg_extra_credit') + ':</b> -' + fmt(Math.abs(extraDebt)) + ' ' + t('som') + '\n'
           : '') +
         '\n💰 <b>' + t('tg_grand_total') + ': ' + fmt(grandTotal) + ' ' + t('som') + '</b>\n' +
         '\n<i>Nina Spiska tizimi</i>';
@@ -4744,8 +4899,16 @@ async function loadCustomers() {
   allCustomersCache = res.data || [];
 
   var dRes = await db.from('customer_debts').select('customer_id,balance');
+  // MUHIM: faqat FAOL (o'chirilmagan) mijozlarning balansini hisobga
+  // olamiz. Aks holda, o'chirilgan mijozning eski balansi ro'yxatdan
+  // yo'qolib ketgan bo'lsa-da, "Umumiy qarz"/"Bizning qarzimiz"
+  // bannerida "arvoh" bo'lib qo'shilib qolaverar edi.
+  var activeIds = {};
+  allCustomersCache.forEach(function(c){ activeIds[c.id] = true; });
   allDebtsCache = {};
-  (dRes.data || []).forEach(function(d) { allDebtsCache[d.customer_id] = d.balance || 0; });
+  (dRes.data || []).forEach(function(d) {
+    if (activeIds[d.customer_id]) allDebtsCache[d.customer_id] = d.balance || 0;
+  });
 
   // Umumiy qarz va umumiy kredit — ALOHIDA hisoblanadi, chunki agar
   // shunchaki barcha balanslarni qo'shsak, mijozga bo'lgan qarzimiz
@@ -6086,6 +6249,33 @@ async function saveCustomer() {
 }
 
 async function deleteCustomer(id) {
+  // MUHIM: mijozni o'chirishdan oldin uning joriy balansini tekshiramiz.
+  // Agar qarz yoki kredit (biz qarzmiz) qolgan bo'lsa, buni ko'rmasdan/
+  // bilmasdan yashirincha yo'qotib yubormasligimiz kerak — aks holda bu
+  // summa hech qayerda ko'rinmaydigan "arvoh" balans bo'lib qolib ketadi.
+  var debtRes = await db.from('customer_debts').select('balance').eq('customer_id', id).maybeSingle();
+  var balance = (debtRes.data && debtRes.data.balance) || 0;
+
+  if (balance !== 0) {
+    var isCredit = balance < 0;
+    var absAmt = fmt(Math.abs(balance)) + " so'm";
+    var warnTitle = isCredit ? t('delete_customer_credit_warn_title') : t('delete_customer_debt_warn_title');
+    var warnMsg = isCredit ? t('delete_customer_credit_warn_msg', absAmt) : t('delete_customer_debt_warn_msg', absAmt);
+    var okWriteoff = await showConfirm(warnTitle, warnMsg, t('delete_customer_writeoff_btn'));
+    if (!okWriteoff) return;
+
+    // Balansni nolga tushiramiz (write-off) — bu shaffof tarzda audit
+    // tarixida qayd etiladi, hech narsa "sirli" yo'qolib qolmaydi.
+    await db.from('customer_debts').update({ balance: 0, updated_at: new Date().toISOString() }).eq('customer_id', id);
+    var wRes = await db.from('customers').select('full_name').eq('id', id).single();
+    logAudit('debt', 'update', (wRes.data && wRes.data.full_name) || '—', {
+      entityId: id,
+      oldValue: (isCredit ? '-' : '') + absAmt,
+      newValue: "0 so'm",
+      meta: { note: t('delete_customer_writeoff_note') }
+    });
+  }
+
   var ok = await showConfirm(t('confirm_delete_customer_title'), t('confirm_delete_customer_msg'), t('confirm_delete_btn'));
   if (!ok) return;
   // Eski ma'lumotni olamiz
@@ -6770,6 +6960,7 @@ var LANGS = {
     spiska_extra_debt: "Qo'shimcha qarz", spiska_grand_total: "JAMI TO'LASH",
     spiska_add_item: "Mahsulot qo'shish", spiska_add_debt: "Qarz qo'shish",
     spiska_edit_debt: "Qarz: {0} so'm (o'zgartirish)",
+    spiska_edit_credit: "🔵 Kredit: {0} so'm (o'zgartirish)",
     spiska_close_btn: 'Spiskani yakunlash', spiska_closed_banner: 'Spiska yakunlangan',
     spiska_delete_btn: "Spiskani o'chirish",
     spiska_confirm1: "Spiskani O'CHIRMOQCHIMISIZ?\n\nBarcha mahsulotlar va ma'lumotlar bazadan butunlay o'chib ketadi!",
@@ -6910,6 +7101,7 @@ var LANGS = {
     tg_products: 'Mahsulotlar',
     tg_products_total: 'Mahsulotlar jami',
     tg_extra_debt: "Qo'shimcha qarz",
+    tg_extra_credit: "Kredit qo'llanildi",
     tg_grand_total: "JAMI TO'LASH",
     tg_note: 'Izoh',
     tg_system: 'Nina Spiska tizimi',
@@ -6931,6 +7123,7 @@ var LANGS = {
     preview_total_units: 'JAMI DONA', preview_units_label: 'dona mahsulot',
     preview_products_label: 'MAHSULOTLAR',
     preview_prev_debt: 'Oldingi qarz',
+    preview_prev_credit: 'Kredit qo\'llanildi',
     preview_grand: "JAMI TO'LASH",
     preview_note_label: 'IZOH',
     preview_back: 'Orqaga',
@@ -7124,6 +7317,29 @@ var LANGS = {
     search_no_results: "Qidiruv natijasi yo'q",
     product_admin_only: 'FAQAT ADMIN',
     no_data: "Ma'lumot yo'q",
+    delete_customer_debt_warn_title: 'Mijozning qarzi bor!',
+    delete_customer_debt_warn_msg: "Bu mijozning {0} qarzi bor. Mijozni o'chirsangiz, bu qarz nolga tushiriladi (yozib tashlanadi) va buni orqaga qaytarib bo'lmaydi. Davom etasizmi?",
+    delete_customer_credit_warn_title: 'Biz mijozga qarzdormiz!',
+    delete_customer_credit_warn_msg: "Biz bu mijozga {0} qarzmiz. Mijozni o'chirsangiz, bu qarz yopiladi (yozib tashlanadi) va buni orqaga qaytarib bo'lmaydi. Davom etasizmi?",
+    delete_customer_writeoff_btn: 'Ha, nolga tushirib davom etish',
+    delete_customer_writeoff_note: "Mijoz o'chirilganda balans yozib tashlandi (write-off)",
+    access_req_title: "Siz hali admin sifatida ro'yxatdan o'tmagansiz",
+    access_req_sub: "Quyidagi ID Telegram'ning o'zidan avtomatik olindi — bu aniq, xatosiz raqam:",
+    access_req_btn: "So'rov yuborish",
+    access_req_already: 'Allaqachon adminsiz va parolingiz bormi?',
+    access_req_manual_link: 'Parol bilan kirish',
+    access_req_tg_title: "YANGI KIRISH SO'ROVI",
+    access_req_tg_hint: "Bu ID Telegram'ning o'zidan olindi — xato bo'lishi mumkin emas. \"Adminlar ro'yxati\" bo'limidan qo'shishingiz mumkin.",
+    access_req_sent: 'So\'rov yuborildi!',
+    access_req_failed: "Yuborilmadi, qayta urinib ko'ring",
+    spiska_debt_hint_debt: "💡 Bu mijozning <strong>oldingi qarzi</strong> — bu spiskaga qo'shiladi va jami summa avtomatik hisoblanadi",
+    spiska_debt_hint_credit: "🔵 Bu mijozning <strong>mavjud krediti</strong> (biz unga qarzmiz) — shu summani ushbu buyurtmadan ayirib ko'rsatishingiz mumkin, jami to'lov shuncha kamayadi",
+    spiska_debt_amount_label_debt: "QARZ SUMMASI (SO'M)",
+    spiska_debt_amount_label_credit: "AYRILADIGAN KREDIT SUMMASI (SO'M)",
+    spiska_credit_apply_btn: 'Shu kreditni qo\'llash',
+    spiska_extra_credit_row_label: 'Oldingi kredit qo\'llanildi',
+    spiska_credit_applied_toast: 'Kredit qo\'llanildi',
+    spiska_credit_exceeds_err: "Kredit summasi mahsulotlar summasidan ({0} so'm) katta bo'lishi mumkin emas!",
     // Sub-tabs
     stab_overview: 'Umumiy', stab_customers: 'Mijozlar',
     stab_products: 'Mahsulotlar', stab_spiska: 'Spiska',
@@ -7227,6 +7443,7 @@ var LANGS = {
     spiska_extra_debt: 'Доп. долг', spiska_grand_total: 'ИТОГО К ОПЛАТЕ',
     spiska_add_item: 'Добавить товар', spiska_add_debt: 'Добавить долг',
     spiska_edit_debt: 'Долг: {0} сум (изменить)',
+    spiska_edit_credit: '🔵 Кредит: {0} сум (изменить)',
     spiska_close_btn: 'Завершить список', spiska_closed_banner: 'Список завершён',
     spiska_delete_btn: 'Удалить список',
     spiska_confirm1: 'УДАЛИТЬ СПИСОК?\n\nВсе товары и данные будут полностью удалены из базы!',
@@ -7363,6 +7580,7 @@ var LANGS = {
     tg_products: 'Товары',
     tg_products_total: 'Итого по товарам',
     tg_extra_debt: 'Доп. долг',
+    tg_extra_credit: 'Кредит применён',
     tg_grand_total: 'ИТОГО К ОПЛАТЕ',
     tg_note: 'Примечание',
     tg_system: 'Nina Spiska система',
@@ -7384,6 +7602,7 @@ var LANGS = {
     preview_total_units: 'ВСЕГО ЕДИНИЦ', preview_units_label: 'ед. товара',
     preview_products_label: 'ТОВАРЫ',
     preview_prev_debt: 'Предыдущий долг',
+    preview_prev_credit: 'Кредит применён',
     preview_grand: 'ИТОГО К ОПЛАТЕ',
     preview_note_label: 'ПРИМЕЧАНИЕ',
     preview_back: 'Назад',
@@ -7577,6 +7796,29 @@ var LANGS = {
     search_no_results: 'Нет результатов поиска',
     product_admin_only: 'ТОЛЬКО АДМИН',
     no_data: 'Нет данных',
+    delete_customer_debt_warn_title: 'У клиента есть долг!',
+    delete_customer_debt_warn_msg: 'У этого клиента есть долг {0}. Если вы удалите клиента, этот долг будет списан (обнулён), и это действие нельзя отменить. Продолжить?',
+    delete_customer_credit_warn_title: 'Мы должны клиенту!',
+    delete_customer_credit_warn_msg: 'Мы должны этому клиенту {0}. Если вы удалите клиента, этот долг будет закрыт (списан), и это действие нельзя отменить. Продолжить?',
+    delete_customer_writeoff_btn: 'Да, списать и продолжить',
+    delete_customer_writeoff_note: 'Баланс списан при удалении клиента',
+    access_req_title: 'Вы ещё не зарегистрированы как администратор',
+    access_req_sub: 'ID ниже получен автоматически от самого Telegram — это точный номер без ошибок:',
+    access_req_btn: 'Отправить запрос',
+    access_req_already: 'Уже администратор и есть пароль?',
+    access_req_manual_link: 'Войти с паролем',
+    access_req_tg_title: 'НОВЫЙ ЗАПРОС НА ДОСТУП',
+    access_req_tg_hint: 'Этот ID получен от самого Telegram — ошибка исключена. Вы можете добавить его в разделе «Список администраторов».',
+    access_req_sent: 'Запрос отправлен!',
+    access_req_failed: 'Не отправлено, попробуйте снова',
+    spiska_debt_hint_debt: '💡 Это <strong>предыдущий долг</strong> клиента — добавляется в список, итог рассчитывается автоматически',
+    spiska_debt_hint_credit: '🔵 Это <strong>текущий кредит</strong> клиента (мы должны ему) — можно вычесть эту сумму из данного заказа, итоговая оплата уменьшится на неё',
+    spiska_debt_amount_label_debt: 'СУММА ДОЛГА (СУМ)',
+    spiska_debt_amount_label_credit: 'СУММА ВЫЧИТАЕМОГО КРЕДИТА (СУМ)',
+    spiska_credit_apply_btn: 'Применить этот кредит',
+    spiska_extra_credit_row_label: 'Кредит применён',
+    spiska_credit_applied_toast: 'Кредит применён',
+    spiska_credit_exceeds_err: 'Сумма кредита не может превышать сумму товаров ({0} сум)!',
     // Sub-tabs
     stab_overview: 'Общий', stab_customers: 'Клиенты',
     stab_products: 'Товары', stab_spiska: 'Списки',
@@ -7699,6 +7941,15 @@ function applyLang() {
   }
   var lb = document.getElementById('login-btn');
   if (lb) lb.textContent = d.login_btn;
+
+  // Kirish so'rovi paneli
+  sid('access-request-title', d.access_req_title);
+  sid('access-request-sub',   d.access_req_sub);
+  sid('access-request-btn-label', d.access_req_btn);
+  var arAlready = document.getElementById('access-request-already');
+  if (arAlready) {
+    arAlready.innerHTML = d.access_req_already + ' <a href="#" onclick="showManualLoginForm();return false;" style="color:var(--accent);font-weight:600;text-decoration:none">' + d.access_req_manual_link + '</a>';
+  }
 
   // === BOTTOM NAV ===
   setNavLabel('nav-dashboard', d.nav_home);
@@ -8438,6 +8689,23 @@ document.addEventListener('DOMContentLoaded', function() {
     if (tgUser && tgUser.id) {
       document.getElementById('manual-telegram-id').value = tgUser.id;
       document.getElementById('telegram-id-group').style.display = 'none';
+      window._detectedTgUser = tgUser;
+
+      // MUHIM: Telegram orqali avtomatik aniqlangan ID'ni bazadagi
+      // adminlar bilan tekshiramiz. Agar bu ID hali ro'yxatdan
+      // o'tmagan bo'lsa — parol so'rash o'rniga, aniq (xatosiz)
+      // ID'ni ko'rsatib, asosiy adminga "kirish so'rovi" yuborish
+      // imkonini beramiz. Shu orqali ID hech qachon qo'lda
+      // kiritilmaydi/yozilmaydi — xato ehtimoli butunlay yo'qoladi.
+      // Agar allaqachon saqlangan sessiya bo'lsa (currentAdmin), bu
+      // tekshiruv shart emas — showMainApp() darhol ishga tushadi.
+      if (!currentAdmin && db) {
+        db.from('admins').select('id').eq('telegram_id', tgUser.id).eq('is_active', true).maybeSingle()
+          .then(function(res) {
+            if (!res.data) showAccessRequestPanel(tgUser);
+          })
+          .catch(function() { /* Xato bo'lsa — oddiy parol formasi ko'rinishida qoladi */ });
+      }
     }
   }
 
