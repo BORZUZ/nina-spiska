@@ -4516,6 +4516,25 @@ async function saveSpiskaDebt(forceZero) {
     return;
   }
 
+  // MUHIM (2-tekshiruv): kredit mijozning HAQIQIY joriy kreditidan ham
+  // oshib ketmasligi kerak. Bazadan ENG YANGI balansni olamiz (sheet
+  // ochilgan paytdagi eski qiymatga emas) — aks holda admin xato yoki
+  // eski ma'lumot asosida haqiqatdan katta "chegirma" berib qo'yishi,
+  // natijada kassada kam pul yig'ilib qolishi mumkin.
+  if (amount < 0) {
+    try {
+      var crRes = await db.from('customer_debts').select('balance').eq('customer_id', s.customer_id).maybeSingle();
+      var realBalance = (crRes.data && crRes.data.balance) || 0;
+      var realCredit = realBalance < 0 ? Math.abs(realBalance) : 0;
+      if (Math.abs(amount) > realCredit) {
+        showToast(t('spiska_credit_real_exceeds_err', fmt(realCredit)), 'error');
+        return;
+      }
+    } catch(e) {
+      console.warn('Real kredit tekshiruvi ishlamadi:', e);
+    }
+  }
+
   var btnId = forceZero === 0 ? 'spiska-debt-remove-btn' : 'spiska-debt-save-btn';
   var btn = btnStart(btnId, t('saving'));
   if (!btn) return;
@@ -7393,6 +7412,7 @@ var LANGS = {
     spiska_extra_credit_row_label: 'Oldingi kredit qo\'llanildi',
     spiska_credit_applied_toast: 'Kredit qo\'llanildi',
     spiska_credit_exceeds_err: "Kredit summasi mahsulotlar summasidan ({0} so'm) katta bo'lishi mumkin emas!",
+    spiska_credit_real_exceeds_err: "Mijozning haqiqiy krediti bor-yo'g'i {0} so'm — undan ortiq kredit qo'llab bo'lmaydi!",
     // Sub-tabs
     stab_overview: 'Umumiy', stab_customers: 'Mijozlar',
     stab_products: 'Mahsulotlar', stab_spiska: 'Spiska',
@@ -7874,6 +7894,7 @@ var LANGS = {
     spiska_extra_credit_row_label: 'Кредит применён',
     spiska_credit_applied_toast: 'Кредит применён',
     spiska_credit_exceeds_err: 'Сумма кредита не может превышать сумму товаров ({0} сум)!',
+    spiska_credit_real_exceeds_err: 'У клиента реальный кредит всего {0} сум — нельзя применить больше!',
     // Sub-tabs
     stab_overview: 'Общий', stab_customers: 'Клиенты',
     stab_products: 'Товары', stab_spiska: 'Списки',
@@ -9921,17 +9942,28 @@ function openReceiptSheet(paymentId, amount, dateStr, customerName, customerPhon
   if (nameEl)   nameEl.textContent   = customerName || '—';
   if (phoneEl)  phoneEl.textContent  = customerPhone || '—';
 
-  // Qoldiq qarz — faqat aniq bo'lsa (eski yozuvlarda bo'lmasligi mumkin) va 0 dan katta bo'lsa ko'rsatiladi
+  // Qoldiq — faqat aniq bo'lsa (eski yozuvlarda bo'lmasligi mumkin) ko'rsatiladi.
+  // 3 holat, tizimdagi mavjud rang/belgi konvensiyasiga mos:
+  //   musbat  -> mijoz hali qarzdor       (qizil,  "Qoldiq qarz")
+  //   manfiy  -> BIZ mijozga qarzdormiz   (ko'k 🔵, "Biz mijozga qarzdormiz" — ortiqcha to'lov)
+  //   nol/yo'q -> hisob toza, qator ko'rsatilmaydi
   var remWrap = document.getElementById('receipt-remaining-wrap');
   var remLbl  = document.getElementById('receipt-lbl-remaining');
   var remVal  = document.getElementById('receipt-remaining');
   var hasBalanceAfter = (balanceAfter !== null && balanceAfter !== undefined && balanceAfter !== 'null' && !isNaN(Number(balanceAfter)));
   var balanceAfterNum = hasBalanceAfter ? Number(balanceAfter) : null;
   if (hasBalanceAfter && balanceAfterNum > 0) {
-    if (remLbl) remLbl.textContent = t('receipt_remaining_debt');
-    if (remVal) remVal.textContent = fmt(balanceAfterNum) + " so'm";
+    // Mijoz hali qarzdor — qizil (tizimdagi .debt-badge.has-debt bilan bir xil)
+    if (remLbl) { remLbl.textContent = t('receipt_remaining_debt'); remLbl.style.color = '#6b7280'; }
+    if (remVal) { remVal.textContent = fmt(balanceAfterNum) + " so'm"; remVal.style.color = '#DC2626'; }
+    if (remWrap) remWrap.style.display = 'block';
+  } else if (hasBalanceAfter && balanceAfterNum < 0) {
+    // BIZ mijozga qarzdormiz (ortiqcha to'lov) — ko'k (tizimdagi .debt-badge.credit bilan bir xil)
+    if (remLbl) { remLbl.textContent = '🔵 ' + t('customer_credit_full'); remLbl.style.color = '#007AFF'; }
+    if (remVal) { remVal.textContent = fmt(Math.abs(balanceAfterNum)) + " so'm"; remVal.style.color = '#007AFF'; }
     if (remWrap) remWrap.style.display = 'block';
   } else {
+    // Hisob toza (0) yoki eski yozuv — qo'shimcha qator kerak emas
     if (remWrap) remWrap.style.display = 'none';
   }
 
@@ -9967,7 +9999,7 @@ function openReceiptSheet(paymentId, amount, dateStr, customerName, customerPhon
     phone: customerPhone,
     note: note,
     isDebtAdd: isDebtAdd,
-    balanceAfter: (hasBalanceAfter && balanceAfterNum > 0) ? balanceAfterNum : null
+    balanceAfter: (hasBalanceAfter && balanceAfterNum !== 0) ? balanceAfterNum : null
   };
 
   showSheet('receipt-sheet');
@@ -10053,7 +10085,11 @@ async function copyReceiptAsText() {
   lines.push('');
   lines.push('💰 + ' + fmt(Math.abs(d.amount)) + " so'm");
   if (d.balanceAfter !== null && d.balanceAfter !== undefined) {
-    lines.push(t('receipt_remaining_debt') + ': ' + fmt(d.balanceAfter) + " so'm");
+    if (d.balanceAfter > 0) {
+      lines.push(t('receipt_remaining_debt') + ': ' + fmt(d.balanceAfter) + " so'm");
+    } else {
+      lines.push('🔵 ' + t('customer_credit_full') + ': ' + fmt(Math.abs(d.balanceAfter)) + " so'm");
+    }
   }
   lines.push('');
   lines.push(t('receipt_lbl_name') + ': ' + (d.name || '—'));
