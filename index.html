@@ -2821,15 +2821,19 @@ body{
 
     <!-- CHEK KARTA — rasm sifatida olishingiz uchun -->
     <div id="receipt-card" style="background:#fff;border-radius:14px;border:1px solid #e5e7eb;overflow:hidden;max-width:340px;margin:0 auto 14px;color:#111;font-family:'-apple-system',BlinkMacSystemFont,'Segoe UI',sans-serif">
-      <!-- Yashil banner: status + summa -->
-      <div style="background:#EAF3DE;padding:18px 20px 14px;text-align:center;border-bottom:1px solid #d1d5db">
+      <!-- Banner: status + summa (rangi to'lov/qarz holatiga qarab JS orqali almashadi) -->
+      <div id="receipt-banner" style="background:#EAF3DE;padding:18px 20px 14px;text-align:center;border-bottom:1px solid #d1d5db">
         <div style="display:inline-flex;align-items:center;justify-content:center;gap:6px;margin-bottom:4px">
-          <div style="width:24px;height:24px;border-radius:7px;background:#3B6D11;color:#fff;display:inline-flex;align-items:center;justify-content:center">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          <div id="receipt-icon-box" style="width:24px;height:24px;border-radius:7px;background:#3B6D11;color:#fff;display:inline-flex;align-items:center;justify-content:center">
+            <svg id="receipt-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
           <span id="receipt-status-label" style="font-size:11px;font-weight:600;color:#3B6D11;text-transform:uppercase;letter-spacing:.06em">To'lov qabul qilindi</span>
         </div>
         <div id="receipt-amount" style="font-size:24px;font-weight:700;color:#173404;font-family:'JetBrains Mono','SF Mono',monospace;margin-top:6px;letter-spacing:-.02em">+ 0 so'm</div>
+        <div id="receipt-remaining-wrap" style="display:none;margin-top:8px;padding-top:8px;border-top:1px dashed rgba(0,0,0,.15)">
+          <span id="receipt-lbl-remaining" style="font-size:11px;color:#6b7280">Qoldiq qarz</span>
+          <span id="receipt-remaining" style="font-size:14px;font-weight:700;color:#B45309;margin-left:6px;font-family:'JetBrains Mono','SF Mono',monospace">0 so'm</span>
+        </div>
       </div>
 
       <!-- Asosiy ma'lumotlar -->
@@ -3157,14 +3161,22 @@ function fmtInputNumber(input) {
   input.value = parts.length > 1 ? intPart + '.' + parts[1] : intPart;
 }
 function getRawNumber(input) {
-  // Avval haqiqiy input qiymatidan bo'shliqlarni olib parse qilish
-  var displayVal = input.value.replace(/\s/g, '').replace(',', '.');
-  var rawVal = (input.dataset && input.dataset.rawValue) || '';
-  // Agar rawValue bo'sh bo'lsa yoki input qiymatidan farq qilsa — display qiymatini ishlatamiz
-  if (!rawVal || rawVal === '') {
-    return parseFloat(displayVal) || 0;
-  }
-  return parseFloat(rawVal) || parseFloat(displayVal) || 0;
+  // MUHIM (jiddiy xato tuzatildi): oldin bu funksiya dataset.rawValue'ga
+  // ustunlik berardi. Lekin sheet qayta ochilganda (masalan boshqa
+  // mahsulotni tahrirlashda) inputning .value'si to'g'ri yangilanadi-yu,
+  // lekin dataset.rawValue ESKI yozuvdan qolib ketaveradi (chunki
+  // avto-formatlash faqat input hali type="number" bo'lgandagina ishga
+  // tushadi, ikkinchi marotaba ochilganda esa u allaqachon type="text").
+  // Natijada, agar admin bitta maydonni (masalan faqat tan narxini)
+  // o'zgartirib, boshqasiga (sotish narxiga) tegmasa — saqlashda o'sha
+  // boshqa maydonga OLDINGI, ALOQASIZ mahsulotning narxi yozilib
+  // ketaverardi. Endi har doim EKRANDA KO'RINAYOTGAN (.value) qiymatdan
+  // hisoblanadi — bu har doim to'g'ri va yangilangan holatni aks
+  // ettiradi, xoh admin uni qo'lda yozgan bo'lsin, xoh kod orqali
+  // o'rnatilgan bo'lsin.
+  if (!input) return 0;
+  var displayVal = String(input.value || '').replace(/\s/g, '').replace(',', '.');
+  return parseFloat(displayVal) || 0;
 }
 // Sahifa yuklanganda barcha number inputlarga avto-format qo'shish
 function initNumberFormatting() {
@@ -3189,10 +3201,19 @@ function initNumberFormatting() {
     setTimeout(function() {
       var sheet = document.getElementById(id);
       if (!sheet) return;
-      sheet.querySelectorAll('input[type="number"]').forEach(function(inp) {
-        inp.type = 'text';
-        inp.inputMode = 'decimal';
+      // MUHIM: faqat hali type="number" bo'lgan emas, balki avvalroq
+      // type="text"ga aylantirilgan (va endi yangi yozuv uchun qayta
+      // to'ldirilgan) inputlarni ham qamrab olamiz — aks holda ekranda
+      // raqam formatlanmasdan (bo'shliqsiz, masalan "20000") ko'rinib
+      // qolishi mumkin edi, garchi saqlanadigan qiymatning o'zi endi
+      // getRawNumber() tuzatilgani tufayli har doim to'g'ri bo'lsa ham.
+      sheet.querySelectorAll('input[type="number"], input[inputmode="decimal"]').forEach(function(inp) {
+        if (inp.type === 'number') {
+          inp.type = 'text';
+          inp.inputMode = 'decimal';
+        }
         if (inp.value && inp.value !== '0') fmtInputNumber(inp);
+        else inp.dataset.rawValue = '';
       });
     }, 50);
   };
@@ -5057,41 +5078,54 @@ function switchDebtTab(tab) {
 
 async function saveDebtChange() {
   var customerId = document.getElementById('debt-customer-id').value;
-  var currentBalance = getRawNumber(document.getElementById('debt-current-balance')) || 0;
   var amount = getRawNumber(document.getElementById('debt-amount-input')) || 0;
   var note = document.getElementById('debt-note-input').value.trim();
-  var newBalance = 0;
   var actionText = '';
 
-  if (currentDebtTab === 'zero') {
-    newBalance = 0; actionText = t('debt_zero_btn');
-  } else if (currentDebtTab === 'add') {
+  if (currentDebtTab === 'add' || currentDebtTab === 'reduce') {
     if (!amount || amount <= 0) { showToast(t('payment_amount_err'), 'error'); return; }
-    newBalance = currentBalance + amount; actionText = t('debt_add_btn') + ': +' + fmt(amount) + ' ' + t('som');
-  } else {
-    if (!amount || amount <= 0) { showToast(t('payment_amount_err'), 'error'); return; }
+  }
+  if (currentDebtTab === 'add') {
+    actionText = t('debt_add_btn') + ': +' + fmt(amount) + ' ' + t('som');
+  } else if (currentDebtTab === 'reduce') {
     // MUHIM: endi 0 ga cheklanmaydi — agar kamaytirilayotgan summa joriy
     // qarzdan katta bo'lsa, natija manfiy chiqadi va bu "biz mijozga
     // qarzdormiz" degani (masalan ortiqcha to'lov holatida).
-    newBalance = currentBalance - amount; actionText = "Qarz -" + fmt(amount) + " so'm kamaydi";
+    actionText = "Qarz -" + fmt(amount) + " so'm kamaydi";
+  } else {
+    actionText = t('debt_zero_btn');
   }
 
   var btn = btnStart('debt-save-btn', t('saving'));
   if (!btn) return;
   try {
-    var dr = await db.from('customer_debts').select('id').eq('customer_id', customerId).maybeSingle();
-    if (dr.data) {
-      await db.from('customer_debts').update({ balance: newBalance, updated_at: new Date().toISOString() }).eq('customer_id', customerId);
+    // MUHIM: bu yerda ENDI hech qanday "avval o'qib, keyin yozish" yo'q —
+    // shu sababli boshqa admin aynan shu payt o'sha mijozga to'lov qabul
+    // qilgan yoki spiska yopgan bo'lsa ham, o'sha o'zgarish yo'qolib
+    // qolmaydi (change_customer_debt/set_customer_debt bazaning o'zida
+    // atomik ishlaydi va HAR DOIM eng yangi balansdan qaytadi).
+    var oldBalance, newBalance;
+    if (currentDebtTab === 'zero') {
+      var zRes = await db.rpc('set_customer_debt', { p_customer_id: customerId, p_balance: 0 });
+      if (zRes.error) throw zRes.error;
+      oldBalance = Number(zRes.data) || 0;
+      newBalance = 0;
     } else {
-      await db.from('customer_debts').insert({ customer_id: customerId, balance: newBalance });
+      var delta = currentDebtTab === 'add' ? amount : -amount;
+      var cRes = await db.rpc('change_customer_debt', { p_customer_id: customerId, p_amount: delta });
+      if (cRes.error) throw cRes.error;
+      newBalance = Number(cRes.data) || 0;
+      oldBalance = newBalance - delta;
     }
+    var currentBalance = oldBalance;
 
     // To'lov tarixi
     await db.from('payments').insert({
       customer_id: customerId,
-      amount: currentDebtTab === 'add' ? -amount : (currentDebtTab === 'zero' ? -currentBalance : amount),
+      amount: currentDebtTab === 'add' ? -amount : (currentDebtTab === 'zero' ? oldBalance : amount),
       note: note || actionText,
-      admin_id: currentAdmin.id
+      admin_id: currentAdmin.id,
+      balance_after: newBalance
     });
 
     // Telegram xabar
@@ -5364,13 +5398,21 @@ function renderCustomerDetail(c, spiskalar, debt, payments, correctTotalSpent) {
         var pDate   = p.created_at;
         var pNote   = p.note || '';
         var pId     = p.id;
+        var isDebtAdd = pAmount < 0; // manfiy summa = qo'lda "qarz qo'shildi" yozuvi, haqiqiy to'lov emas
+        // balance_after — eski (bu ustun qo'shilishidan oldingi) yozuvlarda bo'lmasligi mumkin
+        var hasBalAfter = (p.balance_after !== null && p.balance_after !== undefined);
+        var balAfterArg = hasBalAfter ? p.balance_after : 'null';
         // Cheka uzatish uchun ma'lumotlar (attribute escape qilingan)
         var attrName = attrEscape(c.full_name);
         var attrPhone = attrEscape(c.phone || '');
         var attrNote = attrEscape(pNote);
-        return '<div onclick="openReceiptSheet(\'' + pId + '\',' + pAmount + ',\'' + pDate + '\',\'' + attrName + '\',\'' + attrPhone + '\',\'' + attrNote + '\')" style="display:flex;justify-content:space-between;align-items:center;padding:10px 8px;border-bottom:1px solid var(--border);cursor:pointer;border-radius:8px;transition:background .15s" onmouseover="this.style.background=\'var(--bg-tertiary)\'" onmouseout="this.style.background=\'transparent\'">' +
+        var rowColor = isDebtAdd ? 'var(--warning)' : 'var(--success)';
+        var rowLabel = isDebtAdd
+          ? (t('receipt_status_debt') + ': ' + fmt(Math.abs(pAmount)) + " so'm")
+          : ('+ ' + fmt(pAmount) + " so'm");
+        return '<div onclick="openReceiptSheet(\'' + pId + '\',' + pAmount + ',\'' + pDate + '\',\'' + attrName + '\',\'' + attrPhone + '\',\'' + attrNote + '\',' + balAfterArg + ')" style="display:flex;justify-content:space-between;align-items:center;padding:10px 8px;border-bottom:1px solid var(--border);cursor:pointer;border-radius:8px;transition:background .15s" onmouseover="this.style.background=\'var(--bg-tertiary)\'" onmouseout="this.style.background=\'transparent\'">' +
           '<div>' +
-            '<div style="font-size:.85rem;font-weight:600;color:var(--success)">+ ' + fmt(pAmount) + " so'm</div>" +
+            '<div style="font-size:.85rem;font-weight:600;color:' + rowColor + '">' + rowLabel + '</div>' +
             '<div style="font-size:.72rem;color:var(--text-muted)">' + fmtDate(pDate) + (pNote ? ' · ' + htmlEscape(pNote) : '') + '</div>' +
           '</div>' +
           '<div style="display:flex;align-items:center;gap:8px">' +
@@ -5471,30 +5513,39 @@ async function savePayment() {
   var btn = btnStart('payment-save-btn', t('saving'));
   if (!btn) return;
   try {
-    // To'lov saqlash
-    await db.from('payments').insert({
-      customer_id: customerId,
-      amount: amount,
-      note: note || null,
-      admin_id: currentAdmin.id
-    });
-
-    // Qarzni kamaytirish (atomar — race condition'dan himoya)
+    // MUHIM: avval qarzni ATOMAR kamaytiramiz (race condition'dan himoya),
+    // shundan keyingina to'lov yozuviga "shu to'lovdan keyingi aniq qoldiq"
+    // (balance_after) yozib qo'yamiz — chekda va tarixda to'g'ri qoldiqni
+    // ko'rsatish uchun shu qiymat kerak bo'ladi.
+    var newBalance;
     var rpcRes = await db.rpc('change_customer_debt', {
       p_customer_id: customerId,
       p_amount: -amount
     });
     if (rpcRes.error) {
-      // Zaxira usul
+      // Zaxira usul (RPC butunlay ishlamay qolgan taqdirdagina)
       console.warn('RPC ishlamadi:', rpcRes.error);
       var dr = await db.from('customer_debts').select('*').eq('customer_id', customerId).maybeSingle();
+      // MUHIM: endi 0 ga cheklanmaydi — ortiqcha to'lov qilingan bo'lsa,
+      // balans manfiy bo'ladi ("biz mijozga qarzdormiz").
+      newBalance = (dr.data ? (dr.data.balance || 0) : 0) - amount;
       if (dr.data) {
-        // MUHIM: endi 0 ga cheklanmaydi — ortiqcha to'lov qilingan bo'lsa,
-        // balans manfiy bo'ladi ("biz mijozga qarzdormiz").
-        var newBalance = (dr.data.balance || 0) - amount;
-        await db.from('customer_debts').update({ balance: newBalance }).eq('customer_id', customerId);
+        await db.from('customer_debts').update({ balance: newBalance, updated_at: new Date().toISOString() }).eq('customer_id', customerId);
+      } else {
+        await db.from('customer_debts').insert({ customer_id: customerId, balance: newBalance });
       }
+    } else {
+      newBalance = Number(rpcRes.data) || 0;
     }
+
+    // To'lov saqlash — shu to'lovdan keyingi qoldiq bilan birga
+    await db.from('payments').insert({
+      customer_id: customerId,
+      amount: amount,
+      note: note || null,
+      admin_id: currentAdmin.id,
+      balance_after: newBalance
+    });
 
     hideSheet('payment-sheet');
     showToast(t('payment_saved') + ': ' + fmt(amount) + ' ' + t('som'));
@@ -7251,6 +7302,8 @@ var LANGS = {
     notif_time_day: 'kun oldin',
     receipt_title: "To'lov cheki",
     receipt_status: "To'lov qabul qilindi",
+    receipt_status_debt: "Qarz qo'shildi",
+    receipt_remaining_debt: 'Qoldiq qarz',
     receipt_lbl_name: 'Mijoz',
     receipt_lbl_phone: 'Telefon',
     receipt_lbl_date: 'Sana',
@@ -7730,6 +7783,8 @@ var LANGS = {
     notif_time_day: 'дн назад',
     receipt_title: 'Чек об оплате',
     receipt_status: 'Оплата принята',
+    receipt_status_debt: 'Долг добавлен',
+    receipt_remaining_debt: 'Остаток долга',
     receipt_lbl_name: 'Клиент',
     receipt_lbl_phone: 'Телефон',
     receipt_lbl_date: 'Дата',
@@ -9811,14 +9866,31 @@ window.markAllNotifsRead = markAllNotifsRead;
 // Joriy chek ma'lumotlari (matn nusxa olish uchun)
 var currentReceiptData = null;
 
-function openReceiptSheet(paymentId, amount, dateStr, customerName, customerPhone, note) {
+function openReceiptSheet(paymentId, amount, dateStr, customerName, customerPhone, note, balanceAfter) {
+  var isDebtAdd = Number(amount) < 0; // manfiy summa = qo'lda "qarz qo'shildi" yozuvi, haqiqiy to'lov emas
+
   // Sheet ichidagi ma'lumotlarni to'ldirish
   var titleEl = document.getElementById('receipt-sheet-title');
   if (titleEl) titleEl.textContent = t('receipt_title');
 
-  // Status label
+  // Status label + banner rangi (to'lov = yashil, qarz qo'shildi = amber)
   var statusEl = document.getElementById('receipt-status-label');
-  if (statusEl) statusEl.textContent = t('receipt_status');
+  var bannerEl = document.getElementById('receipt-banner');
+  var iconBoxEl = document.getElementById('receipt-icon-box');
+  var amountElColor = document.getElementById('receipt-amount');
+  if (isDebtAdd) {
+    if (statusEl)  statusEl.textContent = t('receipt_status_debt');
+    if (statusEl)  statusEl.style.color = '#B45309';
+    if (bannerEl)  bannerEl.style.background = '#FEF3E2';
+    if (iconBoxEl) iconBoxEl.style.background = '#B45309';
+    if (amountElColor) amountElColor.style.color = '#7C2D12';
+  } else {
+    if (statusEl)  statusEl.textContent = t('receipt_status');
+    if (statusEl)  statusEl.style.color = '#3B6D11';
+    if (bannerEl)  bannerEl.style.background = '#EAF3DE';
+    if (iconBoxEl) iconBoxEl.style.background = '#3B6D11';
+    if (amountElColor) amountElColor.style.color = '#173404';
+  }
 
   // Label tarjimalari
   var lblName  = document.getElementById('receipt-lbl-name');
@@ -9845,9 +9917,23 @@ function openReceiptSheet(paymentId, amount, dateStr, customerName, customerPhon
   var rowNote  = document.getElementById('receipt-row-note');
   var rowPhone = document.getElementById('receipt-row-phone');
 
-  if (amountEl) amountEl.textContent = '+ ' + fmt(amount) + " so'm";
+  if (amountEl) amountEl.textContent = '+ ' + fmt(Math.abs(amount)) + " so'm";
   if (nameEl)   nameEl.textContent   = customerName || '—';
   if (phoneEl)  phoneEl.textContent  = customerPhone || '—';
+
+  // Qoldiq qarz — faqat aniq bo'lsa (eski yozuvlarda bo'lmasligi mumkin) va 0 dan katta bo'lsa ko'rsatiladi
+  var remWrap = document.getElementById('receipt-remaining-wrap');
+  var remLbl  = document.getElementById('receipt-lbl-remaining');
+  var remVal  = document.getElementById('receipt-remaining');
+  var hasBalanceAfter = (balanceAfter !== null && balanceAfter !== undefined && balanceAfter !== 'null' && !isNaN(Number(balanceAfter)));
+  var balanceAfterNum = hasBalanceAfter ? Number(balanceAfter) : null;
+  if (hasBalanceAfter && balanceAfterNum > 0) {
+    if (remLbl) remLbl.textContent = t('receipt_remaining_debt');
+    if (remVal) remVal.textContent = fmt(balanceAfterNum) + " so'm";
+    if (remWrap) remWrap.style.display = 'block';
+  } else {
+    if (remWrap) remWrap.style.display = 'none';
+  }
 
   // Sana — kun va vaqt birga
   var d = new Date(dateStr);
@@ -9879,7 +9965,9 @@ function openReceiptSheet(paymentId, amount, dateStr, customerName, customerPhon
     date: fmtDateTime,
     name: customerName,
     phone: customerPhone,
-    note: note
+    note: note,
+    isDebtAdd: isDebtAdd,
+    balanceAfter: (hasBalanceAfter && balanceAfterNum > 0) ? balanceAfterNum : null
   };
 
   showSheet('receipt-sheet');
@@ -9957,9 +10045,16 @@ async function copyReceiptAsText() {
   if (!currentReceiptData) return;
   var d = currentReceiptData;
   var lines = [];
-  lines.push('✅ ' + t('receipt_status'));
+  if (d.isDebtAdd) {
+    lines.push('🔶 ' + t('receipt_status_debt'));
+  } else {
+    lines.push('✅ ' + t('receipt_status'));
+  }
   lines.push('');
-  lines.push('💰 + ' + fmt(d.amount) + " so'm");
+  lines.push('💰 + ' + fmt(Math.abs(d.amount)) + " so'm");
+  if (d.balanceAfter !== null && d.balanceAfter !== undefined) {
+    lines.push(t('receipt_remaining_debt') + ': ' + fmt(d.balanceAfter) + " so'm");
+  }
   lines.push('');
   lines.push(t('receipt_lbl_name') + ': ' + (d.name || '—'));
   if (d.phone && d.phone.trim() && d.phone !== '—') {
