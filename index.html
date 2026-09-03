@@ -2718,6 +2718,11 @@ body{
       <label class="form-label">PAROL *</label>
       <input type="password" class="form-input" id="admin-password-input" placeholder="Kamida 6 belgi">
     </div>
+    <div class="form-group" style="border-top:1px solid var(--border);padding-top:16px">
+      <label class="form-label" style="color:var(--danger)">EGA PAROLI (TASDIQLASH UCHUN) *</label>
+      <input type="password" class="form-input" id="admin-owner-password-input" placeholder="O'zingizning (ega) parolingiz">
+      <div class="form-hint">Xavfsizlik uchun: admin qo'shish/tahrirlash faqat ega paroli bilan tasdiqlanadi</div>
+    </div>
     <button class="btn btn-primary btn-full" onclick="saveAdmin()" style="height:48px">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
       Saqlash
@@ -2732,6 +2737,22 @@ body{
     <h3 class="sheet-title">Adminlar Ro'yxati</h3>
     <div id="admin-list-content">
       <div class="loading-spinner"><div class="spinner"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- EGA PAROLINI TASDIQLASH SHEET (qayta ishlatiladigan) -->
+<div class="sheet-overlay" id="owner-confirm-sheet">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <h3 class="sheet-title" id="owner-confirm-title">Tasdiqlash</h3>
+    <div class="form-group">
+      <label class="form-label" style="color:var(--danger)">EGA PAROLI *</label>
+      <input type="password" class="form-input" id="owner-confirm-password" placeholder="Parolingizni kiriting">
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost btn-full" onclick="ownerConfirmCancel()" style="height:46px">Bekor</button>
+      <button class="btn btn-primary btn-full" id="owner-confirm-btn" onclick="ownerConfirmSubmit()" style="height:46px">Tasdiqlash</button>
     </div>
   </div>
 </div>
@@ -3095,7 +3116,17 @@ const SURL = 'https://khxdzqrxrbrzvqntyjzw.supabase.co';
 const SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtoeGR6cXJ4cmJyenZxbnR5anp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5ODYwNjUsImV4cCI6MjA4ODU2MjA2NX0.kYK0gSjd4DKEqx67ikA_n4YxYc2XR5fg1IdMAju-v70';
 const _supabaseLib = window.supabase || (typeof supabase !== 'undefined' ? supabase : null);
 if (!_supabaseLib) { console.error('Supabase yuklanmadi!'); }
-const db = _supabaseLib ? _supabaseLib.createClient(SURL, SKEY) : null;
+let db = _supabaseLib ? _supabaseLib.createClient(SURL, SKEY) : null;
+
+// Login qilingandan keyin sessiya tokenini har bir so'rovga qo'shib yuboradigan
+// yangi client bilan almashtiramiz — shu orqali server "bu so'rov haqiqatan
+// kirgan admindan" ekanini biladi.
+function attachSessionToken(token) {
+  if (!token || !_supabaseLib) return;
+  try {
+    db = _supabaseLib.createClient(SURL, SKEY, { global: { headers: { 'x-session-token': token } } });
+  } catch(e) { console.error('Sessiya tokenini bog\'lashda xato:', e); }
+}
 
 // ===================== STATE =====================
 let currentAdmin = JSON.parse(localStorage.getItem('nina_admin') || 'null');
@@ -3136,13 +3167,13 @@ function toggleTheme() {
   var current = getTheme();
   var next = current === 'dark' ? 'light' : 'dark';
   setTheme(next);
-  if (currentAdmin) db.from('admins').update({theme:next}).eq('id', currentAdmin.id);
+  if (currentAdmin) db.rpc('update_my_prefs', { p_admin_id: currentAdmin.id, p_theme: next, p_language: null });
 }
 function changeTheme(isDark) {
   soundToggle();
   var theme = isDark ? 'dark' : 'light';
   setTheme(theme);
-  if (currentAdmin) db.from('admins').update({theme:theme}).eq('id', currentAdmin.id);
+  if (currentAdmin) db.rpc('update_my_prefs', { p_admin_id: currentAdmin.id, p_theme: theme, p_language: null });
 }
 document.documentElement.setAttribute('data-theme', getTheme());
 
@@ -3291,26 +3322,28 @@ async function handleLogin() {
   btn.innerHTML = '<div class="spinner" style="width:18px;height:18px;border-width:2px;border-color:rgba(255,255,255,.3);border-top-color:#fff;display:inline-block"></div>';
   document.getElementById('login-error').classList.add('hidden');
   try {
-    // 1-usul: verify_admin_password RPC orqali tekshirish
-    var res = await db.rpc('verify_admin_password', {
+    // Login qilamiz VA shu bilan birga sessiya tokeni olamiz
+    var res = await db.rpc('admin_login', {
       p_telegram_id: telegramId,
       p_password: password
     });
 
     if (!res.error) {
-      // RPC muvaffaqiyatli ishladi
-      var valid = res.data && res.data[0] && res.data[0].is_valid;
-      if (!valid) {
+      var token = res.data && res.data[0] && res.data[0].session_token;
+      if (!token) {
         showLoginError(t('login_err_wrong'));
         return;
       }
+      // Endi shu tokenni har bir keyingi so'rovga qo'shib yuboradigan qilamiz
+      attachSessionToken(token);
+
       // Admin to'liq ma'lumotlarini olish
       // MUHIM: 'role' va 'last_login_at' ustunlari admins jadvalida
       // UMUMAN MAVJUD EMAS edi ('last_login' bor, 'role' yo'q) — shu
       // sabab bu so'rov har doim xato bilan tugab, login (asosiy
       // admindan boshqa hech kim uchun) ishlamay qolgan edi.
-      var adminRes = await db.from('admins')
-        .select('id, telegram_id, username, full_name, is_active, created_at, last_login, theme, language')
+      var adminRes = await db.from('admins_public')
+        .select('id, telegram_id, username, full_name, is_active, created_at, last_login, theme, language, is_owner')
         .eq('telegram_id', telegramId)
         .eq('is_active', true)
         .single();
@@ -3321,6 +3354,7 @@ async function handleLogin() {
       }
       currentAdmin = adminRes.data;
       localStorage.setItem('nina_admin', JSON.stringify(currentAdmin));
+      localStorage.setItem('nina_session_token', token);
       if (currentAdmin.theme) setTheme(currentAdmin.theme);
       showMainApp();
       return;
@@ -5171,6 +5205,29 @@ async function saveDebtChange() {
 }
 
 // ===================== ADMIN BOSHQARUVI =====================
+var _ownerConfirmCallback = null;
+function requestOwnerConfirm(title, callback) {
+  var titleEl = document.getElementById('owner-confirm-title');
+  var pwEl = document.getElementById('owner-confirm-password');
+  if (titleEl) titleEl.textContent = title || 'Tasdiqlash';
+  if (pwEl) pwEl.value = '';
+  _ownerConfirmCallback = callback;
+  showSheet('owner-confirm-sheet');
+}
+function ownerConfirmCancel() {
+  _ownerConfirmCallback = null;
+  hideSheet('owner-confirm-sheet');
+}
+function ownerConfirmSubmit() {
+  var pwEl = document.getElementById('owner-confirm-password');
+  var pw = pwEl ? pwEl.value : '';
+  if (!pw) { showToast("Parolni kiriting!", 'error'); return; }
+  var cb = _ownerConfirmCallback;
+  _ownerConfirmCallback = null;
+  hideSheet('owner-confirm-sheet');
+  if (cb) cb(pw);
+}
+
 function openAdminSheet(id, fullname, username, telegramId) {
   id=id||''; fullname=fullname||''; username=username||''; telegramId=telegramId||'';
   document.getElementById('admin-edit-id').value = id;
@@ -5178,6 +5235,7 @@ function openAdminSheet(id, fullname, username, telegramId) {
   document.getElementById('admin-username-input').value = username;
   document.getElementById('admin-telegram-id-input').value = telegramId;
   document.getElementById('admin-password-input').value = '';
+  document.getElementById('admin-owner-password-input').value = '';
   document.getElementById('admin-sheet-title').textContent = id ? t('admin_sheet_edit') : t('admin_sheet_title');
   showSheet('admin-sheet');
 }
@@ -5188,11 +5246,13 @@ async function saveAdmin() {
   var username = document.getElementById('admin-username-input').value.trim().replace('@','');
   var telegramId = parseInt(document.getElementById('admin-telegram-id-input').value);
   var password = document.getElementById('admin-password-input').value;
+  var ownerPassword = document.getElementById('admin-owner-password-input').value;
 
   if (!fullName) { showToast(t('admin_fullname_label').replace(' *','') + ' ' + t('customer_name_err').toLowerCase(), 'error'); return; }
   if (!telegramId) { showToast(t('admin_tg_label').replace(' *','') + ': ' + t('customer_name_err').toLowerCase(), 'error'); return; }
   if (!id && !password) { showToast(t('admin_pass_label').replace(' *','') + ': ' + t('customer_name_err').toLowerCase(), 'error'); return; }
   if (!id && password.length < 6) { showToast(t('admin_pass_ph'), 'error'); return; }
+  if (!ownerPassword) { showToast("Ega parolini kiriting (tasdiqlash uchun)!", 'error'); return; }
 
   // Btn loading
   var saveBtn = document.querySelector('#admin-sheet .btn-primary');
@@ -5201,19 +5261,21 @@ async function saveAdmin() {
   try {
     if (id) {
       // Asosiy ma'lumotlarni yangilash
-      var upd = {
-        full_name: fullName,
-        username: username || null,
-        telegram_id: telegramId
-      };
-      var updRes = await db.from('admins').update(upd).eq('id', id);
+      var updRes = await db.rpc('update_admin_profile', {
+        p_admin_id: id,
+        p_full_name: fullName,
+        p_username: username || null,
+        p_telegram_id: telegramId,
+        p_owner_password: ownerPassword
+      });
       if (updRes.error) throw updRes.error;
 
       // Parol o'zgartirilgan bo'lsa — hash qilib saqlash
       if (password && password.length >= 6) {
         var pwRes = await db.rpc('update_admin_password', {
           p_admin_id: id,
-          p_new_password: password
+          p_new_password: password,
+          p_owner_password: ownerPassword
         });
         if (pwRes.error) throw pwRes.error;
       }
@@ -5225,7 +5287,8 @@ async function saveAdmin() {
         p_full_name: fullName,
         p_username: username || null,
         p_telegram_id: telegramId,
-        p_password: password
+        p_password: password,
+        p_owner_password: ownerPassword
       });
       if (createRes.error) throw createRes.error;
 
@@ -5255,7 +5318,12 @@ async function saveAdmin() {
 
   } catch(e) {
     console.error(e);
-    showToast(t('err_generic') + ': ' + (e.message || e), 'error');
+    var msg = (e.message || String(e));
+    if (msg.indexOf('not_authorized') >= 0) {
+      showToast("Ega paroli noto'g'ri — amal bekor qilindi!", 'error');
+    } else {
+      showToast(t('err_generic') + ': ' + msg, 'error');
+    }
   } finally {
     if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = t('admin_save_btn'); }
   }
@@ -5266,7 +5334,7 @@ async function openAdminListSheet() {
   var el = document.getElementById('admin-list-content');
   el.innerHTML = '<div class="loading-spinner"><div class="spinner"></div></div>';
   try {
-    var res = await db.from('admins').select('id, telegram_id, username, full_name, is_active, created_at').order('full_name');
+    var res = await db.from('admins_public').select('id, telegram_id, username, full_name, is_active, is_owner, created_at').order('is_owner', {ascending:false}).order('full_name');
     var list = res.data || [];
     if (!list.length) { el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-muted)">' + t('admin_list_title') + '</div>'; return; }
     el.innerHTML = list.map(function(a) {
@@ -5276,14 +5344,14 @@ async function openAdminListSheet() {
       return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)">' +
         '<div style="width:38px;height:38px;border-radius:10px;background:' + color + '20;color:' + color + ';display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0">' + ini + '</div>' +
         '<div style="flex:1;min-width:0">' +
-          '<div style="font-weight:600;font-size:.88rem">' + a.full_name + (isMe ? ' <span style="font-size:.6rem;background:var(--accent-light);color:var(--accent);padding:1px 5px;border-radius:8px;font-weight:700">SIZ</span>' : '') + (a.is_active ? '' : ' <span style="font-size:.6rem;background:var(--danger-light);color:var(--danger);padding:1px 5px;border-radius:8px">o\'chirilgan</span>') + '</div>' +
+          '<div style="font-weight:600;font-size:.88rem">' + a.full_name + (a.is_owner ? ' <span style="font-size:.6rem;background:var(--warning-light);color:var(--warning);padding:1px 5px;border-radius:8px;font-weight:700">EGA</span>' : '') + (isMe ? ' <span style="font-size:.6rem;background:var(--accent-light);color:var(--accent);padding:1px 5px;border-radius:8px;font-weight:700">SIZ</span>' : '') + (a.is_active ? '' : ' <span style="font-size:.6rem;background:var(--danger-light);color:var(--danger);padding:1px 5px;border-radius:8px">o\'chirilgan</span>') + '</div>' +
           '<div style="font-size:.7rem;color:var(--text-muted)">' + (a.username ? '@'+a.username+' · ' : '') + 'ID: ' + a.telegram_id + '</div>' +
         '</div>' +
         '<div style="display:flex;gap:4px">' +
           '<button class="btn-icon" style="width:28px;height:28px" onclick="openAdminSheet(\'' + a.id + '\',\'' + a.full_name.replace(/'/g,"\\'") + '\',\'' + (a.username||'') + '\',' + a.telegram_id + ')">' +
             '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>' +
           '</button>' +
-          (!isMe ? '<button class="btn-icon ' + (a.is_active ? 'btn-icon-danger' : '') + '" style="width:28px;height:28px" onclick="toggleAdminStatus(\'' + a.id + '\',' + a.is_active + ')">' +
+          (!isMe && !a.is_owner ? '<button class="btn-icon ' + (a.is_active ? 'btn-icon-danger' : '') + '" style="width:28px;height:28px" onclick="toggleAdminStatus(\'' + a.id + '\',' + a.is_active + ')">' +
             (a.is_active ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>') +
           '</button>' : '') +
         '</div>' +
@@ -5297,20 +5365,33 @@ async function toggleAdminStatus(adminId, isActive) {
   var msg   = isActive ? "Bu admin tizimga kira olmay qoladi." : "Bu admin tizimga qayta kira oladi.";
   var ok = await showConfirm(title, msg, isActive ? "O'chirish" : 'Faollashtirish', isActive);
   if (!ok) return;
-  // Eski ma'lumotni olamiz
-  var oldRes = await db.from('admins').select('full_name').eq('id', adminId).single();
-  var adminName = (oldRes.data && oldRes.data.full_name) || '—';
+  requestOwnerConfirm("Ega paroli (tasdiqlash uchun)", async function(ownerPassword) {
+    try {
+      // Eski ma'lumotni olamiz
+      var oldRes = await db.from('admins_public').select('full_name').eq('id', adminId).single();
+      var adminName = (oldRes.data && oldRes.data.full_name) || '—';
 
-  await db.from('admins').update({ is_active: !isActive }).eq('id', adminId);
-  showToast(isActive ? t('admin_deactivated') : t('admin_activated'));
+      var res = await db.rpc('set_admin_active', {
+        p_admin_id: adminId,
+        p_is_active: !isActive,
+        p_owner_password: ownerPassword
+      });
+      if (res.error) throw res.error;
 
-  // AUDIT
-  logAudit('admin', isActive ? 'delete' : 'update', adminName, {
-    entityId: adminId,
-    meta: { active: !isActive }
+      showToast(isActive ? t('admin_deactivated') : t('admin_activated'));
+
+      // AUDIT
+      logAudit('admin', isActive ? 'delete' : 'update', adminName, {
+        entityId: adminId,
+        meta: { active: !isActive }
+      });
+
+      openAdminListSheet();
+    } catch(e) {
+      var msg2 = (e.message || String(e));
+      showToast(msg2.indexOf('not_authorized') >= 0 ? "Ega paroli noto'g'ri!" : (t('err_generic') + ': ' + msg2), 'error');
+    }
   });
-
-  openAdminListSheet();
 }
 
 // ===================== MIJOZ DETAIL =====================
@@ -7983,7 +8064,7 @@ function t(key, param) {
 
 async function changeLang(lang) {
   localStorage.setItem('nina_lang', lang);
-  if (currentAdmin) await db.from('admins').update({language: lang}).eq('id', currentAdmin.id);
+  if (currentAdmin) await db.rpc('update_my_prefs', { p_admin_id: currentAdmin.id, p_theme: null, p_language: lang });
   applyLang();
   // Joriy sahifani qayta render qilish — dynamic kontent uchun
   try {
@@ -8776,7 +8857,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Agar allaqachon saqlangan sessiya bo'lsa (currentAdmin), bu
       // tekshiruv shart emas — showMainApp() darhol ishga tushadi.
       if (!currentAdmin && db) {
-        db.from('admins').select('id').eq('telegram_id', tgUser.id).eq('is_active', true).maybeSingle()
+        db.from('admins_public').select('id').eq('telegram_id', tgUser.id).eq('is_active', true).maybeSingle()
           .then(function(res) {
             if (!res.data) showAccessRequestPanel(tgUser);
           })
@@ -8795,6 +8876,8 @@ document.addEventListener('DOMContentLoaded', function() {
   if (loginBtn) loginBtn.addEventListener('click', handleLogin);
 
   if (currentAdmin) {
+    var savedToken = localStorage.getItem('nina_session_token');
+    if (savedToken) attachSessionToken(savedToken);
     showMainApp();
   }
 });
@@ -8933,7 +9016,7 @@ async function loadExpenses() {
     });
     var adminMap = {};
     if (adminIds.length > 0) {
-      var ar = await db.from('admins').select('id,full_name').in('id', adminIds);
+      var ar = await db.from('admins_public').select('id,full_name').in('id', adminIds);
       if (!ar.error && ar.data) {
         ar.data.forEach(function(a) { adminMap[a.id] = a.full_name || '—'; });
       }
@@ -9187,7 +9270,7 @@ async function editExpense(id) {
     // Admin nomini alohida yuklaymiz
     var createdAdminName = '—';
     if (e.admin_id) {
-      var ar = await db.from('admins').select('full_name').eq('id', e.admin_id).single();
+      var ar = await db.from('admins_public').select('full_name').eq('id', e.admin_id).single();
       if (!ar.error && ar.data) createdAdminName = ar.data.full_name || '—';
     }
 
@@ -10147,7 +10230,7 @@ async function loadOurDebtDetail(debtId) {
     }
 
     // Admin nomlarini alohida olish
-    var allAdmins = await db.from('admins').select('id, full_name');
+    var allAdmins = await db.from('admins_public').select('id, full_name');
     var adminMap = {};
     (allAdmins.data || []).forEach(function(a){ adminMap[a.id] = a.full_name; });
 
@@ -11376,6 +11459,9 @@ window.searchProducts = searchProducts;
 window.switchProductSort = switchProductSort;
 window.calcProductMargin = calcProductMargin;
 window.openAdminListSheet = openAdminListSheet;
+window.requestOwnerConfirm = requestOwnerConfirm;
+window.ownerConfirmSubmit = ownerConfirmSubmit;
+window.ownerConfirmCancel = ownerConfirmCancel;
 window.openAdminSheet = openAdminSheet;
 window.saveAdmin = saveAdmin;
 window.toggleAdminStatus = toggleAdminStatus;
