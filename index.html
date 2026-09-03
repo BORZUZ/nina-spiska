@@ -8877,8 +8877,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
   if (currentAdmin) {
     var savedToken = localStorage.getItem('nina_session_token');
-    if (savedToken) attachSessionToken(savedToken);
-    showMainApp();
+    if (savedToken) {
+      attachSessionToken(savedToken);
+      showMainApp();
+    } else {
+      // Eski (yangilanishdan oldingi) kirish — sessiya tokeni yo'q.
+      // Xavfsiz tomonga: avtomatik kirgizmaymiz, login sahifasini ko'rsatamiz —
+      // parolni qayta kiritgach, yangi to'g'ri token beriladi.
+      localStorage.removeItem('nina_admin');
+      currentAdmin = null;
+    }
   }
 });
 
