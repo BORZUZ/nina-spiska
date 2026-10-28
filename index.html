@@ -3920,6 +3920,32 @@ async function loadSpiskaDetail(spiskaId) {
   }
 }
 
+// Mahsulot kodi: avval spiska_items.product_code, bo'lmasa (eski yozuvlar) mahsulotlar ro'yxatidan.
+// Hech qachon xato tashlamaydi — kod topilmasa bo'sh qaytaradi.
+function spiskaItemCode(item) {
+  try {
+    if (item && item.product_code) return String(item.product_code);
+    if (item && item.product_id && Array.isArray(allProducts)) {
+      for (var i = 0; i < allProducts.length; i++) {
+        if (allProducts[i].id === item.product_id) return allProducts[i].code ? String(allProducts[i].code) : '';
+      }
+    }
+  } catch(e) {}
+  return '';
+}
+// Ilova ichidagi ro'yxat uchun (tema ranglariga mos)
+function spiskaCodeChip(item) {
+  var c = spiskaItemCode(item);
+  if (!c) return '';
+  return '<div style="margin:3px 0 1px"><span style="display:inline-block;font-family:JetBrains Mono,monospace;font-size:.7rem;font-weight:600;letter-spacing:.03em;color:var(--text-primary);background:var(--bg-tertiary);border:1px solid var(--border);border-radius:5px;padding:1px 6px">' + htmlEscape(c) + '</span></div>';
+}
+// Spiska ko'rish (screenshot) oynasi uchun — u doim och rangda
+function previewCodeChip(item) {
+  var c = spiskaItemCode(item);
+  if (!c) return '';
+  return '<span style="display:inline-block;margin-top:4px;font-family:monospace;font-size:11.5px;font-weight:600;letter-spacing:.03em;color:#0F172A;background:#F6F8FC;border:1px solid #E2E8F0;border-radius:5px;padding:1px 6px">' + htmlEscape(c) + '</span>';
+}
+
 function renderSpiskaItemRow(item, idx, isOpen) {
   var removeBtn = isOpen
     ? '<button onclick="removeItem(\'' + item.id + '\')" style="width:24px;height:24px;border:none;background:transparent;color:var(--text-muted);opacity:.4;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:all .15s" onmouseover="this.style.opacity=1;this.style.background=\'var(--danger-light)\';this.style.color=\'var(--danger)\'" onmouseout="this.style.opacity=.4;this.style.background=\'transparent\';this.style.color=\'var(--text-muted)\'" title="O\'chirish">' +
@@ -3930,6 +3956,7 @@ function renderSpiskaItemRow(item, idx, isOpen) {
     '<div class="spiska-item-num">' + idx + '</div>' +
     '<div style="flex:1;min-width:0">' +
       '<div class="spiska-item-name">' + htmlEscape(item.product_name) + '</div>' +
+      spiskaCodeChip(item) +
       '<div class="spiska-item-detail">' + item.quantity + ' × ' + fmt(item.unit_price) + " so'm</div>" +
     '</div>' +
     '<div style="display:flex;align-items:center;gap:6px;flex-shrink:0">' +
@@ -3975,7 +4002,7 @@ function renderSpiskaDetail(s) {
         var color = catColors[colorIdx % catColors.length];
         colorIdx++;
         itemsHtml += '<div style="border-left:2px solid ' + color + ';margin:4px 0 4px 4px;padding-left:8px;border-radius:0">';
-        itemsHtml += '<div style="font-size:.68rem;font-weight:600;color:var(--text-muted);padding:3px 0 1px;display:flex;align-items:center;gap:4px">' +
+        itemsHtml += '<div style="font-size:.8rem;font-weight:700;color:var(--text-primary);padding:3px 0 2px;display:flex;align-items:center;gap:4px">' +
           (g.cat.icon||'') + ' ' + htmlEscape(g.cat.name) + '</div>';
         g.items.forEach(function(item) {
           globalIdx++;
@@ -3985,7 +4012,7 @@ function renderSpiskaDetail(s) {
       });
       if (noCatItems.length) {
         itemsHtml += '<div style="border-left:2px solid var(--text-muted);margin:4px 0 4px 4px;padding-left:8px;border-radius:0;opacity:.85">';
-        itemsHtml += '<div style="font-size:.68rem;font-weight:600;color:var(--text-muted);padding:3px 0 1px">' + t('cat_other') + '</div>';
+        itemsHtml += '<div style="font-size:.8rem;font-weight:700;color:var(--text-primary);padding:3px 0 2px">' + t('cat_other') + '</div>';
         noCatItems.forEach(function(item) {
           globalIdx++;
           itemsHtml += renderSpiskaItemRow(item, globalIdx, isOpen);
@@ -4172,16 +4199,16 @@ function openSpiskaPreview() {
       if (!g.items.length) return;
       var color = catColors[colorIdx % catColors.length];
       colorIdx++;
-      rowsHtml += '<tr><td colspan="5" style="padding:7px 10px 4px;background:#F8FAFC;border-bottom:1px solid #F1F5F9">' +
-        '<div style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:' + color + '">' +
-          '<span style="display:inline-block;width:3px;height:14px;border-radius:2px;background:' + color + '"></span>' +
+      rowsHtml += '<tr><td colspan="5" style="padding:10px 10px 6px;background:#F1F5F9;border-top:1px solid #E2E8F0;border-bottom:1px solid #E2E8F0">' +
+        '<div style="display:flex;align-items:center;gap:5px;font-size:13px;font-weight:800;color:' + color + '">' +
+          '<span style="display:inline-block;width:3px;height:16px;border-radius:2px;background:' + color + '"></span>' +
           (g.cat.icon || '') + ' ' + g.cat.name +
         '</div></td></tr>';
       g.items.forEach(function(item) {
         globalIdx++;
         rowsHtml += '<tr style="background:' + (globalIdx%2===0?'#ffffff':'#FAFBFC') + '">' +
           '<td style="padding:8px 10px;text-align:center;color:#64748B;font-size:12px;font-family:monospace;border-bottom:1px solid #F1F5F9">' + globalIdx + '</td>' +
-          '<td style="padding:8px 10px;border-bottom:1px solid #F1F5F9"><div style="font-weight:600;font-size:13px;color:#0F172A">' + item.product_name + '</div></td>' +
+          '<td style="padding:8px 10px;border-bottom:1px solid #F1F5F9"><div style="font-weight:600;font-size:13px;color:#0F172A">' + item.product_name + '</div>' + previewCodeChip(item) + '</td>' +
           '<td style="padding:8px 10px;text-align:center;font-size:13px;font-weight:700;color:#0F172A;border-bottom:1px solid #F1F5F9;font-family:monospace">' + item.quantity + '</td>' +
           '<td style="padding:8px 10px;text-align:right;font-size:11px;color:#64748B;border-bottom:1px solid #F1F5F9;font-family:monospace">' + fmt(item.unit_price) + '</td>' +
           '<td style="padding:8px 10px;text-align:right;font-weight:700;font-size:13px;color:#1D4ED8;border-bottom:1px solid #F1F5F9;font-family:monospace">' + fmt(item.total_price) + '</td>' +
@@ -4189,16 +4216,16 @@ function openSpiskaPreview() {
       });
     });
     if (noCatItems.length) {
-      rowsHtml += '<tr><td colspan="5" style="padding:7px 10px 4px;background:#F8FAFC;border-bottom:1px solid #F1F5F9">' +
-        '<div style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#64748B">' +
-          '<span style="display:inline-block;width:3px;height:14px;border-radius:2px;background:#94A3B8"></span>' +
+      rowsHtml += '<tr><td colspan="5" style="padding:10px 10px 6px;background:#F1F5F9;border-top:1px solid #E2E8F0;border-bottom:1px solid #E2E8F0">' +
+        '<div style="display:flex;align-items:center;gap:5px;font-size:13px;font-weight:800;color:#64748B">' +
+          '<span style="display:inline-block;width:3px;height:16px;border-radius:2px;background:#94A3B8"></span>' +
           (d.cat_other || 'Boshqa') +
         '</div></td></tr>';
       noCatItems.forEach(function(item) {
         globalIdx++;
         rowsHtml += '<tr style="background:' + (globalIdx%2===0?'#ffffff':'#FAFBFC') + '">' +
           '<td style="padding:8px 10px;text-align:center;color:#64748B;font-size:12px;font-family:monospace;border-bottom:1px solid #F1F5F9">' + globalIdx + '</td>' +
-          '<td style="padding:8px 10px;border-bottom:1px solid #F1F5F9"><div style="font-weight:600;font-size:13px;color:#0F172A">' + item.product_name + '</div></td>' +
+          '<td style="padding:8px 10px;border-bottom:1px solid #F1F5F9"><div style="font-weight:600;font-size:13px;color:#0F172A">' + item.product_name + '</div>' + previewCodeChip(item) + '</td>' +
           '<td style="padding:8px 10px;text-align:center;font-size:13px;font-weight:700;color:#0F172A;border-bottom:1px solid #F1F5F9;font-family:monospace">' + item.quantity + '</td>' +
           '<td style="padding:8px 10px;text-align:right;font-size:11px;color:#64748B;border-bottom:1px solid #F1F5F9;font-family:monospace">' + fmt(item.unit_price) + '</td>' +
           '<td style="padding:8px 10px;text-align:right;font-weight:700;font-size:13px;color:#1D4ED8;border-bottom:1px solid #F1F5F9;font-family:monospace">' + fmt(item.total_price) + '</td>' +
@@ -4210,7 +4237,7 @@ function openSpiskaPreview() {
       globalIdx++;
       rowsHtml += '<tr style="background:' + (idx%2===0?'#ffffff':'#F8FAFC') + '">' +
         '<td style="padding:8px 10px;text-align:center;color:#64748B;font-size:12px;font-family:monospace;border-bottom:1px solid #F1F5F9">' + globalIdx + '</td>' +
-        '<td style="padding:8px 10px;border-bottom:1px solid #F1F5F9"><div style="font-weight:600;font-size:13px;color:#0F172A">' + item.product_name + '</div></td>' +
+        '<td style="padding:8px 10px;border-bottom:1px solid #F1F5F9"><div style="font-weight:600;font-size:13px;color:#0F172A">' + item.product_name + '</div>' + previewCodeChip(item) + '</td>' +
         '<td style="padding:8px 10px;text-align:center;font-size:13px;font-weight:700;color:#0F172A;border-bottom:1px solid #F1F5F9;font-family:monospace">' + item.quantity + '</td>' +
         '<td style="padding:8px 10px;text-align:right;font-size:11px;color:#64748B;border-bottom:1px solid #F1F5F9;font-family:monospace">' + fmt(item.unit_price) + '</td>' +
         '<td style="padding:8px 10px;text-align:right;font-weight:700;font-size:13px;color:#1D4ED8;border-bottom:1px solid #F1F5F9;font-family:monospace">' + fmt(item.total_price) + '</td>' +
